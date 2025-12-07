@@ -1,0 +1,71 @@
+# Custom Falco Rules for E-commerce Dashboard Security Monitoring
+
+- rule: Unauthorized Database Access Attempt
+  desc: Detect unauthorized attempts to access the database
+  condition: >
+    spawned_process and 
+    proc.name in (psql, pg_dump, pg_restore) and
+    not user.name in (postgres, admin)
+  output: >
+    Unauthorized database access attempt detected
+    (user=%user.name command=%proc.cmdline container=%container.name)
+  priority: WARNING
+  tags: [database, security]
+
+- rule: Suspicious File Access in Data Directory
+  desc: Monitor unauthorized access to sensitive data directories
+  condition: >
+    open_write and
+    fd.name startswith /data and
+    not proc.name in (python, postgres)
+  output: >
+    Suspicious file write in data directory
+    (file=%fd.name process=%proc.name user=%user.name container=%container.name)
+  priority: WARNING
+  tags: [filesystem, data-security]
+
+- rule: Container Shell Spawn
+  desc: Detect shell spawned in container
+  condition: >
+    spawned_process and
+    container and
+    proc.name in (bash, sh, ash, zsh)
+  output: >
+    Shell spawned in container
+    (user=%user.name container=%container.name command=%proc.cmdline)
+  priority: NOTICE
+  tags: [container, shell]
+
+- rule: Sensitive Data Exfiltration Attempt
+  desc: Detect potential data exfiltration
+  condition: >
+    open_read and
+    fd.name startswith /data/clean and
+    proc.name in (curl, wget, nc, netcat)
+  output: >
+    Potential data exfiltration detected
+    (file=%fd.name process=%proc.name user=%user.name)
+  priority: CRITICAL
+  tags: [data-exfiltration, security]
+
+- rule: Grafana Configuration Change
+  desc: Monitor changes to Grafana configuration
+  condition: >
+    open_write and
+    fd.name startswith /etc/grafana
+  output: >
+    Grafana configuration file modified
+    (file=%fd.name process=%proc.name user=%user.name)
+  priority: WARNING
+  tags: [grafana, configuration]
+
+- rule: High CPU Usage Detection
+  desc: Alert on processes consuming excessive CPU
+  condition: >
+    evt.type = execve and
+    proc.cpu_time > 80
+  output: >
+    High CPU usage detected
+    (process=%proc.name cpu=%proc.cpu_time user=%user.name)
+  priority: INFO
+  tags: [performance, monitoring]
