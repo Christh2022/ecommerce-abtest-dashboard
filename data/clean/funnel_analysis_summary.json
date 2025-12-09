@@ -1,0 +1,194 @@
+{
+  "period": {
+    "start_date": "2015-05-03",
+    "end_date": "2015-09-18",
+    "days": 139
+  },
+  "funnel_stages": {
+    "view": {
+      "total": 2664218,
+      "avg_daily": 19167.03597122302,
+      "unique_users": 1649534,
+      "percentage_of_users": 100.0
+    },
+    "cart": {
+      "total": 68966,
+      "avg_daily": 496.158273381295,
+      "percentage_of_views": 2.588601983771598,
+      "dropoff_from_view": 97.4113980162284
+    },
+    "purchase": {
+      "total": 22457,
+      "avg_daily": 161.5611510791367,
+      "percentage_of_carts": 32.56242206304556,
+      "percentage_of_views": 0.842911503488078,
+      "dropoff_from_cart": 67.43757793695444
+    }
+  },
+  "conversion_rates": {
+    "view_to_cart": 2.588601983771598,
+    "cart_to_purchase": 32.56242206304556,
+    "view_to_purchase": 0.842911503488078,
+    "overall_efficiency": 0.842911503488078
+  },
+  "drop_off_analysis": {
+    "view_to_cart_loss": {
+      "rate": 97.4113980162284,
+      "absolute": 2595252
+    },
+    "cart_to_purchase_loss": {
+      "rate": 67.43757793695444,
+      "absolute": 46509
+    },
+    "total_loss_from_view": {
+      "rate": 99.15708849651192,
+      "absolute": 2641761
+    }
+  },
+  "daily_statistics": {
+    "view_to_cart": {
+      "mean": 2.5863818420944518,
+      "median": 2.553407934893184,
+      "std": 0.3570219328682942,
+      "min": 1.4683418025376438,
+      "max": 3.6896573889567392
+    },
+    "cart_to_purchase": {
+      "mean": 31.884587289863774,
+      "median": 32.34782608695652,
+      "std": 5.829749460087505,
+      "min": 17.928286852589643,
+      "max": 44.11764705882353
+    },
+    "view_to_purchase": {
+      "mean": 0.8279507216013454,
+      "median": 0.8316216622413707,
+      "std": 0.20239272925542054,
+      "min": 0.43689503220217696,
+      "max": 1.3008672448298866
+    }
+  },
+  "weekday_analysis": {
+    "best_conversion_day": "Wednesday",
+    "best_conversion_rate": 1.0,
+    "worst_conversion_day": "Saturday",
+    "worst_conversion_rate": 0.61,
+    "weekend_vs_weekday": {
+      "weekend_avg": 0.61,
+      "weekday_avg": 0.9120000000000001
+    }
+  },
+  "segment_analysis": {
+    "best_segment": {
+      "name": "Premium",
+      "revenue_per_user": 7999.81,
+      "conversion_rate": 3099.52,
+      "transactions_per_user": 31.0
+    },
+    "worst_segment": {
+      "name": "New",
+      "revenue_per_user": 264.79,
+      "conversion_rate": 103.61,
+      "transactions_per_user": 1.04
+    },
+    "segment_comparison": [
+      {
+        "segment": "Premium",
+        "num_users": 209,
+        "user_percentage": 1.78,
+        "num_transactions": 6478,
+        "transactions_per_user": 31.0,
+        "revenue_per_user": 7999.81,
+        "total_revenue": 1671960.74,
+        "revenue_percentage": 29.16,
+        "avg_transaction_value": 258.1,
+        "conversion_rate": 3099.52
+      },
+      {
+        "segment": "Regular",
+        "num_users": 1316,
+        "user_percentage": 11.23,
+        "num_transactions": 3593,
+        "transactions_per_user": 2.73,
+        "revenue_per_user": 690.85,
+        "total_revenue": 909164.11,
+        "revenue_percentage": 15.86,
+        "avg_transaction_value": 253.04,
+        "conversion_rate": 273.02
+      },
+      {
+        "segment": "Occasional",
+        "num_users": 4957,
+        "user_percentage": 42.3,
+        "num_transactions": 6960,
+        "transactions_per_user": 1.4,
+        "revenue_per_user": 356.07,
+        "total_revenue": 1765016.35,
+        "revenue_percentage": 30.79,
+        "avg_transaction_value": 253.59,
+        "conversion_rate": 140.41
+      },
+      {
+        "segment": "New",
+        "num_users": 5237,
+        "user_percentage": 44.69,
+        "num_transactions": 5426,
+        "transactions_per_user": 1.04,
+        "revenue_per_user": 264.79,
+        "total_revenue": 1386726.62,
+        "revenue_percentage": 24.19,
+        "avg_transaction_value": 255.57,
+        "conversion_rate": 103.61
+      }
+    ]
+  },
+  "product_analysis": {
+    "viewed_not_carted": {
+      "count": 211157,
+      "total_views": 1438833,
+      "percentage_of_catalog": 89.83072479058627
+    },
+    "carted_not_purchased": {
+      "count": 12291,
+      "total_carts": 20415,
+      "percentage_of_catalog": 5.228855488575306
+    },
+    "high_performers": {
+      "high_view_to_cart_count": 50,
+      "high_cart_to_purchase_count": 50,
+      "avg_view_to_cart_top50": 14.213600000000001,
+      "avg_cart_to_purchase_top50": 82.7844
+    }
+  },
+  "temporal_evolution": {
+    "first_week_conversion": 0.62,
+    "last_week_conversion": 0.82,
+    "conversion_evolution_pct": 32.258064516129025,
+    "weekly_volatility": 0.07871285972262909,
+    "monthly_volatility": 0.028284271247461867
+  },
+  "friction_points": {
+    "high_friction_days_count": 42,
+    "high_friction_days_pct": 30.215827338129497,
+    "avg_conversion_friction_days": 0.6035272251054762,
+    "avg_conversion_normal_days": 0.9251237819397629,
+    "friction_impact": {
+      "view_to_cart_threshold": 2.2293599092261576,
+      "cart_to_purchase_threshold": 26.054837829776268
+    }
+  },
+  "improvement_opportunities": {
+    "view_to_cart_improvement": {
+      "current_rate": 2.588601983771598,
+      "target_rate": 2.943403774962746,
+      "potential_additional_carts": 9452,
+      "potential_additional_carts_pct": 13.706309174429393
+    },
+    "cart_to_purchase_improvement": {
+      "current_rate": 32.56242206304556,
+      "target_rate": 37.71433674995128,
+      "potential_additional_purchases": 7118,
+      "potential_additional_purchases_pct": 31.69653124990589
+    }
+  }
+}

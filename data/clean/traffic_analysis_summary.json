@@ -1,0 +1,60 @@
+{
+  "period": {
+    "start_date": "2015-05-03",
+    "end_date": "2015-09-18",
+    "total_days": 139,
+    "weekdays": 100,
+    "weekends": 39
+  },
+  "visitors": {
+    "total_unique_users": 1649534,
+    "avg_daily_users": 11867.15107913669,
+    "median_daily_users": 12348.0,
+    "min_daily_users": 1016,
+    "max_daily_users": 17516,
+    "std_daily_users": 2303.606145614121
+  },
+  "sessions": {
+    "total_sessions": 1649534,
+    "avg_daily_sessions": 11867.15107913669,
+    "median_daily_sessions": 12348.0,
+    "min_daily_sessions": 1016,
+    "max_daily_sessions": 17516,
+    "sessions_per_user": 1.0
+  },
+  "engagement": {
+    "total_events": 2755641,
+    "avg_events_per_day": 19824.755395683453,
+    "avg_events_per_user": 1.6661870503597125,
+    "avg_events_per_session": 1.6705572604141534
+  },
+  "temporal_patterns": {
+    "weekday_avg_users": 12590.05,
+    "weekend_avg_users": 10013.564102564103,
+    "weekday_avg_sessions": 12590.05,
+    "weekend_avg_sessions": 10013.564102564103,
+    "weekend_uplift_users": -20.4644612009952,
+    "weekend_uplift_sessions": -20.4644612009952
+  },
+  "growth": {
+    "avg_weekly_user_growth": 42.19184834497891,
+    "avg_weekly_session_growth": 42.19184834497891,
+    "total_user_growth": 410.94723458359823,
+    "total_session_growth": 410.94723458359823
+  },
+  "user_segments": {
+    "new_users": 1480417,
+    "new_users_pct": 89.74758931916529,
+    "occasional_users": 125478,
+    "occasional_users_pct": 7.60687563881678,
+    "regular_users": 34508,
+    "regular_users_pct": 2.0919847666068114,
+    "premium_users": 9131,
+    "premium_users_pct": 0.5535502754111161
+  },
+  "metadata": {
+    "generated_at": "2025-12-09T02:00:17.585642",
+    "script": "traffic_analysis.py",
+    "issue": "#9"
+  }
+}
