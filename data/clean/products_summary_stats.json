@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-12-09T01:27:19.220257",
+  "source": "data_clean.csv + transactions.csv",
+  "total_products": 235061,
+  "total_columns": 21,
+  "columns": [
+    "rank",
+    "product_id",
+    "category",
+    "unique_users",
+    "unique_sessions",
+    "total_events",
+    "views",
+    "add_to_carts",
+    "purchases",
+    "view_to_cart_rate",
+    "view_to_purchase_rate",
+    "cart_to_purchase_rate",
+    "total_revenue",
+    "avg_price",
+    "min_price",
+    "max_price",
+    "num_purchases",
+    "events_per_user",
+    "sessions_per_user",
+    "revenue_per_user",
+    "revenue_per_view"
+  ],
+  "categories": {
+    "High Revenue": 223952,
+    "Top Performer": 11109
+  },
+  "summary": {
+    "products_with_sales": 12025,
+    "products_no_sales": 223036,
+    "total_revenue": 5732867.819999999,
+    "avg_revenue_per_product": 24.38885148961333,
+    "avg_conversion_rate": 0.3369082068058929,
+    "top_product": {
+      "id": 461686,
+      "revenue": 34781.58,
+      "views": 2538,
+      "purchases": 133
+    }
+  },
+  "file_size_kb": 20599.326171875
+}

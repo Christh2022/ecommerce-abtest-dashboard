@@ -78,6 +78,8 @@ data/clean/data_clean.csv
 !data/clean/data_clean_summary.json
 !data/clean/daily_metrics.csv
 !data/clean/daily_metrics_summary.json
+!data/clean/products_summary.csv
+!data/clean/products_summary_stats.json
 # Garder uniquement les README
 !data/raw/README.md
 !data/clean/README.md
