@@ -1,10 +1,25 @@
 /* Custom CSS for E-Commerce A/B Test Dashboard - Dark Mode */
 
 /* General Styles */
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: #0d1117 !important;
     color: #c9d1d9 !important;
+    overflow-x: hidden;
+}
+
+/* Fixed Header Styles */
+.bg-primary h1 {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.bg-primary {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 /* Override Bootstrap light backgrounds */
@@ -44,25 +59,59 @@ hr {
 .nav-link {
     color: #8b949e !important;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 8px;
+    padding: 0.75rem 1rem !important;
+    margin-bottom: 0.25rem;
+    border-left: 3px solid transparent;
 }
 
 .nav-link:hover {
-    background-color: #161b22 !important;
+    background-color: rgba(102, 126, 234, 0.1) !important;
     color: #c9d1d9 !important;
-    transform: translateX(5px);
+    transform: translateX(8px);
+    border-left-color: #667eea;
 }
 
 .nav-link.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.1) 100%) !important;
     color: white !important;
     font-weight: 600;
+    border-left-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .nav-link i {
-    width: 20px;
+    width: 24px;
     text-align: center;
+    font-size: 1.1rem;
+}
+
+/* Fixed Sidebar Scrollbar */
+.nav-link::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nav-link::-webkit-scrollbar-track {
+    background: #0d1117;
+}
+
+.nav-link::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 3px;
+}
+
+.nav-link::-webkit-scrollbar-thumb:hover {
+    background: #667eea;
+}
+
+/* Sidebar Section Headers */
+h6.text-muted {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6e7681 !important;
 }
 
 /* Cards */

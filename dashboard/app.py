@@ -25,27 +25,51 @@ app = Dash(
 server = app.server
 
 # Main layout with sidebar navigation
-app.layout = dbc.Container([
-    # Header
-    dbc.Row([
-        dbc.Col([
-            html.Div([
-                html.H1([
-                    html.I(className="fas fa-chart-line me-3"),
-                    "E-Commerce A/B Test Dashboard"
-                ], className="text-white mb-0"),
-                html.P(
-                    "Analyse complète des tests A/B et optimisations e-commerce",
-                    className="text-white-50 mb-0"
-                ),
-            ], className="p-4 bg-primary rounded-3 mb-4 shadow")
-        ])
-    ]),
+app.layout = html.Div([
+    # Fixed Header
+    html.Div([
+        dbc.Container([
+            dbc.Row([
+                dbc.Col([
+                    html.Div([
+                        html.H1([
+                            html.I(className="fas fa-chart-line me-3"),
+                            "E-Commerce A/B Test Dashboard"
+                        ], className="text-white mb-1", style={"fontSize": "1.8rem", "fontWeight": "600"}),
+                        html.P([
+                            html.I(className="fas fa-flask me-2"),
+                            "Analyse complète des tests A/B et optimisations e-commerce",
+                            html.Span(" | ", className="mx-2"),
+                            html.I(className="fas fa-calendar-alt me-2"),
+                            "Mai - Septembre 2015"
+                        ], className="text-white-50 mb-0", style={"fontSize": "0.95rem"}),
+                    ], className="d-flex flex-column justify-content-center", style={"height": "100%"})
+                ], width=9),
+                dbc.Col([
+                    html.Div([
+                        html.Div([
+                            html.I(className="fas fa-users fa-2x mb-2"),
+                            html.H4("1.65M", className="mb-0 fw-bold"),
+                            html.Small("Utilisateurs", className="text-white-50")
+                        ], className="text-center text-white p-2"),
+                    ], className="d-flex align-items-center justify-content-center h-100")
+                ], width=3),
+            ], className="align-items-center")
+        ], fluid=True)
+    ], className="bg-primary shadow-lg", style={
+        "position": "fixed",
+        "top": "0",
+        "left": "0",
+        "right": "0",
+        "zIndex": "1000",
+        "padding": "1rem 0",
+        "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+    }),
     
-    # Main content area with sidebar and page content
-    dbc.Row([
-        # Sidebar navigation (3 columns width)
-        dbc.Col([
+    # Main content area with fixed sidebar
+    html.Div([
+        # Fixed Sidebar navigation
+        html.Div([
             dbc.Nav([
                 dbc.NavLink([
                     html.I(className="fas fa-home me-2"),
@@ -119,52 +143,58 @@ app.layout = dbc.Container([
                     "À Propos"
                 ], href="/about", active="exact", className="mb-2"),
                 
-            ], vertical=True, pills=True, className="bg-dark p-3 rounded-3 shadow-sm"),
+            ], vertical=True, pills=True, className="bg-dark p-3"),
             
             # Footer info in sidebar
             html.Div([
-                html.Hr(),
-                html.P([
-                    html.I(className="fas fa-database me-2"),
-                    "Période: Mai-Sept 2015"
-                ], className="text-muted small mb-1"),
-                html.P([
-                    html.I(className="fas fa-chart-line me-2"),
-                    "1.65M utilisateurs"
-                ], className="text-muted small mb-1"),
-                html.P([
-                    html.I(className="fas fa-shopping-basket me-2"),
-                    "22.5K transactions"
-                ], className="text-muted small mb-0"),
-            ], className="px-3 py-2 bg-dark rounded-3 mt-3"),
+                html.Hr(className="border-secondary"),
+                html.Div([
+                    html.Div([
+                        html.I(className="fas fa-database fa-lg mb-2 text-primary"),
+                        html.P("139 jours", className="mb-0 fw-bold"),
+                        html.Small("de données", className="text-muted")
+                    ], className="text-center mb-3"),
+                    html.Div([
+                        html.I(className="fas fa-shopping-basket fa-lg mb-2 text-success"),
+                        html.P("22.5K", className="mb-0 fw-bold"),
+                        html.Small("transactions", className="text-muted")
+                    ], className="text-center mb-3"),
+                    html.Div([
+                        html.I(className="fas fa-box fa-lg mb-2 text-warning"),
+                        html.P("235K", className="mb-0 fw-bold"),
+                        html.Small("produits", className="text-muted")
+                    ], className="text-center"),
+                ], className="p-3 bg-dark rounded-3 border border-secondary")
+            ], className="px-3 py-2 mt-3"),
             
-        ], width=3, className="pe-3"),
+        ], style={
+            "position": "fixed",
+            "top": "100px",
+            "left": "0",
+            "width": "280px",
+            "height": "calc(100vh - 100px)",
+            "overflowY": "auto",
+            "overflowX": "hidden",
+            "backgroundColor": "#161b22",
+            "padding": "1rem",
+            "borderRight": "1px solid #30363d",
+            "zIndex": "999"
+        }),
         
-        # Page content (9 columns width)
-        dbc.Col([
-            # Page content will be inserted here by dash.page_container
-            dash.page_container
-        ], width=9),
+        # Page content with left margin for fixed sidebar
+        html.Div([
+            dbc.Container([
+                dash.page_container
+            ], fluid=True, className="p-4")
+        ], style={
+            "marginLeft": "280px",
+            "marginTop": "100px",
+            "backgroundColor": "#0d1117",
+            "minHeight": "calc(100vh - 100px)"
+        }),
     ]),
     
-    # Footer
-    dbc.Row([
-        dbc.Col([
-            html.Hr(className="my-4"),
-            html.Div([
-                html.P([
-                    "Dashboard créé avec ",
-                    html.I(className="fas fa-heart text-danger"),
-                    " | ",
-                    html.A("GitHub", href="https://github.com/Christh2022/ecommerce-abtest-dashboard", 
-                           target="_blank", className="text-decoration-none"),
-                    " | Milestone 4: Multi-page Dashboard"
-                ], className="text-center text-muted small mb-0")
-            ])
-        ])
-    ])
-    
-], fluid=True, className="p-4", style={"backgroundColor": "#0d1117"})
+], style={"backgroundColor": "#0d1117"})
 
 
 if __name__ == '__main__':
