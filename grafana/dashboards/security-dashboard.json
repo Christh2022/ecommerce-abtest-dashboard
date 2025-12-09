@@ -1,0 +1,65 @@
+{
+  "dashboard": {
+    "title": "E-commerce Security Monitoring",
+    "tags": ["security", "falco", "intrusion-detection"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Falco Security Events",
+        "type": "logs",
+        "datasource": "Loki",
+        "targets": [
+          {
+            "expr": "{job=\"falco-security\"}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "Security Events by Priority",
+        "type": "piechart",
+        "datasource": "Loki",
+        "targets": [
+          {
+            "expr": "sum by (priority) (count_over_time({job=\"falco-security\"}[5m]))",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 3,
+        "title": "Container Activity",
+        "type": "graph",
+        "datasource": "Loki",
+        "targets": [
+          {
+            "expr": "rate({job=\"docker\"}[5m])",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        }
+      }
+    ],
+    "schemaVersion": 36,
+    "version": 1
+  }
+}

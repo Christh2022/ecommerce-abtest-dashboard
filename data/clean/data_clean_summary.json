@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-12-09T00:57:21.512149",
+  "source": "events_enriched.csv",
+  "total_rows": 2755641,
+  "total_columns": 13,
+  "columns": [
+    "user_id",
+    "session_id",
+    "timestamp",
+    "date",
+    "hour",
+    "day_of_week",
+    "event_type",
+    "product_id",
+    "transaction_id",
+    "amount",
+    "segment",
+    "product_views",
+    "product_purchases"
+  ],
+  "unique_users": 1407580,
+  "unique_sessions": 1649534,
+  "unique_products": 235061,
+  "events_by_type": {
+    "view": 2664218,
+    "addtocart": 68966,
+    "transaction": 22457
+  },
+  "users_by_segment": {
+    "New": 1922250,
+    "Occasional": 476948,
+    "Regular": 197603,
+    "Premium": 158840
+  },
+  "period": {
+    "start_date": "2015-05-03",
+    "end_date": "2015-09-18"
+  },
+  "file_size_mb": 228.92606925964355
+}
