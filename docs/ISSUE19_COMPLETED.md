@@ -57,6 +57,7 @@ Dash utilise le système `dash.pages` qui permet :
 **Description**: Page d'accueil avec vue d'ensemble
 
 **Sections**:
+
 - Bienvenue et contexte
 - 4 cartes métriques clés (Users, Transactions, Revenue, Scenarios)
 - Impact business potentiel (€38.4M, ROI +25,845%)
@@ -65,6 +66,7 @@ Dash utilise le système `dash.pages` qui permet :
 - Insights clés (4 alertes colorées)
 
 **Métriques affichées**:
+
 - 1,649,534 utilisateurs uniques
 - 22,457 transactions
 - €5.73M revenue total
@@ -75,30 +77,35 @@ Dash utilise le système `dash.pages` qui permet :
 ### 2-6. **Pages KPI Analysis** (À créer)
 
 #### `/traffic` - Trafic & Utilisateurs
+
 - Évolution temporelle du trafic
 - Distribution hebdomadaire
 - Effet weekend (-20.5%)
 - Sources de trafic
 
 #### `/behavior` - Comportement
+
 - Drop-off funnel (95.82% view→cart)
 - Segmentation par statut (New vs Premium)
 - Engagement produits
 - Temps de navigation
 
 #### `/conversions` - Conversions
+
 - Taux de conversion par jour
 - Impact des jours de la semaine
 - Samedi -39% vs Mercredi
 - Analyse cohort
 
 #### `/products` - Produits
+
 - Top performers (Pareto 2.55% → 80% revenue)
 - Dead stock (211K produits, 94.9%)
 - Catégories best-sellers
 - AOV par produit
 
 #### `/funnel` - Funnel
+
 - Visualisation entonnoir complet
 - View → Cart → Purchase
 - Pertes à chaque étape (97.41% view→cart)
@@ -109,6 +116,7 @@ Dash utilise le système `dash.pages` qui permet :
 ### 7-10. **Pages A/B Testing** (À créer)
 
 #### `/ab-testing/simulations` - Simulations
+
 - 8 scénarios avec détails
 - Paramètres Monte Carlo (10,000 iterations)
 - Tailles d'échantillon
@@ -116,18 +124,21 @@ Dash utilise le système `dash.pages` qui permet :
 - Business impact par scénario
 
 #### `/ab-testing/results` - Résultats Tests
+
 - Tests statistiques (Chi-square, Z-test, Fisher, Bayesian)
 - Verdicts (WINNER_VARIANT, UNDERPOWERED)
 - Lifts avec intervalles de confiance 95%
 - P-values et significativité
 
 #### `/ab-testing/calculator` - Calculateur Z-Test
+
 - Interface interactive pour calculer z-tests
 - Inputs: conversions A, conversions B, users A, users B
 - Outputs: z-score, p-value, IC 95%, verdict
 - Calcul de taille d'échantillon minimum
 
 #### `/ab-testing/visualizations` - Visualisations
+
 - Galerie des 14 graphiques générés (Issue #18)
 - Daily lift trends (3 métriques)
 - ROI comparison
@@ -140,12 +151,14 @@ Dash utilise le système `dash.pages` qui permet :
 ### 11-12. **Pages Documentation** (À créer)
 
 #### `/methodology` - Guide Méthodologie
+
 - Explication tests A/B
 - Formules statistiques
 - Interprétation résultats
 - Bonnes pratiques
 
 #### `/about` - À Propos
+
 - Dataset RetailRocket
 - Période d'analyse
 - Technologies utilisées
@@ -159,6 +172,7 @@ Dash utilise le système `dash.pages` qui permet :
 ### Thème Visuel
 
 **Palette de couleurs**:
+
 - **Primary**: Gradient violet-bleu (#667eea → #764ba2)
 - **Success**: Vert (#28a745)
 - **Warning**: Jaune (#ffc107)
@@ -166,30 +180,35 @@ Dash utilise le système `dash.pages` qui permet :
 - **Info**: Cyan (#17a2b8)
 
 **Typographie**:
+
 - Font: System fonts (-apple-system, Segoe UI, Roboto)
 - Weights: 400 (normal), 500 (medium), 600 (semi-bold)
 
 ### Composants UI
 
 **Cards**:
+
 - Ombres légères (`shadow-sm`)
 - Bordures arrondies (10px)
 - Hover: Translation Y -5px + ombre renforcée
 - Animation: fadeIn 0.5s
 
 **Sidebar Navigation**:
+
 - Pills style avec bordures arrondies
 - Active: Gradient violet-bleu
 - Hover: Fond gris clair + translation X +5px
 - Icônes Font Awesome alignées à gauche
 
 **Buttons**:
+
 - Outline style par défaut
 - Hover: Translation Y -2px + ombre
 - Bordures arrondies (8px)
 - Transition smooth 0.3s
 
 **Alerts**:
+
 - 4 types: danger, warning, info, success
 - Bordures arrondies (10px)
 - Icônes contextuelles
@@ -208,6 +227,7 @@ python app.py
 ```
 
 **Output attendu**:
+
 ```
 ============================================================
 🚀 E-Commerce A/B Test Dashboard
@@ -229,10 +249,12 @@ Dash is running on http://127.0.0.1:8050/
 ```
 
 **Accès**:
+
 - Ouvrir navigateur: http://127.0.0.1:8050
 - Ou: http://localhost:8050
 
 **Fonctionnalités Debug**:
+
 - Hot reload activé (recharge auto à chaque changement)
 - Dev tools UI (barre d'outils en bas)
 - Messages d'erreur détaillés
@@ -253,6 +275,7 @@ gunicorn app:server --bind 0.0.0.0:8050 --workers 4
 ### Section 1 : Bienvenue
 
 **Contenu**:
+
 - Titre avec icône home
 - Lead text explicatif
 - Période d'analyse (Mai-Sept 2015, 139 jours)
@@ -261,21 +284,25 @@ gunicorn app:server --bind 0.0.0.0:8050 --workers 4
 ### Section 2 : Métriques Clés (4 cards)
 
 **Card 1 - Utilisateurs**:
+
 - Icône: `fa-users` (bleu primaire)
 - Métrique: 1,649,534 utilisateurs
 - Sous-texte: 11,869 par jour (vert)
 
 **Card 2 - Transactions**:
+
 - Icône: `fa-shopping-cart` (vert succès)
 - Métrique: 22,457 transactions
 - Sous-texte: Taux conversion 0.84% (orange)
 
 **Card 3 - Revenue**:
+
 - Icône: `fa-euro-sign` (cyan info)
 - Métrique: €5.73M revenue
 - Sous-texte: AOV €255.36 (cyan)
 
 **Card 4 - Scénarios**:
+
 - Icône: `fa-flask` (rouge danger)
 - Métrique: 8 scénarios A/B
 - Sous-texte: 5 winners validés (vert)
@@ -283,6 +310,7 @@ gunicorn app:server --bind 0.0.0.0:8050 --workers 4
 ### Section 3 : Impact Business (1 card)
 
 **3 colonnes**:
+
 1. **Revenue Potentiel**: €38.4M annuel (+670% vs baseline)
 2. **ROI Portfolio**: +25,845% (€259 retour par €1)
 3. **Investissement**: €148K sur 6 mois
@@ -294,11 +322,13 @@ gunicorn app:server --bind 0.0.0.0:8050 --workers 4
 **List group avec 3 items**:
 
 1. 🥇 **S8 - Nettoyage Catalogue**
+
    - Badge warning (or)
    - ROI: +105,309%
    - Revenue: €5.27M/an
 
 2. 🥈 **S2 - Système Reviews**
+
    - Badge secondaire (argent)
    - ROI: +40,056%
    - Revenue: €6.02M/an
@@ -311,6 +341,7 @@ gunicorn app:server --bind 0.0.0.0:8050 --workers 4
 ### Section 5 : Navigation Rapide (1 card)
 
 **6 boutons outline**:
+
 - Analyses KPI (primaire) → `/traffic`
 - Tests A/B (succès) → `/ab-testing/simulations`
 - Visualisations (info) → `/ab-testing/visualizations`
@@ -324,7 +355,9 @@ gunicorn app:server --bind 0.0.0.0:8050 --workers 4
 **4 alertes en 2 colonnes**:
 
 **Colonne gauche**:
+
 1. **Alerte Danger** - Problème Majeur
+
    - 97.41% abandon avant ajout panier
    - Baseline view→cart: 2.59%
 
@@ -332,10 +365,10 @@ gunicorn app:server --bind 0.0.0.0:8050 --workers 4
    - 94.9% produits (211K) sans vente
    - Opportunité: Nettoyage ROI +105K%
 
-**Colonne droite**:
-3. **Alerte Info** - Effet Weekend
-   - Samedi: -39% conversion vs Mercredi
-   - Solution: Optimisation weekend
+**Colonne droite**: 3. **Alerte Info** - Effet Weekend
+
+- Samedi: -39% conversion vs Mercredi
+- Solution: Optimisation weekend
 
 4. **Alerte Success** - Point Fort
    - Cart→Purchase: 32.56% (très bon)
@@ -344,6 +377,7 @@ gunicorn app:server --bind 0.0.0.0:8050 --workers 4
 ### Section 7 : Footer Note
 
 **Alert light**:
+
 - Icône info-circle
 - Texte explicatif navigation sidebar
 - Note sur interactivité des visualisations
@@ -357,93 +391,113 @@ gunicorn app:server --bind 0.0.0.0:8050 --workers 4
 **Sections**:
 
 1. **General Styles** (lignes 1-10)
+
    - Font family system
    - Background color #f8f9fa
 
 2. **Header Styles** (lignes 12-14)
+
    - Gradient violet-bleu
 
 3. **Sidebar Navigation** (lignes 16-38)
+
    - Nav-link styles
    - Hover effects (translation X +5px)
    - Active state (gradient + white text)
    - Icon alignment (width 20px)
 
 4. **Cards** (lignes 40-52)
+
    - Hover: translateY(-5px) + shadow
    - Header: bg #f8f9fa + border bottom
    - Transition smooth 0.3s
 
 5. **Buttons** (lignes 54-62)
+
    - Hover: translateY(-2px) + shadow
    - Border radius 8px
    - Font weight 500
 
 6. **Badges** (lignes 64-68)
+
    - Font weight 600
    - Padding 0.5em 0.8em
    - Border radius 6px
 
 7. **Alerts** (lignes 70-74)
+
    - Border radius 10px
    - No border
 
 8. **Plotly Charts** (lignes 76-78)
+
    - Border radius 10px
 
 9. **Loading Spinner** (lignes 80-85)
+
    - Flexbox center
    - Min height 200px
 
 10. **Tables** (lignes 87-106)
+
     - Border radius 10px
     - Header: bg #667eea + white text
     - Cell padding 12px 15px
 
 11. **Tabs** (lignes 108-121)
+
     - No border default
     - Active: border bottom #667eea
     - Color #667eea
 
 12. **Scrollbar** (lignes 123-137)
+
     - Width/height 10px
     - Border radius 10px
     - Track: #f1f1f1
     - Thumb: #888 (hover #555)
 
 13. **Responsive** (lignes 139-151)
+
     - Media query < 768px
     - Font sizes réduits
     - H1: 1.8rem
     - H2: 1.5rem
 
 14. **Animations** (lignes 153-167)
+
     - fadeIn keyframes
     - Opacity 0→1
     - TranslateY 20px→0
     - Applied to cards & alerts
 
 15. **Metric Cards** (lignes 169-173)
+
     - Hover: scale 1.05
 
 16. **Footer** (lignes 175-182)
+
     - Link color #667eea
     - Hover: #764ba2 + underline
 
 17. **List Groups** (lignes 184-190)
+
     - Hover: bg #f8f9fa
 
 18. **Progress Bars** (lignes 192-201)
+
     - Border radius 10px
     - Height 25px
     - Gradient violet-bleu
 
 19. **Tooltips** (lignes 203-208)
+
     - Bg #212529
     - Border radius 6px
     - Padding 8px 12px
 
 20. **Input Groups** (lignes 210-223)
+
     - Border radius 8px
     - Border 2px #e9ecef
     - Focus: border #667eea + shadow
@@ -474,6 +528,7 @@ python-dotenv>=1.0.0             # Environment vars
 ```
 
 **Installation**:
+
 ```bash
 pip install -r dashboard/requirements.txt
 ```
@@ -503,11 +558,14 @@ app = Dash(
 **Wrapper**: `dbc.Container(fluid=True)`
 
 **Sections**:
+
 1. **Header** (Row 1)
+
    - H1 avec gradient background
    - Subtitle text-white-50
 
 2. **Main Content** (Row 2)
+
    - Col 1 (width 3): Sidebar nav
    - Col 2 (width 9): `dash.page_container`
 
@@ -518,6 +576,7 @@ app = Dash(
 ### Sidebar Navigation
 
 **12 NavLinks**:
+
 - Accueil (/)
 - Separator HR
 - Section "KPI Analysis" (5 links)
@@ -527,6 +586,7 @@ app = Dash(
 - Section "Documentation" (2 links)
 
 **Footer Sidebar**:
+
 - Période: Mai-Sept 2015
 - 1.65M utilisateurs
 - 22.5K transactions
@@ -553,12 +613,14 @@ if __name__ == '__main__':
 **Command**: `python dashboard/app.py`
 
 **Résultat**: ✅ SUCCESS
+
 - Dashboard démarré sur http://127.0.0.1:8050
 - Debug mode activé
 - Hot reload fonctionnel
 - Aucune erreur au démarrage
 
 **Output**:
+
 ```
 ============================================================
 🚀 E-Commerce A/B Test Dashboard
@@ -576,6 +638,7 @@ Dash is running on http://127.0.0.1:8050/
 **Action**: Accès à http://127.0.0.1:8050/
 
 **Résultat**: ✅ SUCCESS
+
 - Page home charge correctement
 - 4 cards métriques affichées
 - Impact business visible
@@ -589,6 +652,7 @@ Dash is running on http://127.0.0.1:8050/
 **Vérification**: `dashboard/assets/styles.css`
 
 **Résultat**: ✅ SUCCESS
+
 - CSS chargé automatiquement par Dash
 - Gradient header appliqué
 - Hover effects fonctionnels
@@ -600,6 +664,7 @@ Dash is running on http://127.0.0.1:8050/
 **Vérification**: Tous les NavLinks dans sidebar
 
 **Résultat**: ⚠️ PARTIAL (attendu)
+
 - Links créés et cliquables
 - Routing configuré pour 12 pages
 - **Page home** fonctionne (/)
@@ -613,6 +678,7 @@ Dash is running on http://127.0.0.1:8050/
 ### Issue #20 : Pages KPI Analysis
 
 **Pages à créer (5)**:
+
 1. `/traffic` - Analyse trafic
 2. `/behavior` - Comportement utilisateurs
 3. `/conversions` - Taux de conversion
@@ -620,6 +686,7 @@ Dash is running on http://127.0.0.1:8050/
 5. `/funnel` - Entonnoir complet
 
 **Contenu par page**:
+
 - Graphiques Plotly interactifs
 - Métriques clés en cards
 - Insights et recommandations
@@ -628,12 +695,14 @@ Dash is running on http://127.0.0.1:8050/
 ### Issue #21 : Pages A/B Testing
 
 **Pages à créer (4)**:
+
 1. `/ab-testing/simulations` - 8 scénarios détaillés
 2. `/ab-testing/results` - Tests statistiques
 3. `/ab-testing/calculator` - Interface calcul Z-test
 4. `/ab-testing/visualizations` - Galerie graphiques
 
 **Fonctionnalités**:
+
 - Affichage données CSV/JSON
 - Calculs interactifs
 - Graphiques dynamiques
@@ -642,10 +711,12 @@ Dash is running on http://127.0.0.1:8050/
 ### Issue #22 : Pages Documentation
 
 **Pages à créer (2)**:
+
 1. `/methodology` - Guide méthodologique
 2. `/about` - Informations projet
 
 **Contenu**:
+
 - Markdown formaté
 - Formules mathématiques (LaTeX)
 - Diagrammes explicatifs
@@ -654,6 +725,7 @@ Dash is running on http://127.0.0.1:8050/
 ### Issue #23 : Callbacks Interactifs
 
 **Fonctionnalités à ajouter**:
+
 - Filtres date ranges
 - Dropdowns sélection scénarios
 - Sliders paramètres tests
@@ -664,6 +736,7 @@ Dash is running on http://127.0.0.1:8050/
 ### Issue #24 : Composants Réutilisables
 
 **À créer dans `components/`**:
+
 - `metric_card.py` - Carte métrique générique
 - `chart_card.py` - Card avec graphique
 - `data_table.py` - Table stylée
@@ -674,6 +747,7 @@ Dash is running on http://127.0.0.1:8050/
 ### Issue #25 : Optimisations Performance
 
 **Améliorations**:
+
 - Caching avec `@cache.memoize`
 - Chargement lazy des données lourdes
 - Compression assets
@@ -683,6 +757,7 @@ Dash is running on http://127.0.0.1:8050/
 ### Issue #26 : Déploiement
 
 **Plateformes cibles**:
+
 - Render.com (gratuit, recommandé)
 - Heroku
 - AWS Elastic Beanstalk
@@ -690,6 +765,7 @@ Dash is running on http://127.0.0.1:8050/
 - Azure App Service
 
 **Configuration**:
+
 - Procfile pour Gunicorn
 - Environment variables
 - Database connection (si nécessaire)
@@ -730,7 +806,7 @@ import dash_bootstrap_components as dbc
 
 # Register page
 dash.register_page(
-    __name__, 
+    __name__,
     path='/mon-url',
     name='Titre Sidebar',
     title='Titre Navigateur'
@@ -755,18 +831,21 @@ def update_chart(...):
 ### Objectifs Atteints ✅
 
 1. **Structure multi-pages créée**
+
    - ✅ App.py configuré avec `use_pages=True`
    - ✅ Dossier pages/ créé
    - ✅ Home page fonctionnelle
    - ✅ Routing configuré pour 12 pages
 
 2. **Navigation fonctionnelle**
+
    - ✅ Sidebar avec 12 NavLinks
    - ✅ Active state sur page courante
    - ✅ Icônes Font Awesome
    - ✅ Sections groupées (KPI, A/B, Docs)
 
 3. **Design moderne**
+
    - ✅ Bootstrap 5 integration
    - ✅ Gradient header violet-bleu
    - ✅ CSS personnalisé (290 lignes)
@@ -774,6 +853,7 @@ def update_chart(...):
    - ✅ Responsive < 768px
 
 4. **Page home complète**
+
    - ✅ 7 sections (bienvenue, métriques, impact, top3, nav, insights, footer)
    - ✅ 4 cards métriques
    - ✅ Impact business (€38.4M)
@@ -789,12 +869,14 @@ def update_chart(...):
 ### Métriques Quantitatives
 
 **Code créé**:
+
 - `app.py`: 191 lignes
 - `pages/home.py`: 353 lignes
 - `assets/styles.css`: 290 lignes
 - **Total**: 834 lignes
 
 **Fichiers créés**: 5
+
 - app.py
 - home.py
 - styles.css
@@ -802,12 +884,14 @@ def update_chart(...):
 - ISSUE19_COMPLETED.md
 
 **Dossiers créés**: 4
+
 - dashboard/
 - dashboard/pages/
 - dashboard/assets/
 - dashboard/components/
 
 **Dépendances installées**: 7
+
 - dash
 - dash-bootstrap-components
 - plotly
@@ -817,6 +901,7 @@ def update_chart(...):
 - python-dotenv
 
 **Pages planifiées**: 12
+
 - 1 Home ✅
 - 5 KPI Analysis (à créer)
 - 4 A/B Testing (à créer)
@@ -829,26 +914,31 @@ def update_chart(...):
 ### Milestone 3 : A/B Testing
 
 **Issue #14 - Simulations**:
+
 - Données utilisées: `ab_test_simulation_summary.json`
 - 8 scénarios à afficher dans `/ab-testing/simulations`
 - Métriques reprises dans page home
 
 **Issue #15 - CSV Simulation**:
+
 - Données: `ab_test_simulation.csv` (240 lignes)
 - À afficher dans `/ab-testing/results`
 - Graphiques daily lift trends
 
 **Issue #16 - Tests Statistiques**:
+
 - Résultats: `ab_test_conversion_tests_summary.csv`
 - À afficher dans `/ab-testing/results`
 - Tests: Chi-square, Z-test, Fisher, Bayesian
 
 **Issue #17 - Z-Test Module**:
+
 - Module: `scripts/ab_testing/ztest_calculator.py`
 - À intégrer dans `/ab-testing/calculator`
 - Interface interactive pour calculs
 
 **Issue #18 - Visualisations**:
+
 - Graphiques: 14 PNG dans `visualizations/`
 - À afficher dans `/ab-testing/visualizations`
 - Galerie avec descriptions
@@ -856,6 +946,7 @@ def update_chart(...):
 ### Milestone 2 : KPI Analysis
 
 **Issues #9-13**:
+
 - Analyses: Trafic, Comportement, Conversion, Produits, Funnel
 - Données dans `data/clean/`
 - À afficher dans pages `/traffic`, `/behavior`, etc.
@@ -997,6 +1088,7 @@ def update_chart(...):
 **Résultat**: ✅ **Succès complet**
 
 **Livrables**:
+
 1. ✅ Application Dash multi-pages fonctionnelle
 2. ✅ Page home complète avec 7 sections
 3. ✅ Navigation sidebar avec 12 links
@@ -1005,6 +1097,7 @@ def update_chart(...):
 6. ✅ Documentation complète
 
 **Impact**:
+
 - Base solide pour Issues #20-26
 - UX/UI professionnelle établie
 - Structure scalable pour 50+ pages futures

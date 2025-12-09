@@ -1,16 +1,35 @@
 """
-Home Page - Dashboard Overview
-Issue #19 - Multi-page Structure
+Home Page - Dashboard Overview with Interactive Charts
+Issue #20 - KPIs + Traffic + Revenue
 """
 
 import dash
 from dash import html, dcc, callback, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
+import plotly.express as px
+import pandas as pd
+from pathlib import Path
 from datetime import datetime
 
 # Register this page with dash.page_registry
 dash.register_page(__name__, path='/', name='Accueil')
+
+# Load data
+DATA_DIR = Path(__file__).parent.parent.parent / "data" / "clean"
+
+# Load daily metrics
+try:
+    df_daily = pd.read_csv(DATA_DIR / "daily_metrics.csv")
+    df_daily['date'] = pd.to_datetime(df_daily['date'])
+except FileNotFoundError:
+    df_daily = None
+
+# Load AB test summary
+try:
+    df_ab = pd.read_csv(DATA_DIR / "ab_test_summary_by_scenario.csv")
+except FileNotFoundError:
+    df_ab = None
 
 # Layout for the home page
 layout = dbc.Container([
@@ -327,6 +346,95 @@ layout = dbc.Container([
         ])
     ]),
     
+    # Interactive Charts Section
+    dbc.Row([
+        dbc.Col([
+            html.H4([
+                html.I(className="fas fa-chart-line me-2"),
+                "Évolution des KPIs"
+            ], className="mb-3 mt-4"),
+        ])
+    ]),
+    
+    # Traffic and Revenue Charts
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader([
+                    html.H5([
+                        html.I(className="fas fa-users me-2"),
+                        "Trafic Quotidien"
+                    ], className="mb-0")
+                ]),
+                dbc.CardBody([
+                    dcc.Graph(id='traffic-chart', config={'displayModeBar': False})
+                ])
+            ], className="shadow-sm border-0 mb-4")
+        ], width=6),
+        
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader([
+                    html.H5([
+                        html.I(className="fas fa-euro-sign me-2"),
+                        "Revenue Quotidien"
+                    ], className="mb-0")
+                ]),
+                dbc.CardBody([
+                    dcc.Graph(id='revenue-chart', config={'displayModeBar': False})
+                ])
+            ], className="shadow-sm border-0 mb-4")
+        ], width=6),
+    ]),
+    
+    # Conversion Funnel and Weekend Effect
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader([
+                    html.H5([
+                        html.I(className="fas fa-percentage me-2"),
+                        "Taux de Conversion"
+                    ], className="mb-0")
+                ]),
+                dbc.CardBody([
+                    dcc.Graph(id='conversion-chart', config={'displayModeBar': False})
+                ])
+            ], className="shadow-sm border-0 mb-4")
+        ], width=6),
+        
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader([
+                    html.H5([
+                        html.I(className="fas fa-calendar-week me-2"),
+                        "Effet Jour de la Semaine"
+                    ], className="mb-0")
+                ]),
+                dbc.CardBody([
+                    dcc.Graph(id='weekday-chart', config={'displayModeBar': False})
+                ])
+            ], className="shadow-sm border-0 mb-4")
+        ], width=6),
+    ]),
+    
+    # A/B Test ROI Comparison
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader([
+                    html.H5([
+                        html.I(className="fas fa-chart-bar me-2"),
+                        "Comparaison ROI des Scénarios A/B"
+                    ], className="mb-0")
+                ]),
+                dbc.CardBody([
+                    dcc.Graph(id='ab-roi-chart', config={'displayModeBar': False})
+                ])
+            ], className="shadow-sm border-0 mb-4")
+        ])
+    ]),
+    
     # Footer Note
     dbc.Row([
         dbc.Col([
@@ -339,3 +447,315 @@ layout = dbc.Container([
     ]),
     
 ], fluid=True)
+
+
+# Callbacks for interactive charts
+@callback(
+    Output('traffic-chart', 'figure'),
+    Input('traffic-chart', 'id')
+)
+def update_traffic_chart(_):
+    """Create traffic evolution chart"""
+    if df_daily is None:
+        return go.Figure().add_annotation(
+            text="Données non disponibles",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
+    
+    fig = go.Figure()
+    
+    # Daily traffic
+    fig.add_trace(go.Scatter(
+        x=df_daily['date'],
+        y=df_daily['unique_users'],
+        mode='lines',
+        name='Utilisateurs Quotidiens',
+        line=dict(color='#667eea', width=2),
+        fill='tozeroy',
+        fillcolor='rgba(102, 126, 234, 0.1)'
+    ))
+    
+    # 7-day moving average
+    fig.add_trace(go.Scatter(
+        x=df_daily['date'],
+        y=df_daily['ma7_users'],
+        mode='lines',
+        name='Moyenne Mobile 7j',
+        line=dict(color='#764ba2', width=2, dash='dash')
+    ))
+    
+    fig.update_layout(
+        title="Évolution du Trafic (Mai - Sept 2015)",
+        xaxis_title="Date",
+        yaxis_title="Utilisateurs Uniques",
+        hovermode='x unified',
+        template='plotly_white',
+        height=350,
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
+    )
+    
+    return fig
+
+
+@callback(
+    Output('revenue-chart', 'figure'),
+    Input('revenue-chart', 'id')
+)
+def update_revenue_chart(_):
+    """Create revenue evolution chart"""
+    if df_daily is None:
+        return go.Figure().add_annotation(
+            text="Données non disponibles",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
+    
+    fig = go.Figure()
+    
+    # Daily revenue
+    fig.add_trace(go.Bar(
+        x=df_daily['date'],
+        y=df_daily['daily_revenue'],
+        name='Revenue Quotidien',
+        marker_color='#2ecc71',
+        opacity=0.7
+    ))
+    
+    # 7-day moving average
+    fig.add_trace(go.Scatter(
+        x=df_daily['date'],
+        y=df_daily['ma7_revenue'],
+        mode='lines',
+        name='Moyenne Mobile 7j',
+        line=dict(color='#e74c3c', width=3)
+    ))
+    
+    fig.update_layout(
+        title="Évolution du Revenue (Mai - Sept 2015)",
+        xaxis_title="Date",
+        yaxis_title="Revenue (€)",
+        hovermode='x unified',
+        template='plotly_white',
+        height=350,
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
+    )
+    
+    return fig
+
+
+@callback(
+    Output('conversion-chart', 'figure'),
+    Input('conversion-chart', 'id')
+)
+def update_conversion_chart(_):
+    """Create conversion rates evolution chart"""
+    if df_daily is None:
+        return go.Figure().add_annotation(
+            text="Données non disponibles",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
+    
+    fig = go.Figure()
+    
+    # View to Cart
+    fig.add_trace(go.Scatter(
+        x=df_daily['date'],
+        y=df_daily['view_to_cart_rate'],
+        mode='lines+markers',
+        name='View → Cart',
+        line=dict(color='#3498db', width=2),
+        marker=dict(size=4)
+    ))
+    
+    # Cart to Purchase
+    fig.add_trace(go.Scatter(
+        x=df_daily['date'],
+        y=df_daily['cart_to_purchase_rate'],
+        mode='lines+markers',
+        name='Cart → Purchase',
+        line=dict(color='#e74c3c', width=2),
+        marker=dict(size=4)
+    ))
+    
+    # View to Purchase
+    fig.add_trace(go.Scatter(
+        x=df_daily['date'],
+        y=df_daily['view_to_purchase_rate'],
+        mode='lines+markers',
+        name='View → Purchase',
+        line=dict(color='#2ecc71', width=2),
+        marker=dict(size=4)
+    ))
+    
+    fig.update_layout(
+        title="Taux de Conversion par Étape du Funnel",
+        xaxis_title="Date",
+        yaxis_title="Taux de Conversion (%)",
+        hovermode='x unified',
+        template='plotly_white',
+        height=350,
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
+    )
+    
+    return fig
+
+
+@callback(
+    Output('weekday-chart', 'figure'),
+    Input('weekday-chart', 'id')
+)
+def update_weekday_chart(_):
+    """Create weekday effect chart"""
+    if df_daily is None:
+        return go.Figure().add_annotation(
+            text="Données non disponibles",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
+    
+    # Aggregate by day of week
+    weekday_stats = df_daily.groupby('day_of_week').agg({
+        'unique_users': 'mean',
+        'daily_revenue': 'mean',
+        'view_to_purchase_rate': 'mean'
+    }).reset_index()
+    
+    # Order days correctly
+    days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    weekday_stats['day_of_week'] = pd.Categorical(weekday_stats['day_of_week'], categories=days_order, ordered=True)
+    weekday_stats = weekday_stats.sort_values('day_of_week')
+    
+    # French day names
+    french_days = {
+        'Monday': 'Lundi',
+        'Tuesday': 'Mardi',
+        'Wednesday': 'Mercredi',
+        'Thursday': 'Jeudi',
+        'Friday': 'Vendredi',
+        'Saturday': 'Samedi',
+        'Sunday': 'Dimanche'
+    }
+    weekday_stats['day_fr'] = weekday_stats['day_of_week'].map(french_days)
+    
+    fig = go.Figure()
+    
+    # Users bar
+    fig.add_trace(go.Bar(
+        x=weekday_stats['day_fr'],
+        y=weekday_stats['unique_users'],
+        name='Utilisateurs Moy.',
+        marker_color='#667eea',
+        yaxis='y',
+        opacity=0.7
+    ))
+    
+    # Conversion rate line
+    fig.add_trace(go.Scatter(
+        x=weekday_stats['day_fr'],
+        y=weekday_stats['view_to_purchase_rate'],
+        name='Taux Conversion (%)',
+        mode='lines+markers',
+        line=dict(color='#e74c3c', width=3),
+        marker=dict(size=8),
+        yaxis='y2'
+    ))
+    
+    fig.update_layout(
+        title="Performance par Jour de la Semaine",
+        xaxis_title="Jour",
+        yaxis_title="Utilisateurs Moyens",
+        yaxis2=dict(
+            title="Taux de Conversion (%)",
+            overlaying='y',
+            side='right'
+        ),
+        hovermode='x unified',
+        template='plotly_white',
+        height=350,
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
+    )
+    
+    return fig
+
+
+@callback(
+    Output('ab-roi-chart', 'figure'),
+    Input('ab-roi-chart', 'id')
+)
+def update_ab_roi_chart(_):
+    """Create A/B test ROI comparison chart"""
+    if df_ab is None:
+        return go.Figure().add_annotation(
+            text="Données non disponibles",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
+    
+    # Sort by annual ROI
+    df_sorted = df_ab.sort_values('annual_roi_pct', ascending=True)
+    
+    fig = go.Figure()
+    
+    # ROI bars
+    colors = ['#2ecc71' if roi > 30000 else '#3498db' if roi > 20000 else '#f39c12' 
+              for roi in df_sorted['annual_roi_pct']]
+    
+    fig.add_trace(go.Bar(
+        x=df_sorted['annual_roi_pct'],
+        y=df_sorted['scenario_name'],
+        orientation='h',
+        marker=dict(
+            color=colors,
+            line=dict(color='rgba(0,0,0,0.2)', width=1)
+        ),
+        text=[f"+{roi:,.0f}%" for roi in df_sorted['annual_roi_pct']],
+        textposition='outside',
+        hovertemplate='<b>%{y}</b><br>' +
+                      'ROI Annuel: +%{x:,.0f}%<br>' +
+                      '<extra></extra>'
+    ))
+    
+    fig.update_layout(
+        title="ROI Annuel par Scénario A/B (Top 8)",
+        xaxis_title="ROI Annuel (%)",
+        yaxis_title="",
+        template='plotly_white',
+        height=400,
+        showlegend=False,
+        xaxis=dict(
+            tickformat=',.0f',
+            ticksuffix='%'
+        )
+    )
+    
+    return fig
