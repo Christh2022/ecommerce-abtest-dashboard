@@ -119,7 +119,7 @@ app.layout = dbc.Container([
                     "À Propos"
                 ], href="/about", active="exact", className="mb-2"),
                 
-            ], vertical=True, pills=True, className="bg-light p-3 rounded-3 shadow-sm"),
+            ], vertical=True, pills=True, className="bg-dark p-3 rounded-3 shadow-sm"),
             
             # Footer info in sidebar
             html.Div([
@@ -136,7 +136,7 @@ app.layout = dbc.Container([
                     html.I(className="fas fa-shopping-basket me-2"),
                     "22.5K transactions"
                 ], className="text-muted small mb-0"),
-            ], className="px-3 py-2 bg-light rounded-3 mt-3"),
+            ], className="px-3 py-2 bg-dark rounded-3 mt-3"),
             
         ], width=3, className="pe-3"),
         
@@ -164,7 +164,7 @@ app.layout = dbc.Container([
         ])
     ])
     
-], fluid=True, className="p-4", style={"backgroundColor": "#f8f9fa"})
+], fluid=True, className="p-4", style={"backgroundColor": "#0d1117"})
 
 
 if __name__ == '__main__':
