@@ -309,12 +309,15 @@ def update_products_conversion(_):
     
     fig = go.Figure()
     
+    # Calculate marker sizes (clip between 10 and 30)
+    marker_sizes = (top30['total_revenue'] / 500).clip(10, 30)
+    
     fig.add_trace(go.Scatter(
         x=top30['view_to_purchase_rate'],
         y=range(len(top30)),
         mode='markers',
         marker=dict(
-            size=top30['total_revenue'] / 500,  # Size by revenue
+            size=marker_sizes,
             color=top30['view_to_purchase_rate'],
             colorscale='Greens',
             showscale=True,

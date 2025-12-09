@@ -378,20 +378,18 @@ def update_funnel_segment(_):
     
     segments = df_segment['segment'].tolist()
     
-    # View to cart
+    # Conversion rate by segment
     fig.add_trace(go.Bar(
-        name='View → Cart %',
+        name='Taux de Conversion',
         x=segments,
-        y=df_segment['view_to_cart_pct'],
-        marker_color='#3498db'
-    ))
-    
-    # Cart to purchase
-    fig.add_trace(go.Bar(
-        name='Cart → Purchase %',
-        x=segments,
-        y=df_segment['cart_to_purchase_pct'],
-        marker_color='#2ecc71'
+        y=df_segment['conversion_rate'],
+        marker=dict(
+            color=df_segment['conversion_rate'],
+            colorscale='Greens',
+            showscale=False
+        ),
+        text=[f"{val:.1f}%" for val in df_segment['conversion_rate']],
+        textposition='outside'
     ))
     
     fig.update_layout(
@@ -563,16 +561,16 @@ def update_top_performers(_):
     fig = go.Figure()
     
     fig.add_trace(go.Bar(
-        x=top10['view_to_purchase_pct'],
+        x=top10['view_to_purchase_rate'],
         y=[f"P{pid}" for pid in top10['product_id']],
         orientation='h',
         marker=dict(
-            color=top10['view_to_purchase_pct'],
+            color=top10['view_to_purchase_rate'],
             colorscale='Greens',
             showscale=False,
             line=dict(color='rgba(0,0,0,0.3)', width=1)
         ),
-        text=[f"{val:.1f}%" for val in top10['view_to_purchase_pct']],
+        text=[f"{val:.1f}%" for val in top10['view_to_purchase_rate']],
         textposition='outside'
     ))
     
