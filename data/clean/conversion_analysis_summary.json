@@ -1,0 +1,109 @@
+{
+  "global_metrics": {
+    "total_users": 1649534,
+    "total_views": 2664218,
+    "total_add_to_carts": 68966,
+    "total_transactions": 22457,
+    "total_revenue": 5732867.82,
+    "avg_order_value": 255.28199759540456
+  },
+  "conversion_rates": {
+    "view_to_cart": 2.588601983771598,
+    "view_to_transaction": 0.842911503488078,
+    "cart_to_transaction": 32.56242206304556,
+    "user_to_transaction": 1.3614147995736978
+  },
+  "by_segment": {
+    "new": {
+      "users": 5237,
+      "transactions": 5426,
+      "conversion_rate": 103.60893641397746,
+      "revenue": 1386726.62,
+      "revenue_per_user": 264.79,
+      "avg_transaction": 255.57,
+      "transactions_per_user": 1.0360893641397746
+    },
+    "occasional": {
+      "users": 4957,
+      "transactions": 6960,
+      "conversion_rate": 140.4075045390357,
+      "revenue": 1765016.35,
+      "revenue_per_user": 356.07,
+      "avg_transaction": 253.59,
+      "transactions_per_user": 1.404075045390357
+    },
+    "premium": {
+      "users": 209,
+      "transactions": 6478,
+      "conversion_rate": 3099.5215311004786,
+      "revenue": 1671960.74,
+      "revenue_per_user": 7999.81,
+      "avg_transaction": 258.1,
+      "transactions_per_user": 30.995215311004785
+    },
+    "regular": {
+      "users": 1316,
+      "transactions": 3593,
+      "conversion_rate": 273.0243161094225,
+      "revenue": 909164.11,
+      "revenue_per_user": 690.85,
+      "avg_transaction": 253.04,
+      "transactions_per_user": 2.730243161094225
+    }
+  },
+  "temporal": {
+    "weekday_avg_conversion": 0.9088999999999998,
+    "weekend_avg_conversion": 0.6194871794871795,
+    "weekend_variation": -31.842097096800572,
+    "best_day": "Wednesday",
+    "best_day_rate": 1.6247274833750183,
+    "worst_day": "Saturday",
+    "worst_day_rate": 0.9676885015522557
+  },
+  "evolution": {
+    "early_period": {
+      "dates": "2015-05-03 → 2015-06-17",
+      "avg_conversion": 0.8006521739130434,
+      "avg_aov": 253.50089994459015
+    },
+    "mid_period": {
+      "dates": "2015-06-18 → 2015-08-02",
+      "avg_conversion": 0.8428260869565216,
+      "avg_aov": 258.8830619376055
+    },
+    "late_period": {
+      "dates": "2015-08-03 → 2015-09-18",
+      "avg_conversion": 0.8393617021276594,
+      "avg_aov": 253.72390530977643
+    },
+    "conversion_trend": 4.834749654825776,
+    "aov_trend": 0.08797024595772474
+  },
+  "aov_analysis": {
+    "mean": 255.35745177079488,
+    "median": 255.98921686746988,
+    "std": 12.3388411215538,
+    "min": 10.01,
+    "max": 499.96,
+    "p25": 247.72266144578316,
+    "p75": 262.24273001508294
+  },
+  "product_conversion": {
+    "avg_product_conversion": 1.5838796,
+    "median_product_conversion": 0.0,
+    "top_converter_rate": 250.0,
+    "products_with_purchases": 12025,
+    "products_without_purchases": 37975,
+    "conversion_rate_distribution": {
+      "under_1pct": 38891,
+      "1_to_5pct": 6421,
+      "5_to_10pct": 2625,
+      "over_10pct": 2063
+    }
+  },
+  "metadata": {
+    "generated_at": "2025-12-09T02:15:25.803670",
+    "script": "conversion_analysis.py",
+    "issue": "#11"
+  }
+}
