@@ -32,14 +32,14 @@ try:
     df_conversion = pd.read_csv(os.path.join(data_path, 'conversion_daily.csv'))
     df_conversion['date'] = pd.to_datetime(df_conversion['date'])
     
-    print(f"✓ Données chargées: {len(df_daily)} jours, {df_daily['unique_users'].sum():,} utilisateurs")
+    print(f"[OK] Donnees chargees: {len(df_daily)} jours, {df_daily['unique_users'].sum():,} utilisateurs")
 except FileNotFoundError as e:
-    print(f"✗ Erreur chargement données: {e}")
+    print(f"[ERREUR] Chargement donnees: {e}")
     df_daily = None
     df_traffic = None
     df_conversion = None
 except Exception as e:
-    print(f"✗ Erreur: {e}")
+    print(f"[ERREUR] {e}")
     df_daily = None
     df_traffic = None
     df_conversion = None
