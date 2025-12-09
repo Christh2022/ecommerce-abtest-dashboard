@@ -1,0 +1,9 @@
+id,name,description,target_metric,baseline,expected_lift,variant,implementation_cost,implementation_weeks,affected_products_pct,priority,sample_size_per_group,total_sample_size,test_duration_days,test_duration_weeks
+S1,Amélioration Photos Produits,"Photos HD, multi-angles, zoom, vidéos produits",view_to_cart,0.02588601983771598,0.3,0.033651825789030775,30000,4,100,HIGH,7519,15038,2,1
+S2,Système Reviews Clients,"Avis vérifiés, ratings, photos clients, Q&A",view_to_cart,0.02588601983771598,0.4,0.03624042777280237,15000,3,100,HIGH,4407,8814,1,1
+S3,Checkout Simplifié,"Réduction 5→3 étapes, auto-fill, guest checkout",cart_to_purchase,0.3256242206304556,0.25,0.4070302757880695,25000,6,100,MEDIUM,550,1100,1,1
+S4,Optimisation Prix Compétitifs,"Price matching, promotions dynamiques, bundling",view_to_cart,0.02588601983771598,0.5,0.03882902975657397,20000,8,80,HIGH,2934,5868,1,1
+S5,Options Paiement Multiples,"PayPal, Apple Pay, Google Pay, Buy Now Pay Later",cart_to_purchase,0.3256242206304556,0.15,0.3744678537250239,10000,2,100,MEDIUM,1498,2996,1,1
+S6,Optimisation Weekend,"Promotions weekend, support dédié, UX mobile",view_to_purchase,0.00842911503488078,0.4,0.01180076104883309,18000,3,100,HIGH,13827,27654,3,1
+S7,Programme Fidélité,"Points, rewards, VIP tiers, early access",cart_to_purchase,0.3256242206304556,0.2,0.3907490647565467,25000,12,100,MEDIUM,851,1702,1,1
+S8,Nettoyage Catalogue,"Retrait 211K produits morts, focus top 10%",view_to_cart,0.02588601983771598,0.35,0.034946126780916575,5000,2,10,CRITICAL,5640,11280,1,1
