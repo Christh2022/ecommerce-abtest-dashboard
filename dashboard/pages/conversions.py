@@ -352,13 +352,13 @@ def update_conversion_weekday(_):
     
     fig = go.Figure()
     
-    # View to purchase
+    # View to cart
     fig.add_trace(go.Bar(
-        name='View → Purchase',
+        name='View → Cart',
         x=df_sorted['day_of_week'],
-        y=df_sorted['view_to_purchase_rate'],
-        marker_color='#2ecc71',
-        text=[f"{val:.2f}%" for val in df_sorted['view_to_purchase_rate']],
+        y=df_sorted['view_to_cart'],
+        marker_color='#3498db',
+        text=[f"{val:.2f}%" for val in df_sorted['view_to_cart']],
         textposition='outside',
     ))
     
@@ -366,9 +366,9 @@ def update_conversion_weekday(_):
     fig.add_trace(go.Bar(
         name='Cart → Purchase',
         x=df_sorted['day_of_week'],
-        y=df_sorted['cart_to_purchase_rate'],
-        marker_color='#e74c3c',
-        text=[f"{val:.1f}%" for val in df_sorted['cart_to_purchase_rate']],
+        y=df_sorted['cart_to_purchase'],
+        marker_color='#2ecc71',
+        text=[f"{val:.1f}%" for val in df_sorted['cart_to_purchase']],
         textposition='outside',
     ))
     

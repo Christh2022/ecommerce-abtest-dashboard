@@ -298,6 +298,12 @@ def update_products_conversion(_):
     if len(df_with_sales) == 0:
         return go.Figure()
     
+    # Drop any NaN values
+    df_with_sales = df_with_sales.dropna(subset=['view_to_purchase_rate', 'total_revenue'])
+    
+    if len(df_with_sales) == 0:
+        return go.Figure()
+    
     # Top 30 by conversion
     top30 = df_with_sales.nlargest(30, 'view_to_purchase_rate')
     
@@ -388,6 +394,12 @@ def update_pareto_chart(_):
     
     # Filter products with revenue > 0
     df_with_revenue = df_products[df_products['total_revenue'] > 0].copy()
+    
+    if len(df_with_revenue) == 0:
+        return go.Figure()
+    
+    # Drop any NaN values
+    df_with_revenue = df_with_revenue.dropna(subset=['total_revenue'])
     
     if len(df_with_revenue) == 0:
         return go.Figure()
