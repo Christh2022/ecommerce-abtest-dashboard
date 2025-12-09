@@ -16,16 +16,30 @@ from datetime import datetime, timedelta
 dash.register_page(__name__, path='/cohorts', name='Cohorts & Rétention')
 
 # Load data
+import os
+
+# Get the correct path relative to the dashboard directory
+base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+data_path = os.path.join(os.path.dirname(base_path), 'data', 'clean')
+
 try:
-    df_daily = pd.read_csv('data/clean/daily_metrics.csv')
+    df_daily = pd.read_csv(os.path.join(data_path, 'daily_metrics.csv'))
     df_daily['date'] = pd.to_datetime(df_daily['date'])
     
-    df_traffic = pd.read_csv('data/clean/traffic_daily.csv')
+    df_traffic = pd.read_csv(os.path.join(data_path, 'traffic_daily.csv'))
     df_traffic['date'] = pd.to_datetime(df_traffic['date'])
     
-    df_conversion = pd.read_csv('data/clean/conversion_daily.csv')
+    df_conversion = pd.read_csv(os.path.join(data_path, 'conversion_daily.csv'))
     df_conversion['date'] = pd.to_datetime(df_conversion['date'])
-except FileNotFoundError:
+    
+    print(f"✓ Données chargées: {len(df_daily)} jours, {df_daily['unique_users'].sum():,} utilisateurs")
+except FileNotFoundError as e:
+    print(f"✗ Erreur chargement données: {e}")
+    df_daily = None
+    df_traffic = None
+    df_conversion = None
+except Exception as e:
+    print(f"✗ Erreur: {e}")
     df_daily = None
     df_traffic = None
     df_conversion = None
