@@ -228,7 +228,7 @@ layout = dbc.Container([
                     ], className="mb-0")
                 ]),
                 dbc.CardBody([
-                    dcc.Graph(id='conversion-heatmap', config={'displayModeBar': False})
+                    dcc.Graph(id='conversion-rate-heatmap', config={'displayModeBar': False})
                 ])
             ], className="shadow-sm border-0 mb-4")
         ])
@@ -578,10 +578,10 @@ def update_revenue_per_user(_):
 
 
 @callback(
-    Output('conversion-heatmap', 'figure'),
-    Input('conversion-heatmap', 'id')
+    Output('conversion-rate-heatmap', 'figure'),
+    Input('conversion-rate-heatmap', 'id')
 )
-def update_conversion_heatmap(_):
+def update_conversion_rate_heatmap(_):
     """Create conversion heatmap"""
     if df_daily is None:
         return go.Figure()
