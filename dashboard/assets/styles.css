@@ -70,7 +70,7 @@ hr {
     background-color: rgba(102, 126, 234, 0.1) !important;
     color: #c9d1d9 !important;
     transform: translateX(8px);
-    border-left-color: #667eea;
+    border-left-color: transparent;
 }
 
 .nav-link.active {
@@ -78,7 +78,6 @@ hr {
     color: white !important;
     font-weight: 600;
     border-left-color: #667eea;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .nav-link i {
@@ -124,7 +123,6 @@ h6.text-muted {
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
 }
 
 .card-header {
