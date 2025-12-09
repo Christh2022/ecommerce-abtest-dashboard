@@ -55,14 +55,15 @@ app.layout = html.Div([
                 ], width=3),
             ], className="align-items-center")
         ], fluid=True)
-    ], className="bg-primary shadow-lg", style={
+    ], className="shadow-lg", style={
         "position": "fixed",
         "top": "0",
         "left": "0",
         "right": "0",
         "zIndex": "1000",
         "padding": "1rem 0",
-        "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+        "backgroundColor": "#161b22",
+        "borderBottom": "1px solid #30363d"
     }),
     
     # Main content area with fixed sidebar
