@@ -291,8 +291,15 @@ def update_products_conversion(_):
     if df_products is None:
         return go.Figure()
     
+    # Filter products with purchases and reasonable conversion rates
+    df_with_sales = df_products[(df_products['purchases'] > 0) & 
+                                (df_products['view_to_purchase_rate'] < 100)].copy()
+    
+    if len(df_with_sales) == 0:
+        return go.Figure()
+    
     # Top 30 by conversion
-    top30 = df_products.nlargest(30, 'view_to_purchase_rate')
+    top30 = df_with_sales.nlargest(30, 'view_to_purchase_rate')
     
     fig = go.Figure()
     
@@ -379,10 +386,16 @@ def update_pareto_chart(_):
     if df_products is None:
         return go.Figure()
     
+    # Filter products with revenue > 0
+    df_with_revenue = df_products[df_products['total_revenue'] > 0].copy()
+    
+    if len(df_with_revenue) == 0:
+        return go.Figure()
+    
     # Sort by revenue and calculate cumulative
-    df_sorted = df_products.sort_values('total_revenue', ascending=False).reset_index(drop=True)
+    df_sorted = df_with_revenue.sort_values('total_revenue', ascending=False).reset_index(drop=True)
     df_sorted['cumulative_revenue_pct'] = (df_sorted['total_revenue'].cumsum() / df_sorted['total_revenue'].sum()) * 100
-    df_sorted['product_pct'] = ((df_sorted.index + 1) / len(df_sorted)) * 100
+    df_sorted['product_pct'] = ((df_sorted.index + 1) / len(df_with_revenue)) * 100
     
     fig = go.Figure()
     
