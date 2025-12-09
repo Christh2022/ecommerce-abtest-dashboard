@@ -1,0 +1,1650 @@
+{
+  "S1": {
+    "scenario_name": "Amélioration Photos Produits",
+    "target_metric": "view_to_cart",
+    "metrics": {
+      "view_to_cart": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 283.4543439319121,
+          "p_value": 1.326938871448873e-63,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              8749.5,
+              287425.5
+            ],
+            [
+              8749.5,
+              287425.5
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 16.84377609938177,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.025836076643876087,
+          "variant_rate": 0.033247235587068456,
+          "difference": 0.007411158943192369,
+          "difference_pct": 0.7411158943192369,
+          "confidence_interval_95": {
+            "lower": 0.006548993267990557,
+            "upper": 0.00827332461839418,
+            "lower_pct": 0.6548993267990557,
+            "upper_pct": 0.827332461839418
+          },
+          "standard_error": 0.00043988852958649476
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.007410441203860684,
+          "relative_lift_mean": 0.2869468120965147,
+          "relative_lift_pct": 28.694681209651467,
+          "credible_interval_95": {
+            "lower": 0.006545972105122175,
+            "upper": 0.008272952557359985,
+            "lower_pct": 24.92919736562129,
+            "upper_pct": 32.53502578926751
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 60046,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      },
+      "cart_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 0.016041955949715817,
+          "p_value": 0.8992120047352868,
+          "degrees_of_freedom": 1,
+          "is_significant": false,
+          "expected_frequencies": [
+            [
+              2479.389679410252,
+              5172.610320589748
+            ],
+            [
+              3190.610320589748,
+              6656.389679410252
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 0.14293798497875856,
+          "p_value": 0.8863391588990144,
+          "is_significant": false,
+          "control_rate": 0.32344485101934134,
+          "variant_rate": 0.32446430384888797,
+          "difference": 0.0010194528295466299,
+          "difference_pct": 0.10194528295466299,
+          "confidence_interval_95": {
+            "lower": -0.012957827522332988,
+            "upper": 0.014996733181426247,
+            "lower_pct": -1.2957827522332988,
+            "upper_pct": 1.4996733181426247
+          },
+          "standard_error": 0.007131396526737543
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 0.55327,
+          "prob_a_beats_b": 0.44672999999999996,
+          "expected_loss_choose_b": 0.0023755180519962086,
+          "expected_loss_choose_a": 0.0033489514632604415,
+          "relative_lift_mean": 0.003283116632709182,
+          "relative_lift_pct": 0.3283116632709182,
+          "credible_interval_95": {
+            "lower": -0.01289233996598294,
+            "upper": 0.015021757524959928,
+            "lower_pct": -3.8885880752135744,
+            "upper_pct": 4.758573549665731
+          },
+          "is_significant": false
+        },
+        "statistical_power": 0.033983842252711984,
+        "min_sample_size_mde_10pct": 3307,
+        "verdict": {
+          "decision": "UNDERPOWERED",
+          "confidence": "LOW",
+          "recommendation": "Échantillon trop petit (puissance: 3.4%). Augmenter la taille pour 3307 utilisateurs/groupe.",
+          "significant_tests": [],
+          "n_significant": 0,
+          "total_tests": 3,
+          "prob_b_beats_a": 0.55327,
+          "statistical_power": 0.033983842252711984
+        }
+      },
+      "view_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 92.05594303773039,
+          "p_value": 8.4260516967455305e-22,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              2835.0,
+              293340.0
+            ],
+            [
+              2835.0,
+              293340.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 9.60792317361143,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.008356545961002786,
+          "variant_rate": 0.010787541149658141,
+          "difference": 0.0024309951886553553,
+          "difference_pct": 0.24309951886553552,
+          "confidence_interval_95": {
+            "lower": 0.0019351240569034553,
+            "upper": 0.002926866320407255,
+            "lower_pct": 0.19351240569034553,
+            "upper_pct": 0.29268663204072554
+          },
+          "standard_error": 0.0002530001243202774
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.0024303856691144424,
+          "relative_lift_mean": 0.2912292851087635,
+          "relative_lift_pct": 29.12292851087635,
+          "credible_interval_95": {
+            "lower": 0.0019335479367511973,
+            "upper": 0.002926834647223363,
+            "lower_pct": 22.507329094045545,
+            "upper_pct": 36.00565329085898
+          },
+          "is_significant": true
+        },
+        "statistical_power": 0.9999999999999898,
+        "min_sample_size_mde_10pct": 189029,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 0.9999999999999898
+        }
+      }
+    }
+  },
+  "S2": {
+    "scenario_name": "Système Reviews Clients",
+    "target_metric": "view_to_cart",
+    "metrics": {
+      "view_to_cart": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 586.4761327351774,
+          "p_value": 1.463535960380531e-129,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              9279.0,
+              287043.0
+            ],
+            [
+              9279.0,
+              287043.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 24.224727660091002,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.025833383953941996,
+          "variant_rate": 0.03679443308293005,
+          "difference": 0.010961049128988057,
+          "difference_pct": 1.0961049128988056,
+          "confidence_interval_95": {
+            "lower": 0.010074656398161881,
+            "upper": 0.011847441859814232,
+            "lower_pct": 1.007465639816188,
+            "upper_pct": 1.1847441859814232
+          },
+          "standard_error": 0.0004522494993877072
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.01096097729761085,
+          "relative_lift_mean": 0.42442103417700533,
+          "relative_lift_pct": 42.44210341770053,
+          "credible_interval_95": {
+            "lower": 0.010076746702029927,
+            "upper": 0.01184500758225218,
+            "lower_pct": 38.39043029029432,
+            "upper_pct": 46.553011001785464
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 60052,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      },
+      "cart_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 0.002497618994045126,
+          "p_value": 0.9601413668010564,
+          "degrees_of_freedom": 1,
+          "is_significant": false,
+          "expected_frequencies": [
+            [
+              2479.068326328268,
+              5175.931673671732
+            ],
+            [
+              3530.931673671732,
+              7372.068326328268
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 0.0659091515878517,
+          "p_value": 0.9474501545144294,
+          "is_significant": false,
+          "control_rate": 0.32357935989549313,
+          "variant_rate": 0.32403925525084837,
+          "difference": 0.0004598953553552332,
+          "difference_pct": 0.04598953553552332,
+          "confidence_interval_95": {
+            "lower": -0.01321528974870714,
+            "upper": 0.014135080459417606,
+            "lower_pct": -1.321528974870714,
+            "upper_pct": 1.4135080459417606
+          },
+          "standard_error": 0.006977263466028197
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 0.52529,
+          "prob_a_beats_b": 0.47470999999999997,
+          "expected_loss_choose_b": 0.002538742493865544,
+          "expected_loss_choose_a": 0.0030169131822470963,
+          "relative_lift_mean": 0.0017491743190669172,
+          "relative_lift_pct": 0.17491743190669173,
+          "credible_interval_95": {
+            "lower": -0.01304178551155484,
+            "upper": 0.014130815834725174,
+            "lower_pct": -3.9309858743421366,
+            "upper_pct": 4.476750285359553
+          },
+          "is_significant": false
+        },
+        "statistical_power": 0.028771755027784,
+        "min_sample_size_mde_10pct": 3305,
+        "verdict": {
+          "decision": "UNDERPOWERED",
+          "confidence": "LOW",
+          "recommendation": "Échantillon trop petit (puissance: 2.9%). Augmenter la taille pour 3305 utilisateurs/groupe.",
+          "significant_tests": [],
+          "n_significant": 0,
+          "total_tests": 3,
+          "prob_b_beats_a": 0.52529,
+          "statistical_power": 0.028771755027784
+        }
+      },
+      "view_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 187.09281483758912,
+          "p_value": 1.3706668662938832e-42,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              3005.0,
+              293317.0
+            ],
+            [
+              3005.0,
+              293317.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 13.691152663437343,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.008359149843751055,
+          "variant_rate": 0.011922840693569832,
+          "difference": 0.0035636908498187774,
+          "difference_pct": 0.35636908498187775,
+          "confidence_interval_95": {
+            "lower": 0.003053609543737454,
+            "upper": 0.004073772155900101,
+            "lower_pct": 0.3053609543737454,
+            "upper_pct": 0.40737721559001006
+          },
+          "standard_error": 0.0002602503464883946
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.003563421232307231,
+          "relative_lift_mean": 0.4266821867748668,
+          "relative_lift_pct": 42.66821867748668,
+          "credible_interval_95": {
+            "lower": 0.0030547237305603996,
+            "upper": 0.004074224069737817,
+            "lower_pct": 35.53517179932379,
+            "upper_pct": 50.09988538435439
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 188970,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      }
+    }
+  },
+  "S3": {
+    "scenario_name": "Checkout Simplifié",
+    "target_metric": "cart_to_purchase",
+    "metrics": {
+      "view_to_cart": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 3929.3714754461357,
+          "p_value": 0.0,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              104322.0,
+              181073.0
+            ],
+            [
+              104322.0,
+              181073.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 62.687447379182885,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.3255768321098828,
+          "variant_rate": 0.405494139701116,
+          "difference": 0.07991730759123317,
+          "difference_pct": 7.991730759123317,
+          "confidence_interval_95": {
+            "lower": 0.0774272569111967,
+            "upper": 0.08240735827126963,
+            "lower_pct": 7.74272569111967,
+            "upper_pct": 8.240735827126963
+          },
+          "standard_error": 0.0012704573653789903
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.07992442673853166,
+          "relative_lift_mean": 0.24549702421252348,
+          "relative_lift_pct": 24.54970242125235,
+          "credible_interval_95": {
+            "lower": 0.0774319447587774,
+            "upper": 0.0824014670303963,
+            "lower_pct": 23.691517495877104,
+            "upper_pct": 25.406256342685268
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 3275,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      },
+      "cart_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 5.731398198459381e-05,
+          "p_value": 0.9939595929691792,
+          "degrees_of_freedom": 1,
+          "is_significant": false,
+          "expected_frequencies": [
+            [
+              30242.305285558177,
+              62675.69471444182
+            ],
+            [
+              37665.69471444182,
+              78060.30528555818
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 0.012271168334785332,
+          "p_value": 0.9902092699605323,
+          "is_significant": false,
+          "control_rate": 0.32545900686626916,
+          "variant_rate": 0.3254843336847381,
+          "difference": 2.5326818468951462e-05,
+          "difference_pct": 0.002532681846895146,
+          "confidence_interval_95": {
+            "lower": -0.004019890508404915,
+            "upper": 0.004070544145342818,
+            "lower_pct": -0.4019890508404915,
+            "upper_pct": 0.4070544145342818
+          },
+          "standard_error": 0.0020639243163558234
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 0.50524,
+          "prob_a_beats_b": 0.49476,
+          "expected_loss_choose_b": 0.0008111139604237033,
+          "expected_loss_choose_a": 0.0008335767047323722,
+          "relative_lift_mean": 9.129870611947155e-05,
+          "relative_lift_pct": 0.009129870611947154,
+          "credible_interval_95": {
+            "lower": -0.004024580378363586,
+            "upper": 0.00406103978077296,
+            "lower_pct": -1.2280311036915703,
+            "upper_pct": 1.2570077609968473
+          },
+          "is_significant": false
+        },
+        "statistical_power": 0.025688755226292867,
+        "min_sample_size_mde_10pct": 3277,
+        "verdict": {
+          "decision": "UNDERPOWERED",
+          "confidence": "LOW",
+          "recommendation": "Échantillon trop petit (puissance: 2.6%). Augmenter la taille pour 3277 utilisateurs/groupe.",
+          "significant_tests": [],
+          "n_significant": 0,
+          "total_tests": 3,
+          "prob_b_beats_a": 0.50524,
+          "statistical_power": 0.025688755226292867
+        }
+      },
+      "view_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 921.472207376572,
+          "p_value": 2.109023711263265e-202,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              33954.0,
+              251441.0
+            ],
+            [
+              33954.0,
+              251441.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 30.35984901301227,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.10596191243714852,
+          "variant_rate": 0.13198198987368384,
+          "difference": 0.026020077436535324,
+          "difference_pct": 2.6020077436535325,
+          "confidence_interval_95": {
+            "lower": 0.02434163623342781,
+            "upper": 0.027698518639642837,
+            "lower_pct": 2.4341636233427812,
+            "upper_pct": 2.7698518639642837
+          },
+          "standard_error": 0.0008563632884822592
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.026021966510501166,
+          "relative_lift_mean": 0.24561605136217812,
+          "relative_lift_pct": 24.561605136217814,
+          "credible_interval_95": {
+            "lower": 0.024337603281395132,
+            "upper": 0.027693305451750597,
+            "lower_pct": 22.798224454797566,
+            "upper_pct": 26.340616585679324
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 13417,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      }
+    }
+  },
+  "S4": {
+    "scenario_name": "Optimisation Prix Compétitifs",
+    "target_metric": "view_to_cart",
+    "metrics": {
+      "view_to_cart": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 790.1122428207983,
+          "p_value": 7.618231433070502e-174,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              9433.5,
+              282173.5
+            ],
+            [
+              9433.5,
+              282173.5
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 28.11633626785537,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.025836142479432934,
+          "variant_rate": 0.038863950453864274,
+          "difference": 0.01302780797443134,
+          "difference_pct": 1.302780797443134,
+          "confidence_interval_95": {
+            "lower": 0.012120267140413537,
+            "upper": 0.013935348808449143,
+            "lower_pct": 1.2120267140413536,
+            "upper_pct": 1.3935348808449144
+          },
+          "standard_error": 0.0004630395462245068
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.01302715372374927,
+          "relative_lift_mean": 0.5043682622991299,
+          "relative_lift_pct": 50.43682622991299,
+          "credible_interval_95": {
+            "lower": 0.01212292415071232,
+            "upper": 0.013937403630773853,
+            "lower_pct": 46.19023554318945,
+            "upper_pct": 54.8133892832529
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 60046,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      },
+      "cart_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 0.005595595730580811,
+          "p_value": 0.9403708862103192,
+          "degrees_of_freedom": 1,
+          "is_significant": false,
+          "expected_frequencies": [
+            [
+              2439.854772883871,
+              5094.145227116129
+            ],
+            [
+              3670.145227116129,
+              7662.854772883871
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 0.09068713919566136,
+          "p_value": 0.9277411899548118,
+          "is_significant": false,
+          "control_rate": 0.3234669498274489,
+          "variant_rate": 0.32409776758139947,
+          "difference": 0.0006308177539505744,
+          "difference_pct": 0.06308177539505744,
+          "confidence_interval_95": {
+            "lower": -0.013001252138731824,
+            "upper": 0.014262887646632973,
+            "lower_pct": -1.3001252138731825,
+            "upper_pct": 1.4262887646632973
+          },
+          "standard_error": 0.006955265504983983
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 0.53531,
+          "prob_a_beats_b": 0.46469000000000005,
+          "expected_loss_choose_b": 0.002464516352810802,
+          "expected_loss_choose_a": 0.0031014426597995902,
+          "relative_lift_mean": 0.0022459157902550856,
+          "relative_lift_pct": 0.22459157902550855,
+          "credible_interval_95": {
+            "lower": -0.01289090624590344,
+            "upper": 0.014239198874345391,
+            "lower_pct": -3.8862154274833993,
+            "upper_pct": 4.5138022226410035
+          },
+          "is_significant": false
+        },
+        "statistical_power": 0.030243885111730148,
+        "min_sample_size_mde_10pct": 3307,
+        "verdict": {
+          "decision": "UNDERPOWERED",
+          "confidence": "LOW",
+          "recommendation": "Échantillon trop petit (puissance: 3.0%). Augmenter la taille pour 3307 utilisateurs/groupe.",
+          "significant_tests": [],
+          "n_significant": 0,
+          "total_tests": 3,
+          "prob_b_beats_a": 0.53531,
+          "statistical_power": 0.030243885111730148
+        }
+      },
+      "view_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 252.27055409607945,
+          "p_value": 8.307056783091171e-57,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              3055.0,
+              288552.0
+            ],
+            [
+              3055.0,
+              288552.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 15.895887984169603,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.008357138203129555,
+          "variant_rate": 0.012595719581491529,
+          "difference": 0.004238581378361974,
+          "difference_pct": 0.42385813783619736,
+          "confidence_interval_95": {
+            "lower": 0.0037160772538557558,
+            "upper": 0.0047610855028681915,
+            "lower_pct": 0.37160772538557557,
+            "upper_pct": 0.47610855028681914
+          },
+          "standard_error": 0.00026658863562170723
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.004237378527650442,
+          "relative_lift_mean": 0.5074480542757467,
+          "relative_lift_pct": 50.74480542757467,
+          "credible_interval_95": {
+            "lower": 0.0037168497580681277,
+            "upper": 0.004761662495804403,
+            "lower_pct": 43.23045832489341,
+            "upper_pct": 58.59050988790956
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 189016,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      }
+    }
+  },
+  "S5": {
+    "scenario_name": "Options Paiement Multiples",
+    "target_metric": "cart_to_purchase",
+    "metrics": {
+      "view_to_cart": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 1639.5012463444664,
+          "p_value": 0.0,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              105132.0,
+              194793.0
+            ],
+            [
+              105132.0,
+              194793.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 40.4934611311566,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.32558139534883723,
+          "variant_rate": 0.3754738684671168,
+          "difference": 0.049892473118279546,
+          "difference_pct": 4.989247311827954,
+          "confidence_interval_95": {
+            "lower": 0.04748088115394627,
+            "upper": 0.05230406508261282,
+            "lower_pct": 4.748088115394626,
+            "upper_pct": 5.230406508261282
+          },
+          "standard_error": 0.0012304266728141967
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.04989040903838439,
+          "relative_lift_mean": 0.15324399596441224,
+          "relative_lift_pct": 15.324399596441223,
+          "credible_interval_95": {
+            "lower": 0.04747276791720022,
+            "upper": 0.05229038117158385,
+            "lower_pct": 14.528001548429895,
+            "upper_pct": 16.11952695739536
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 3275,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      },
+      "cart_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 1.3479672084909313e-05,
+          "p_value": 0.9970705995125048,
+          "degrees_of_freedom": 1,
+          "is_significant": false,
+          "expected_frequencies": [
+            [
+              31785.106580299052,
+              65864.89341970095
+            ],
+            [
+              36655.893419700944,
+              75958.10658029905
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": -0.008337562158715364,
+          "p_value": 0.9933476649516977,
+          "is_significant": false,
+          "control_rate": 0.3255094726062468,
+          "variant_rate": 0.325492389933756,
+          "difference": -1.7082672490786877e-05,
+          "difference_pct": -0.0017082672490786877,
+          "confidence_interval_95": {
+            "lower": -0.004032819473107494,
+            "upper": 0.00399865412812592,
+            "lower_pct": -0.4032819473107494,
+            "upper_pct": 0.399865412812592
+          },
+          "standard_error": 0.0020488829551422003
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 0.49567,
+          "prob_a_beats_b": 0.50433,
+          "expected_loss_choose_b": 0.0008262590808786207,
+          "expected_loss_choose_a": 0.0008111739372987296,
+          "relative_lift_mean": -2.5041966989163137e-05,
+          "relative_lift_pct": -0.0025041966989163135,
+          "credible_interval_95": {
+            "lower": -0.0040311390180600894,
+            "upper": 0.004002034568179047,
+            "lower_pct": -1.22941661802142,
+            "upper_pct": 1.2375700991040406
+          },
+          "is_significant": false
+        },
+        "statistical_power": 0.025474554800918987,
+        "min_sample_size_mde_10pct": 3276,
+        "verdict": {
+          "decision": "UNDERPOWERED",
+          "confidence": "LOW",
+          "recommendation": "Échantillon trop petit (puissance: 2.5%). Augmenter la taille pour 3276 utilisateurs/groupe.",
+          "significant_tests": [],
+          "n_significant": 0,
+          "total_tests": 3,
+          "prob_b_beats_a": 0.49567,
+          "statistical_power": 0.025474554800918987
+        }
+      },
+      "view_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 390.839591293011,
+          "p_value": 5.433725792881508e-87,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              34220.5,
+              265704.5
+            ],
+            [
+              34220.5,
+              265704.5
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 19.77372455565442,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.10597982829040593,
+          "variant_rate": 0.12221388680503459,
+          "difference": 0.016234058514628655,
+          "difference_pct": 1.6234058514628655,
+          "confidence_interval_95": {
+            "lower": 0.014625469388493465,
+            "upper": 0.017842647640763844,
+            "lower_pct": 1.4625469388493466,
+            "upper_pct": 1.7842647640763845
+          },
+          "standard_error": 0.0008207238188168433
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.016231816232542575,
+          "relative_lift_mean": 0.15318632791397457,
+          "relative_lift_pct": 15.318632791397457,
+          "credible_interval_95": {
+            "lower": 0.014627187331230064,
+            "upper": 0.01784778408591275,
+            "lower_pct": 13.70119058007209,
+            "upper_pct": 16.967905335235926
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 13414,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      }
+    }
+  },
+  "S6": {
+    "scenario_name": "Optimisation Weekend",
+    "target_metric": "view_to_purchase",
+    "metrics": {
+      "view_to_cart": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 165.10605197940615,
+          "p_value": 8.672477943644936e-38,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              2932.0,
+              288490.0
+            ],
+            [
+              2932.0,
+              288490.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 12.862484967921251,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.008379600716486744,
+          "variant_rate": 0.011742421642840966,
+          "difference": 0.0033628209263542215,
+          "difference_pct": 0.33628209263542214,
+          "confidence_interval_95": {
+            "lower": 0.0028504726200213816,
+            "upper": 0.0038751692326870614,
+            "lower_pct": 0.28504726200213815,
+            "upper_pct": 0.3875169232687061
+          },
+          "standard_error": 0.00026140700052356975
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.003363374126583983,
+          "relative_lift_mean": 0.4018004545143357,
+          "relative_lift_pct": 40.18004545143357,
+          "credible_interval_95": {
+            "lower": 0.002854014265604839,
+            "upper": 0.0038760765143937936,
+            "lower_pct": 33.091495188713566,
+            "upper_pct": 47.55695713232154
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 188505,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      },
+      "cart_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 0.010695461642998678,
+          "p_value": 0.9176305403007511,
+          "degrees_of_freedom": 1,
+          "is_significant": false,
+          "expected_frequencies": [
+            [
+              783.3223055934516,
+              1658.6776944065484
+            ],
+            [
+              1097.6776944065484,
+              2324.3223055934513
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 0.13179469435770763,
+          "p_value": 0.8951466832343353,
+          "is_significant": false,
+          "control_rate": 0.31981981981981983,
+          "variant_rate": 0.32144944476914084,
+          "difference": 0.0016296249493210069,
+          "difference_pct": 0.1629624949321007,
+          "confidence_interval_95": {
+            "lower": -0.02259961506203318,
+            "upper": 0.025858864960675194,
+            "lower_pct": -2.259961506203318,
+            "upper_pct": 2.5858864960675194
+          },
+          "standard_error": 0.012362084304850161
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 0.55223,
+          "prob_a_beats_b": 0.44777,
+          "expected_loss_choose_b": 0.004173426935164247,
+          "expected_loss_choose_a": 0.005750777950034487,
+          "relative_lift_mean": 0.005800221738611508,
+          "relative_lift_pct": 0.5800221738611508,
+          "credible_interval_95": {
+            "lower": -0.02281751606131353,
+            "upper": 0.02571642754241955,
+            "lower_pct": -6.8223585574180925,
+            "upper_pct": 8.41627815401596
+          },
+          "is_significant": false
+        },
+        "statistical_power": 0.03303424497868292,
+        "min_sample_size_mde_10pct": 3363,
+        "verdict": {
+          "decision": "UNDERPOWERED",
+          "confidence": "LOW",
+          "recommendation": "Échantillon trop petit (puissance: 3.3%). Augmenter la taille pour 3363 utilisateurs/groupe.",
+          "significant_tests": [],
+          "n_significant": 0,
+          "total_tests": 3,
+          "prob_b_beats_a": 0.55223,
+          "statistical_power": 0.03303424497868292
+        }
+      },
+      "view_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 53.93482827024034,
+          "p_value": 2.072511908928236e-13,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              940.5,
+              290481.5
+            ],
+            [
+              940.5,
+              290481.5
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 7.367127960070161,
+          "p_value": 1.7430501486614958e-13,
+          "is_significant": true,
+          "control_rate": 0.0026799623913088236,
+          "variant_rate": 0.0037745949173363714,
+          "difference": 0.0010946325260275478,
+          "difference_pct": 0.10946325260275477,
+          "confidence_interval_95": {
+            "lower": 0.0008034280777458143,
+            "upper": 0.0013858369743092814,
+            "lower_pct": 0.08034280777458143,
+            "upper_pct": 0.13858369743092813
+          },
+          "standard_error": 0.00014857642822965986
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.0010952868498484121,
+          "relative_lift_mean": 0.41002267603242004,
+          "relative_lift_pct": 41.002267603242004,
+          "credible_interval_95": {
+            "lower": 0.0008050639073836594,
+            "upper": 0.0013857517010041475,
+            "lower_pct": 28.618068941911694,
+            "upper_pct": 54.32211130624066
+          },
+          "is_significant": true
+        },
+        "statistical_power": 0.9999999680296986,
+        "min_sample_size_mde_10pct": 592850,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 0.9999999680296986
+        }
+      }
+    }
+  },
+  "S7": {
+    "scenario_name": "Programme Fidélité",
+    "target_metric": "cart_to_purchase",
+    "metrics": {
+      "view_to_cart": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 3062.9154246793637,
+          "p_value": 0.0,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              105642.0,
+              187591.0
+            ],
+            [
+              105642.0,
+              187591.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 55.34633230928816,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.32557045080192204,
+          "variant_rate": 0.39496236780989863,
+          "difference": 0.06939191700797659,
+          "difference_pct": 6.939191700797659,
+          "confidence_interval_95": {
+            "lower": 0.06694098671920425,
+            "upper": 0.07184284729674893,
+            "lower_pct": 6.6940986719204245,
+            "upper_pct": 7.184284729674893
+          },
+          "standard_error": 0.0012504976153158791
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.06938731179659546,
+          "relative_lift_mean": 0.2131315700271624,
+          "relative_lift_pct": 21.313157002716242,
+          "credible_interval_95": {
+            "lower": 0.06693832274564666,
+            "upper": 0.0718370268831257,
+            "lower_pct": 20.484243112669624,
+            "upper_pct": 22.149365263436604
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 3275,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      },
+      "cart_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 0.0,
+          "p_value": 1.0,
+          "degrees_of_freedom": 1,
+          "is_significant": false,
+          "expected_frequencies": [
+            [
+              31074.860207114594,
+              64393.139792885406
+            ],
+            [
+              37698.139792885406,
+              78117.8602071146
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": -0.0013041832348119346,
+          "p_value": 0.9989594126274737,
+          "is_significant": false,
+          "control_rate": 0.3255017388025307,
+          "variant_rate": 0.32549906748635765,
+          "difference": -2.6713161730418378e-06,
+          "difference_pct": -0.0002671316173041838,
+          "confidence_interval_95": {
+            "lower": -0.004017202726542864,
+            "upper": 0.0040118600941967805,
+            "lower_pct": -0.4017202726542864,
+            "upper_pct": 0.401186009419678
+          },
+          "standard_error": 0.0020482679488173935
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 0.49851,
+          "prob_a_beats_b": 0.50149,
+          "expected_loss_choose_b": 0.0008241099249252079,
+          "expected_loss_choose_a": 0.0008106103409803299,
+          "relative_lift_mean": -1.985076469449834e-05,
+          "relative_lift_pct": -0.001985076469449834,
+          "credible_interval_95": {
+            "lower": -0.004039776711714516,
+            "upper": 0.004009475060781486,
+            "lower_pct": -1.2325840638847512,
+            "upper_pct": 1.239548212334754
+          },
+          "is_significant": false
+        },
+        "statistical_power": 0.025072887086508303,
+        "min_sample_size_mde_10pct": 3276,
+        "verdict": {
+          "decision": "UNDERPOWERED",
+          "confidence": "LOW",
+          "recommendation": "Échantillon trop petit (puissance: 2.5%). Augmenter la taille pour 3276 utilisateurs/groupe.",
+          "significant_tests": [],
+          "n_significant": 0,
+          "total_tests": 3,
+          "prob_b_beats_a": 0.49851,
+          "statistical_power": 0.025072887086508303
+        }
+      },
+      "view_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 722.3221453703461,
+          "p_value": 4.185183171275325e-159,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              34386.5,
+              258846.5
+            ],
+            [
+              34386.5,
+              258846.5
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 26.880110121553297,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.1059737478387494,
+          "variant_rate": 0.1285598824143258,
+          "difference": 0.022586134575576414,
+          "difference_pct": 2.2586134575576415,
+          "confidence_interval_95": {
+            "lower": 0.020940280742274914,
+            "upper": 0.024231988408877914,
+            "lower_pct": 2.0940280742274915,
+            "upper_pct": 2.4231988408877916
+          },
+          "standard_error": 0.000839736773881452
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.022583138861923598,
+          "relative_lift_mean": 0.21312412312643764,
+          "relative_lift_pct": 21.312412312643765,
+          "credible_interval_95": {
+            "lower": 0.02093890814256806,
+            "upper": 0.024230210973211767,
+            "lower_pct": 19.6116175285049,
+            "upper_pct": 23.03520710053358
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 13415,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      }
+    }
+  },
+  "S8": {
+    "scenario_name": "Nettoyage Catalogue",
+    "target_metric": "view_to_cart",
+    "metrics": {
+      "view_to_cart": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 387.2181495677682,
+          "p_value": 3.338066303439607e-86,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              8980.0,
+              288364.0
+            ],
+            [
+              8980.0,
+              288364.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 19.685436524948916,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.025832032931554026,
+          "variant_rate": 0.03456938764528627,
+          "difference": 0.008737354713732243,
+          "difference_pct": 0.8737354713732243,
+          "confidence_interval_95": {
+            "lower": 0.007867710798011929,
+            "upper": 0.009606998629452556,
+            "lower_pct": 0.7867710798011929,
+            "upper_pct": 0.9606998629452557
+          },
+          "standard_error": 0.0004437040285331534
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.008737289399862862,
+          "relative_lift_mean": 0.3383680896357944,
+          "relative_lift_pct": 33.83680896357944,
+          "credible_interval_95": {
+            "lower": 0.00786867337989895,
+            "upper": 0.009613382844150996,
+            "lower_pct": 29.996351045120722,
+            "upper_pct": 37.80370979394207
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 60055,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      },
+      "cart_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 0.010202157274200945,
+          "p_value": 0.9195459124186454,
+          "degrees_of_freedom": 1,
+          "is_significant": false,
+          "expected_frequencies": [
+            [
+              2485.633184855234,
+              5195.366815144766
+            ],
+            [
+              3326.366815144766,
+              6952.633184855234
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 0.11712442819411562,
+          "p_value": 0.9067614520620737,
+          "is_significant": false,
+          "control_rate": 0.3231350084624398,
+          "variant_rate": 0.3239614748516393,
+          "difference": 0.0008264663891994761,
+          "difference_pct": 0.08264663891994761,
+          "confidence_interval_95": {
+            "lower": -0.013002310774066871,
+            "upper": 0.014655243552465823,
+            "lower_pct": -1.3002310774066872,
+            "upper_pct": 1.4655243552465824
+          },
+          "standard_error": 0.007055628201510833
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 0.54624,
+          "prob_a_beats_b": 0.45376000000000005,
+          "expected_loss_choose_b": 0.002430943865652377,
+          "expected_loss_choose_a": 0.003237111439676052,
+          "relative_lift_mean": 0.0027681295614672597,
+          "relative_lift_pct": 0.27681295614672596,
+          "credible_interval_95": {
+            "lower": -0.013118910859969423,
+            "upper": 0.014618275635436617,
+            "lower_pct": -3.9614506623997863,
+            "upper_pct": 4.63670388043001
+          },
+          "is_significant": false
+        },
+        "statistical_power": 0.03212179399415246,
+        "min_sample_size_mde_10pct": 3312,
+        "verdict": {
+          "decision": "UNDERPOWERED",
+          "confidence": "LOW",
+          "recommendation": "Échantillon trop petit (puissance: 3.2%). Augmenter la taille pour 3312 utilisateurs/groupe.",
+          "significant_tests": [],
+          "n_significant": 0,
+          "total_tests": 3,
+          "prob_b_beats_a": 0.54624,
+          "statistical_power": 0.03212179399415246
+        }
+      },
+      "view_to_purchase": {
+        "chi_square": {
+          "test_name": "Chi-Square Test",
+          "chi2_statistic": 124.6540907984386,
+          "p_value": 6.058682056027545e-29,
+          "degrees_of_freedom": 1,
+          "is_significant": true,
+          "expected_frequencies": [
+            [
+              2906.0,
+              294438.0
+            ],
+            [
+              2906.0,
+              294438.0
+            ]
+          ]
+        },
+        "z_test": {
+          "test_name": "Z-Test for Proportions",
+          "z_score": 11.178041293253857,
+          "p_value": 0.0,
+          "is_significant": true,
+          "control_rate": 0.008347234179939734,
+          "variant_rate": 0.011199149806284977,
+          "difference": 0.002851915626345243,
+          "difference_pct": 0.2851915626345243,
+          "confidence_interval_95": {
+            "lower": 0.0023519116880629026,
+            "upper": 0.0033519195646275835,
+            "lower_pct": 0.23519116880629026,
+            "upper_pct": 0.33519195646275834
+          },
+          "standard_error": 0.00025510873782697425
+        },
+        "bayesian": {
+          "test_name": "Bayesian A/B Test",
+          "prob_b_beats_a": 1.0,
+          "prob_a_beats_b": 0.0,
+          "expected_loss_choose_b": 0.0,
+          "expected_loss_choose_a": 0.002853663580550706,
+          "relative_lift_mean": 0.34229807096430886,
+          "relative_lift_pct": 34.22980709643089,
+          "credible_interval_95": {
+            "lower": 0.0023552721514697506,
+            "upper": 0.0033549925981790152,
+            "lower_pct": 27.410291424977522,
+            "upper_pct": 41.31122296960381
+          },
+          "is_significant": true
+        },
+        "statistical_power": 1.0,
+        "min_sample_size_mde_10pct": 189242,
+        "verdict": {
+          "decision": "WINNER_VARIANT",
+          "confidence": "HIGH",
+          "recommendation": "Implémenter le variant B immédiatement. Tous les tests confirment sa supériorité.",
+          "significant_tests": [
+            "Chi-Square",
+            "Z-Test",
+            "Bayesian"
+          ],
+          "n_significant": 3,
+          "total_tests": 3,
+          "prob_b_beats_a": 1.0,
+          "statistical_power": 1.0
+        }
+      }
+    }
+  }
+}
