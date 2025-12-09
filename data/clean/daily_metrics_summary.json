@@ -1,0 +1,54 @@
+{
+  "timestamp": "2025-12-09T01:15:23.547196",
+  "source": "data_clean.csv + transactions.csv",
+  "total_days": 139,
+  "total_columns": 29,
+  "columns": [
+    "date",
+    "day_of_week",
+    "week_number",
+    "month",
+    "is_weekend",
+    "unique_users",
+    "unique_sessions",
+    "unique_products",
+    "total_events",
+    "views",
+    "add_to_carts",
+    "transactions",
+    "view_to_cart_rate",
+    "view_to_purchase_rate",
+    "cart_to_purchase_rate",
+    "daily_revenue",
+    "avg_order_value",
+    "min_order",
+    "max_order",
+    "events_per_user",
+    "sessions_per_user",
+    "revenue_per_user",
+    "ma7_revenue",
+    "ma7_users",
+    "ma7_conversion",
+    "users_new",
+    "users_occasional",
+    "users_premium",
+    "users_regular"
+  ],
+  "date_range": {
+    "start": "2015-05-03",
+    "end": "2015-09-18"
+  },
+  "summary": {
+    "total_users": 1649534,
+    "avg_daily_users": 11867,
+    "total_transactions": 22457,
+    "total_revenue": 5732867.82,
+    "avg_conversion_rate": 0.8276978417266186,
+    "best_day": {
+      "revenue": "2015-07-28",
+      "users": "2015-07-26",
+      "conversion": "2015-07-28"
+    }
+  },
+  "file_size_kb": 24.4306640625
+}

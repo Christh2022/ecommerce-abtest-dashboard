@@ -53,11 +53,36 @@ logs/
 # Docker
 docker-compose.override.yml
 
-# Data (optionnel - à ajuster selon vos besoins)
+# Data (fichiers trop volumineux pour Git)
 data/raw/*.csv
 data/raw/*.json
-# Garder les fichiers clean pour le partage
-# data/clean/*.csv
+data/clean/*.zip
+
+# Fichiers CSV volumineux dans data/clean/
+data/clean/events*.csv
+data/clean/item_properties*.csv
+data/clean/sessions*.csv
+data/clean/transactions*.csv
+data/clean/users.csv
+data/clean/products.csv
+data/clean/*_enriched.csv
+data/clean/user_journey.csv
+data/clean/product_performance.csv
+data/clean/data_clean.csv
+
+# Autoriser les petits fichiers d'analyse
+!data/clean/daily_funnel.csv
+!data/clean/hourly_analysis.csv
+!data/clean/segment_performance.csv
+!data/clean/merge_statistics.json
+!data/clean/data_clean_summary.json
+!data/clean/daily_metrics.csv
+!data/clean/daily_metrics_summary.json
+!data/clean/products_summary.csv
+!data/clean/products_summary_stats.json
+# Garder uniquement les README
+!data/raw/README.md
+!data/clean/README.md
 
 # Tests
 .pytest_cache/
@@ -67,3 +92,8 @@ htmlcov/
 
 # OS
 Thumbs.db
+
+# Fichiers CSV enrichis (volumineux)
+data/clean/*_enriched.csv
+data/clean/user_journey.csv
+data/clean/product_performance.csv

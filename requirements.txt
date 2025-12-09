@@ -18,6 +18,9 @@ statsmodels==0.14.1
 # Environment Variables
 python-dotenv==1.0.0
 
+# Kaggle API for dataset download
+kaggle==1.6.6
+
 # Utilities
 gunicorn==21.2.0
 

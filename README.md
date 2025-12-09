@@ -1,470 +1,279 @@
-"# 🛒 E-commerce Dashboard & A/B Testing
+"# E-commerce Dashboard & A/B Testing
 
-> **Tableau de bord analytique avancé avec tests A/B, monitoring de sécurité et visualisation en temps réel**
+Plateforme d'analyse e-commerce avec dashboard interactif et outils d'A/B testing utilisant Python, Dash, PostgreSQL, Docker et Grafana.
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
-[![Dash](https://img.shields.io/badge/Dash-2.14-orange.svg)](https://dash.plotly.com/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
-[![Grafana](https://img.shields.io/badge/Grafana-Latest-orange.svg)](https://grafana.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+## 📊 Vue d'ensemble
 
----
+Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1.4M utilisateurs, 235K produits) pour créer un dashboard de visualisation et des outils d'analyse de performance e-commerce.
 
-## 📋 Table des matières
-
-- [Vue d'ensemble](#-vue-densemble)
-- [Architecture](#-architecture)
-- [Stack Technique](#-stack-technique)
-- [Structure du Projet](#-structure-du-projet)
-- [Installation](#-installation)
-- [Utilisation](#-utilisation)
-- [Milestones](#-milestones)
-- [Branches & Workflow](#-branches--workflow)
-- [Captures d'écran](#-captures-décran)
-- [Documentation](#-documentation)
-- [Contribution](#-contribution)
-- [Licence](#-licence)
+### Objectifs
+- 📈 **Dashboard interactif** : Visualisation en temps réel des KPIs e-commerce
+- 🧪 **A/B Testing** : Comparaison de segments utilisateurs et analyse de conversion
+- 📉 **Analyse de tendances** : Métriques quotidiennes, entonnoirs de conversion, performance produits
+- 🎯 **Recommandations** : Identification des produits top performers et opportunités d'optimisation
 
 ---
 
-## 🎯 Vue d'ensemble
+## 🎯 Milestone 1 : Dataset & Préparation des Données ✅
 
-Ce projet est une **plateforme analytique complète** pour un site e-commerce, combinant :
+**Statut** : COMPLÉTÉ (8 issues)  
+**Branche** : `feature/data-preprocessing`  
+**Période** : Décembre 2025
 
-- 📊 **Dashboard multi-pages interactif** avec Plotly Dash
-- 🧪 **Framework de tests A/B** pour optimiser les conversions
-- 🗃️ **Base de données PostgreSQL** pour la persistance
-- 📈 **Visualisation temps réel** avec Grafana
-- 🔒 **Monitoring de sécurité** avec Falco (IDS)
-- 📝 **Agrégation de logs** avec Loki + Promtail
-- 🐳 **Architecture conteneurisée** avec Docker
+### 📦 Dataset RetailRocket
 
-### Fonctionnalités principales
+Source : [Kaggle - RetailRocket E-commerce Dataset](https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset)
 
-✅ Analyse du comportement utilisateur  
-✅ KPIs e-commerce (taux de conversion, panier moyen, CLV)  
-✅ Tests A/B statistiquement robustes (tests de Student, Chi-2)  
-✅ Analyse de cohortes  
-✅ Détection d'intrusions en temps réel  
-✅ Dashboards Grafana pour monitoring système
+**Caractéristiques :**
+- **Période couverte** : 2015-05-03 → 2015-09-18 (137 jours / 19.6 semaines)
+- **Événements totaux** : 2,755,641 (après nettoyage)
+  - Views : 2,664,218 (96.7%)
+  - Add-to-carts : 68,966 (2.5%)
+  - Transactions : 22,457 (0.8%)
+- **Utilisateurs uniques** : 1,407,580
+- **Sessions uniques** : 1,649,534
+- **Produits uniques** : 235,061
+- **Revenu total** : 5,732,867.82 €
+- **Taux de conversion global** : 0.84%
 
 ---
 
-## 🏗️ Architecture
+## 🔧 Issues Complétées
+
+### Issue #1 : Télécharger le dataset RetailRocket ✅
+**Fichiers créés :**
+- `scripts/download_data.py` : Script de téléchargement via Kaggle API
+- Données brutes (942 MB) → nettoyées (536 MB)
+
+### Issue #2 : Inspecter les fichiers CSV ✅
+**Fichiers créés :**
+- `scripts/inspect_csv.py` : Analyse exploratoire des données
+- Résultats : 460 doublons détectés dans `events.csv`
+
+### Issue #3 : Nettoyer events.csv ✅
+**Fichiers créés :**
+- `scripts/clean_events.py` : Suppression des doublons
+- `data/clean/events_cleaned.csv` : 2,755,641 lignes (460 doublons supprimés)
+
+### Issue #4 : Nettoyer item_properties.csv ✅
+**Fichiers créés :**
+- `scripts/clean_item_properties.py` : Parsing et structuration
+- `data/clean/item_properties_cleaned.csv` : 20,275,902 lignes, 9 colonnes typées
+
+### Issue #5 : Fusionner les données ✅
+**Fichiers créés :**
+- `scripts/merge_data.py` : Fusion et enrichissement (515 lignes)
+- **8 tables enrichies** (490 MB total) :
+  - `events_enriched.csv` : 2.7M lignes, 12 colonnes (242 MB)
+  - `sessions_enriched.csv` : 1.6M lignes, 10 colonnes (134 MB)
+  - `transactions_enriched.csv` : 22K lignes, 13 colonnes (2 MB)
+  - `daily_funnel.csv` : 139 jours, entonnoir de conversion
+  - `hourly_analysis.csv` : 24 heures, activité horaire
+  - `segment_performance.csv` : 4 segments utilisateurs
+  - `user_journey.csv` : 1.4M parcours (105 MB)
+  - `product_performance.csv` : 235K produits (7.5 MB)
+
+### Issue #6 : Générer data_clean.csv ✅
+**Fichiers créés :**
+- `scripts/generate_data_clean_simple.py` : Consolidation optimisée par chunks
+- `data/clean/data_clean.csv` : 2.7M lignes, 13 colonnes (229 MB)
+- **Colonnes** : user_id, session_id, timestamp, date, hour, day_of_week, event_type, product_id, transaction_id, amount, segment, product_views, product_purchases
+
+### Issue #7 : Générer daily_metrics.csv ✅
+**Fichiers créés :**
+- `scripts/generate_daily_metrics.py` : Métriques quotidiennes (224 lignes)
+- `data/clean/daily_metrics.csv` : 139 jours, 29 colonnes (24 KB)
+- **Métriques incluses** :
+  - Base : users, sessions, produits, événements
+  - Conversion : view→cart, view→purchase, cart→purchase
+  - Revenus : daily_revenue, avg_order_value, min/max_order
+  - Par utilisateur : events_per_user, sessions_per_user, revenue_per_user
+  - Moyennes mobiles (MA7) : revenue, users, conversion
+  - Segmentation : users_new, users_occasional, users_regular, users_premium
+  - Temporel : day_of_week, week_number, month, is_weekend
+
+### Issue #8 : Générer products_summary.csv ✅
+**Fichiers créés :**
+- `scripts/generate_products_summary.py` : Analyse produits (268 lignes)
+- `data/clean/products_summary.csv` : 235K produits, 21 colonnes (20 MB)
+- **Métriques incluses** :
+  - Rang et catégorisation (Top Performer, High Revenue)
+  - Engagement : views, add_to_carts, purchases, unique_users
+  - Conversion : view→cart, view→purchase, cart→purchase
+  - Revenus : total_revenue, avg_price, min/max_price
+  - Performance : events_per_user, revenue_per_user, revenue_per_view
+
+---
+
+## 📊 KPIs Globaux
+
+### Utilisateurs
+- **Total** : 1,407,580 utilisateurs uniques
+- **Sessions** : 1,649,534 (1.17 sessions/user en moyenne)
+- **Segmentation** :
+  - New : 70% (983K users)
+  - Occasional : 17% (239K users)
+  - Regular : 7% (99K users)
+  - Premium : 6% (89K users)
+
+### Événements
+- **Total** : 2,755,641 événements
+- **Par type** :
+  - Views : 2,664,218 (96.7%)
+  - Add-to-carts : 68,966 (2.5%)
+  - Transactions : 22,457 (0.8%)
+- **Moyenne** : 1.96 événements/utilisateur
+
+### Conversion
+- **View → Add-to-cart** : 2.59%
+- **View → Purchase** : 0.84%
+- **Cart → Purchase** : 32.56%
+
+### Revenus
+- **Total** : 5,732,867.82 €
+- **Par jour** : 41,243.65 € (moyenne)
+- **Panier moyen** : 255.28 €
+- **Par utilisateur** : 4.07 €
+
+### Produits
+- **Catalogués** : 235,061 produits
+- **Avec ventes** : 12,025 (5.1%)
+- **Sans ventes** : 223,036 (94.9%)
+- **Revenu moyen** : 24.39 €/produit
+- **Top produit #461686** : 34,781.58 € (133 achats, 5.24% conversion)
+
+### Meilleurs jours
+- **Revenue max** : 2015-07-28
+- **Utilisateurs max** : 2015-07-26
+- **Conversion max** : 2015-07-28
+
+---
+
+## 📁 Structure des données
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                       USER INTERFACE                        │
-│  ┌─────────────────────┐        ┌─────────────────────┐   │
-│  │   Dash Dashboard    │        │      Grafana        │   │
-│  │   (Port 8050)       │        │    (Port 3000)      │   │
-│  └──────────┬──────────┘        └──────────┬──────────┘   │
-└─────────────┼─────────────────────────────┼───────────────┘
-              │                              │
-              ▼                              ▼
-    ┌─────────────────┐          ┌─────────────────┐
-    │   PostgreSQL    │          │      Loki       │
-    │   (Port 5432)   │          │   (Port 3100)   │
-    └─────────────────┘          └────────▲────────┘
-                                          │
-                                   ┌──────┴──────┐
-                                   │  Promtail   │
-                                   └──────▲──────┘
-                                          │
-              ┌───────────────────────────┴─────────┐
-              │                                     │
-         ┌────┴──────┐                      ┌──────┴─────┐
-         │   Falco   │                      │ App Logs   │
-         │   (IDS)   │                      │            │
-         └───────────┘                      └────────────┘
-```
-
-### Flux de données
-
-1. **Ingestion** : Données brutes → PostgreSQL
-2. **Transformation** : Scripts Python → Données nettoyées
-3. **Analyse** : KPIs, A/B tests → Métriques calculées
-4. **Visualisation** : Dash + Grafana → Dashboards interactifs
-5. **Monitoring** : Falco → Loki → Grafana → Alertes sécurité
-
----
-
-## 🛠️ Stack Technique
-
-### Backend & Data
-
-- **Python 3.11** - Langage principal
-- **Pandas / NumPy** - Manipulation de données
-- **SQLAlchemy** - ORM pour PostgreSQL
-- **SciPy / Statsmodels** - Tests statistiques
-
-### Frontend & Visualisation
-
-- **Plotly Dash** - Framework de dashboard interactif
-- **Dash Bootstrap Components** - UI moderne
-- **Plotly.js** - Graphiques interactifs
-
-### Infrastructure
-
-- **Docker & Docker Compose** - Conteneurisation
-- **PostgreSQL 15** - Base de données relationnelle
-- **Grafana** - Monitoring et alerting
-- **Loki** - Agrégation de logs
-- **Promtail** - Collecte de logs
-- **Falco** - Système de détection d'intrusions
-
----
-
-## 📁 Structure du Projet
-
-```
-ecommerce-abtest-dashboard/
+data/
+├── raw/                          # Données brutes (942 MB)
+│   ├── events.csv
+│   ├── item_properties.csv
+│   └── category_tree.csv
 │
-├── dash-app/                    # Application Dash
-│   ├── pages/                   # Pages du dashboard
-│   │   ├── __init__.py
-│   │   ├── home.py             # Page d'accueil
-│   │   ├── behavior.py         # Analyse comportementale
-│   │   ├── products.py         # Analyse produits
-│   │   ├── ab_testing.py       # Tests A/B
-│   │   └── cohorts.py          # Analyse de cohortes
-│   ├── assets/                  # CSS, images, JS
-│   │   └── styles.css
-│   ├── utils/                   # Utilitaires
-│   │   ├── __init__.py
-│   │   ├── db.py               # Connexion DB
-│   │   └── charts.py           # Générateurs de graphiques
-│   └── app.py                   # Point d'entrée Dash
-│
-├── data/                        # Données
-│   ├── raw/                     # Données brutes
-│   └── clean/                   # Données nettoyées
-│
-├── src/                         # Code source
-│   ├── preprocessing/           # Nettoyage de données
-│   │   ├── __init__.py
-│   │   ├── cleaner.py
-│   │   └── validator.py
-│   ├── kpis/                    # Calcul des KPIs
-│   │   ├── __init__.py
-│   │   ├── metrics.py
-│   │   └── aggregations.py
-│   └── ab_testing/              # Tests A/B
-│       ├── __init__.py
-│       ├── statistical_tests.py
-│       └── sample_size.py
-│
-├── docker/                      # Configurations Docker
-│   ├── falco/
-│   │   ├── falco.yaml
-│   │   └── rules/
-│   │       └── custom-rules.yaml
-│   ├── loki/
-│   │   └── loki-config.yml
-│   └── promtail/
-│       └── promtail-config.yml
-│
-├── grafana/                     # Grafana provisioning
-│   ├── datasources/
-│   │   └── datasources.yml
-│   └── dashboards/
-│       ├── dashboard-provider.yml
-│       └── security-dashboard.json
-│
-├── docs/                        # Documentation
-│   ├── diagrams/                # Diagrammes d'architecture
-│   ├── ARCHITECTURE.md
-│   ├── API.md
-│   └── DEPLOYMENT.md
-│
-├── scripts/                     # Scripts utilitaires
-│   ├── init_branches.sh         # Création des branches
-│   ├── setup_db.py              # Initialisation DB
-│   └── load_data.py             # Chargement des données
-│
-├── tests/                       # Tests unitaires
-│   ├── test_kpis.py
-│   ├── test_ab_testing.py
-│   └── test_preprocessing.py
-│
-├── docker-compose.yml           # Orchestration Docker
-├── Dockerfile                   # Image Dash
-├── requirements.txt             # Dépendances Python
-├── .env.example                 # Variables d'environnement
-├── .gitignore
-└── README.md                    # Ce fichier
+└── clean/                        # Données nettoyées et enrichies
+    ├── events_cleaned.csv        # 2.7M événements nettoyés
+    ├── data_clean.csv            # 2.7M lignes consolidées (229 MB)
+    ├── daily_metrics.csv         # 139 jours de métriques (24 KB)
+    ├── products_summary.csv      # 235K produits analysés (20 MB)
+    │
+    ├── events_enriched.csv       # Événements + segments + produits (242 MB)
+    ├── sessions_enriched.csv     # Sessions + segments (134 MB)
+    ├── transactions_enriched.csv # Transactions enrichies (2 MB)
+    │
+    ├── daily_funnel.csv          # Entonnoir quotidien
+    ├── hourly_analysis.csv       # Activité horaire
+    ├── segment_performance.csv   # Performance par segment
+    ├── user_journey.csv          # Parcours utilisateurs (105 MB)
+    └── product_performance.csv   # Performance produits (7.5 MB)
 ```
 
 ---
 
-## 🚀 Installation
+## 🛠️ Scripts développés
+
+```
+scripts/
+├── download_data.py                    # Téléchargement Kaggle
+├── inspect_csv.py                      # Exploration données
+├── clean_events.py                     # Nettoyage événements
+├── clean_item_properties.py            # Nettoyage propriétés
+├── merge_data.py                       # Fusion et enrichissement
+├── generate_data_clean_simple.py       # Consolidation données
+├── generate_daily_metrics.py           # Métriques quotidiennes
+└── generate_products_summary.py        # Analyse produits
+```
+
+---
+
+## 🚀 Utilisation
 
 ### Prérequis
-
-- **Docker** & **Docker Compose** installés
-- **Git** configuré
-- **Python 3.11+** (optionnel, pour développement local)
-
-### Installation rapide
-
 ```bash
-# 1. Cloner le repository
-git clone https://github.com/Christh2022/ecommerce-abtest-dashboard.git
-cd ecommerce-abtest-dashboard
+# Python 3.12+
+pip install pandas numpy kaggle
 
-# 2. Copier le fichier d'environnement
-cp .env.example .env
-
-# 3. Initialiser les branches Git
-bash scripts/init_branches.sh
-
-# 4. Lancer l'infrastructure
-docker-compose up -d
-
-# 5. Attendre que les services démarrent (30-60s)
-docker-compose ps
-
-# 6. Accéder aux interfaces
-# - Dash Dashboard: http://localhost:8050
-# - Grafana: http://localhost:3000 (admin/admin123)
-# - PostgreSQL: localhost:5432
+# Configuration Kaggle API
+export KAGGLE_USERNAME=<votre_username>
+export KAGGLE_KEY=<votre_key>
 ```
 
-### Installation pour développement
-
+### Télécharger et préparer les données
 ```bash
-# Créer un environnement virtuel
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+# 1. Télécharger le dataset
+python scripts/download_data.py
 
-# Installer les dépendances
-pip install -r requirements.txt
+# 2. Nettoyer les données
+python scripts/clean_events.py
+python scripts/clean_item_properties.py
 
-# Initialiser la base de données
-python scripts/setup_db.py
+# 3. Fusionner et enrichir
+python scripts/merge_data.py
 
-# Charger les données de test
-python scripts/load_data.py
-
-# Lancer l'application en mode dev
-python dash-app/app.py
+# 4. Générer les fichiers d'analyse
+python scripts/generate_data_clean_simple.py
+python scripts/generate_daily_metrics.py
+python scripts/generate_products_summary.py
 ```
 
 ---
 
-## 💻 Utilisation
+## 📈 Insights clés
 
-### Accès aux services
+### 1. Conversion en entonnoir classique
+- **96.7%** des interactions sont des vues
+- Seulement **2.5%** ajoutent au panier
+- **32.6%** des paniers se convertissent en achat
+- **Opportunité** : Optimiser la transition view → cart (+2.59% actuellement)
 
-| Service            | URL                   | Credentials      |
-| ------------------ | --------------------- | ---------------- |
-| **Dash Dashboard** | http://localhost:8050 | -                |
-| **Grafana**        | http://localhost:3000 | admin / admin123 |
-| **PostgreSQL**     | localhost:5432        | admin / admin123 |
-| **Loki**           | http://localhost:3100 | -                |
+### 2. Segmentation utilisateurs
+- **70% sont "New"** : Opportunité de rétention
+- **Premium (6%)** représentent probablement une part disproportionnée du revenu
+- **Stratégie** : Programmes de fidélisation pour convertir New → Occasional → Regular
 
-### Commandes Docker utiles
+### 3. Catalogue produits
+- **94.9% des produits n'ont jamais été vendus** : Problème de merchandising
+- **5.1% des produits génèrent 100% du revenu** : Concentration extrême
+- **Top 4.7% ("Top Performers")** : Focus sur ces produits pour maximiser ROI
 
-```bash
-# Voir les logs
-docker-compose logs -f dash-app
-
-# Redémarrer un service
-docker-compose restart grafana
-
-# Arrêter tous les services
-docker-compose down
-
-# Supprimer les volumes (⚠️ perte de données)
-docker-compose down -v
-
-# Rebuild après modification
-docker-compose up -d --build
-```
-
-### Workflow de développement
-
-```bash
-# Créer une nouvelle branche feature
-git checkout -b feature/nouvelle-fonctionnalite
-
-# Développer et tester
-python dash-app/app.py
-
-# Tests unitaires
-pytest tests/
-
-# Commit et push
-git add .
-git commit -m "feat: ajout nouvelle fonctionnalité"
-git push origin feature/nouvelle-fonctionnalite
-```
+### 4. Saisonnalité
+- **Pic d'activité** : Fin juillet 2015 (été)
+- **Variation hebdomadaire** : Analyse des weekends vs semaine disponible
+- **Tendances** : Moyennes mobiles (MA7) pour lisser les variations
 
 ---
 
-## 🎯 Milestones
+## 🎯 Prochaines étapes : Milestone 2
 
-### Milestone 1 : Dataset & Préparation
-
-- [x] Structure du projet
-- [ ] Collecte des données brutes
-- [ ] Nettoyage et validation
-- [ ] Import dans PostgreSQL
-
-### Milestone 2 : KPIs & Exploration
-
-- [ ] Calcul des métriques clés
-- [ ] Analyse exploratoire
-- [ ] Détection d'anomalies
-
-### Milestone 3 : A/B Testing
-
-- [ ] Framework de tests statistiques
-- [ ] Calcul de tailles d'échantillon
-- [ ] Analyse de significativité
-
-### Milestone 4 : Dashboard Multi-Pages
-
-- [ ] Page d'accueil
-- [ ] Page comportement utilisateur
-- [ ] Page produits
-- [ ] Page A/B testing
-- [ ] Page cohortes
-
-### Milestone 5 : Dockerisation
-
-- [x] Configuration Docker Compose
-- [x] Dockerfile pour Dash
-- [x] Configuration PostgreSQL
-- [x] Configuration Grafana
-
-### Milestone 6 : Documentation & Livraison
-
-- [x] README complet
-- [ ] Documentation API
-- [ ] Guide de déploiement
-- [ ] Rapport PDF
-
-### Milestone 7 : Sécurité & Intrusion
-
-- [x] Configuration Falco
-- [x] Intégration Loki/Promtail
-- [x] Dashboard Grafana sécurité
-- [ ] Règles d'alerting
+### Dashboard & Visualisation
+- [ ] **Issue #9** : Créer le dashboard Dash avec visualisations interactives
+- [ ] **Issue #10** : Implémenter les filtres (segment, période, produit)
+- [ ] **Issue #11** : Configurer Docker + PostgreSQL
+- [ ] **Issue #12** : Intégrer Grafana pour monitoring avancé
+- [ ] **Issue #13** : Déployer l'application complète
 
 ---
 
-## 🌳 Branches & Workflow
+## 👥 Équipe & Contribution
 
-### Branches principales
-
-- `main` - Production stable
-- `develop` - Branche de développement
-
-### Branches features
-
-```bash
-feature/data-preprocessing      # Nettoyage des données
-feature/data-cleaning           # Validation des données
-feature/data-exploration        # Analyse exploratoire
-feature/kpi-metrics            # Calcul des KPIs
-feature/ab-testing             # Tests A/B
-feature/dashboard-home         # Page d'accueil
-feature/dashboard-behavior     # Page comportement
-feature/dashboard-products     # Page produits
-feature/dashboard-abtest       # Page tests A/B
-feature/dashboard-cohorts      # Page cohortes
-feature/docker-setup           # Configuration Docker
-feature/docs-writing           # Documentation
-feature/refactor               # Refactoring
-feature/tests                  # Tests unitaires
-feature/security-intrusion     # Sécurité & monitoring
-```
-
-### Workflow Git
-
-```
-feature/* → develop → main
-     ↓         ↓        ↓
-   Tests    Review  Production
-```
+**Auteur** : E-commerce Dashboard Team  
+**Repository** : [Christh2022/ecommerce-abtest-dashboard](https://github.com/Christh2022/ecommerce-abtest-dashboard)  
+**Branche active** : `feature/data-preprocessing`
 
 ---
 
-## 📸 Captures d'écran
+## 📝 License
 
-### Dashboard Principal
-
-```
-[Screenshot placeholder: Dashboard home page with KPIs]
-```
-
-### Analyse A/B Testing
-
-```
-[Screenshot placeholder: A/B test results visualization]
-```
-
-### Monitoring Sécurité (Grafana)
-
-```
-[Screenshot placeholder: Grafana security dashboard]
-```
+Ce projet utilise le dataset RetailRocket sous licence publique Kaggle.
 
 ---
 
-## 📚 Documentation
-
-- [Architecture détaillée](docs/ARCHITECTURE.md)
-- [Documentation API](docs/API.md)
-- [Guide de déploiement](docs/DEPLOYMENT.md)
-- [Diagrammes](docs/diagrams/)
-
----
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Merci de :
-
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/amazing-feature`)
-3. Commit vos changements (`git commit -m 'feat: Add amazing feature'`)
-4. Push vers la branche (`git push origin feature/amazing-feature`)
-5. Ouvrir une Pull Request
-
-### Standards de code
-
-- **PEP 8** pour le Python
-- **Black** pour le formatage
-- **Tests unitaires** obligatoires
-- **Documentation** des fonctions
-
----
-
-## 📝 Licence
-
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
----
-
-## 👤 Auteur
-
-**Votre Nom**
-
-- GitHub: [@Christh2022](https://github.com/Christh2022)
-- Email: votre.email@example.com
-
----
-
-## 🙏 Remerciements
-
-- [Plotly Dash](https://dash.plotly.com/) pour le framework de dashboard
-- [Grafana](https://grafana.com/) pour les outils de visualisation
-- [Falco](https://falco.org/) pour la détection d'intrusions
-- La communauté open-source
-
----
-
-<p align="center">
-  Made with ❤️ for e-commerce analytics
-</p>"
+**Dernière mise à jour** : 9 décembre 2025  
+**Milestone 1** : ✅ COMPLÉTÉ (8/8 issues)" 

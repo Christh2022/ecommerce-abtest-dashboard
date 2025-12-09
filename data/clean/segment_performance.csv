@@ -1,0 +1,5 @@
+segment,num_users,total_revenue,avg_transaction,num_transactions,revenue_per_user
+New,5237,1386726.62,255.57,5426,264.79
+Occasional,4957,1765016.35,253.59,6960,356.07
+Premium,209,1671960.74,258.1,6478,7999.81
+Regular,1316,909164.11,253.04,3593,690.85

@@ -1,0 +1,78 @@
+{
+  "timestamp": "2025-12-08T11:29:18.837632",
+  "source_files": {
+    "users": {
+      "rows": 1407580,
+      "columns": 5
+    },
+    "products": {
+      "rows": 235061,
+      "columns": 3
+    },
+    "sessions": {
+      "rows": 1649534,
+      "columns": 7
+    },
+    "transactions": {
+      "rows": 22457,
+      "columns": 9
+    },
+    "events": {
+      "rows": 2755641,
+      "columns": 5
+    }
+  },
+  "enriched_tables": {
+    "events_enriched": {
+      "rows": 2755641,
+      "columns": 12
+    },
+    "sessions_enriched": {
+      "rows": 1649534,
+      "columns": 9
+    },
+    "transactions_enriched": {
+      "rows": 22457,
+      "columns": 13
+    }
+  },
+  "analysis_tables": {
+    "daily_funnel": {
+      "rows": 139,
+      "columns": 9
+    },
+    "hourly_analysis": {
+      "rows": 24,
+      "columns": 6
+    },
+    "segment_performance": {
+      "rows": 4,
+      "columns": 5
+    },
+    "user_journey": {
+      "rows": 1407580,
+      "columns": 6
+    },
+    "product_performance": {
+      "rows": 235061,
+      "columns": 10
+    }
+  },
+  "global_kpis": {
+    "total_events": 2755641,
+    "unique_users": 1407580,
+    "unique_products": 235061,
+    "event_breakdown": {
+      "view": 2664218,
+      "addtocart": 68966,
+      "transaction": 22457
+    },
+    "conversion_rate": "0.84%",
+    "total_revenue": "5732867.82",
+    "avg_order_value": "255.28",
+    "total_transactions": 22457,
+    "period_start": "2015-05-03",
+    "period_end": "2015-09-18",
+    "period_days": 137
+  }
+}
