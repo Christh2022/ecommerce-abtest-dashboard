@@ -528,17 +528,27 @@ def filter_data(df, start_date, end_date, weekday, daytype):
     if df is None:
         return None
     
-    # Filter by date range
-    df_filtered = df[(df['date'] >= start_date) & (df['date'] <= end_date)].copy()
+    # Start with a copy of the dataframe
+    df_filtered = df.copy()
+    
+    # Filter by date range if provided
+    if start_date is not None and end_date is not None:
+        # Convert string dates to datetime if needed
+        if isinstance(start_date, str):
+            start_date = pd.to_datetime(start_date).date()
+        if isinstance(end_date, str):
+            end_date = pd.to_datetime(end_date).date()
+        
+        df_filtered = df_filtered[(df_filtered['date'] >= start_date) & (df_filtered['date'] <= end_date)]
     
     # Filter by weekday
-    if weekday != 'all':
+    if weekday and weekday != 'all':
         df_filtered = df_filtered[df_filtered['day_of_week'] == weekday]
     
     # Filter by day type
-    if daytype == 'weekday':
+    if daytype and daytype == 'weekday':
         df_filtered = df_filtered[df_filtered['is_weekend'] == False]
-    elif daytype == 'weekend':
+    elif daytype and daytype == 'weekend':
         df_filtered = df_filtered[df_filtered['is_weekend'] == True]
     
     return df_filtered
