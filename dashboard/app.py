@@ -104,6 +104,11 @@ app.layout = html.Div([
                     "Funnel"
                 ], href="/funnel", active="exact", className="mb-2"),
                 
+                dbc.NavLink([
+                    html.I(className="fas fa-layer-group me-2"),
+                    "Cohorts & Rétention"
+                ], href="/cohorts", active="exact", className="mb-2"),
+                
                 html.Hr(className="my-3"),
                 
                 html.H6("A/B Testing", className="text-muted px-3 mb-2"),
