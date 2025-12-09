@@ -372,6 +372,142 @@ footer a:hover {
     color: white !important;
 }
 
+/* Dash Dropdown (dcc.Dropdown) */
+.Select-control {
+    background-color: #0d1117 !important;
+    border: 1px solid #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+.Select-menu-outer {
+    background-color: #161b22 !important;
+    border: 1px solid #30363d !important;
+}
+
+.Select-option {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+}
+
+.Select-option:hover {
+    background-color: #667eea !important;
+    color: white !important;
+}
+
+.Select-option.is-selected {
+    background-color: #764ba2 !important;
+    color: white !important;
+}
+
+.Select-value-label {
+    color: #c9d1d9 !important;
+}
+
+.Select-placeholder {
+    color: #8b949e !important;
+}
+
+.Select-arrow {
+    border-color: #8b949e transparent transparent !important;
+}
+
+/* DatePickerRange */
+.DateInput {
+    background-color: #0d1117 !important;
+}
+
+.DateInput_input {
+    background-color: #0d1117 !important;
+    color: #c9d1d9 !important;
+    border: 1px solid #30363d !important;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.DateInput_input:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.DateInput_input::placeholder {
+    color: #8b949e !important;
+}
+
+.DateRangePickerInput {
+    background-color: #0d1117 !important;
+}
+
+.DateRangePickerInput_arrow {
+    color: #8b949e !important;
+}
+
+.DayPicker {
+    background-color: #161b22 !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.DayPickerNavigation_button {
+    background-color: #0d1117 !important;
+    border: 1px solid #30363d !important;
+}
+
+.DayPickerNavigation_button:hover {
+    background-color: #667eea !important;
+    border-color: #667eea !important;
+}
+
+.CalendarMonth {
+    background-color: #161b22 !important;
+}
+
+.CalendarMonth_caption {
+    color: #c9d1d9 !important;
+}
+
+.CalendarDay {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+    border: 1px solid #30363d !important;
+}
+
+.CalendarDay:hover {
+    background-color: #667eea !important;
+    color: white !important;
+    border-color: #667eea !important;
+}
+
+.CalendarDay__selected {
+    background-color: #764ba2 !important;
+    color: white !important;
+    border-color: #764ba2 !important;
+}
+
+.CalendarDay__selected:hover {
+    background-color: #667eea !important;
+    border-color: #667eea !important;
+}
+
+.CalendarDay__selected_span {
+    background-color: rgba(102, 126, 234, 0.3) !important;
+    color: #c9d1d9 !important;
+    border-color: #667eea !important;
+}
+
+.CalendarDay__blocked_out_of_range {
+    color: #484f58 !important;
+    background-color: #0d1117 !important;
+}
+
+.DayPickerKeyboardShortcuts_buttonReset {
+    background-color: #0d1117 !important;
+    border: 1px solid #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+.DayPickerKeyboardShortcuts_show__bottomRight::before {
+    border-right-color: #30363d !important;
+}
+
 /* Plotly dark theme */
 .js-plotly-plot .plotly {
     background-color: #161b22 !important;
