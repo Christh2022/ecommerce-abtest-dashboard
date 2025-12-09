@@ -1,0 +1,9 @@
+scenario_id,scenario_name,priority,implementation_cost,implementation_weeks,test_duration_weeks,additional_purchases_period,additional_revenue_period,roi_period,annual_additional_revenue,annual_roi,payback_weeks,confidence_level
+S1,Amélioration Photos Produits,HIGH,30000,4,1,6737,1720368.69,5634.56,4517514.9,14958.38,0.3,0.7871
+S2,Système Reviews Clients,HIGH,15000,3,1,8982,2293824.92,15192.17,6023353.2,40055.69,0.1,0.7822
+S3,Checkout Simplifié,MEDIUM,25000,6,1,5614,1433640.57,5634.56,3764595.75,14958.38,0.3,0.7715
+S4,Optimisation Prix Compétitifs,HIGH,20000,8,1,11228,2867281.15,14236.41,7529191.5,37545.96,0.1,0.7799
+S5,Options Paiement Multiples,MEDIUM,10000,2,1,3368,860184.34,8501.84,2258757.45,22487.57,0.2,0.789
+S6,Optimisation Weekend,HIGH,18000,3,1,8982,2293824.92,12643.47,6023353.2,33363.07,0.2,0.7849
+S7,Programme Fidélité,MEDIUM,25000,12,1,4491,1146912.46,4487.65,3011676.6,11946.71,0.4,0.7845
+S8,Nettoyage Catalogue,CRITICAL,5000,2,1,7859,2007096.8,40041.94,5270434.05,105308.68,0.0,0.7835
