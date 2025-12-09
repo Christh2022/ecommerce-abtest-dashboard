@@ -37,7 +37,6 @@ app.layout = html.Div([
                             "E-Commerce A/B Test Dashboard"
                         ], className="text-white mb-1", style={"fontSize": "1.8rem", "fontWeight": "600"}),
                         html.P([
-                            html.I(className="fas fa-flask me-2"),
                             "Analyse complète des tests A/B et optimisations e-commerce",
                             html.Span(" | ", className="mx-2"),
                             html.I(className="fas fa-calendar-alt me-2"),
