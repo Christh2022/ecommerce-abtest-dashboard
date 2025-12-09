@@ -273,7 +273,7 @@ def update_top_products_revenue(_):
         title="Top 20 Produits par Revenue Total",
         xaxis_title="Revenue Total (€)",
         yaxis_title="",
-        template='plotly_white',
+        template='plotly_dark',
         height=600,
         showlegend=False,
         yaxis=dict(autorange="reversed")
@@ -325,7 +325,7 @@ def update_products_conversion(_):
         title="Taux de Conversion View → Purchase (Top 30)",
         xaxis_title="Taux de Conversion (%)",
         yaxis_title="Rank",
-        template='plotly_white',
+        template='plotly_dark',
         height=500,
         showlegend=False,
         yaxis=dict(showticklabels=False)
@@ -368,7 +368,7 @@ def update_products_aov(_):
         title="Valeur Moyenne Panier par Produit (Top 30)",
         xaxis_title="Produit",
         yaxis_title="AOV (€)",
-        template='plotly_white',
+        template='plotly_dark',
         height=500,
         showlegend=False,
         xaxis=dict(tickangle=-45)
@@ -433,7 +433,7 @@ def update_pareto_chart(_):
             side='right',
             range=[0, 100]
         ),
-        template='plotly_white',
+        template='plotly_dark',
         height=400,
         hovermode='x unified',
         legend=dict(
@@ -488,7 +488,7 @@ def update_scatter_traffic_conversion(_):
     
     fig.update_layout(
         title="Matrice Performance: Trafic vs Conversion (Top 100)",
-        template='plotly_white',
+        template='plotly_dark',
         height=500
     )
     
@@ -534,7 +534,7 @@ def update_category_funnel(_):
         title="Distribution du Funnel par Catégorie",
         xaxis_title="Étape du Funnel",
         yaxis_title="Nombre",
-        template='plotly_white',
+        template='plotly_dark',
         height=500,
         barmode='group',
         legend=dict(

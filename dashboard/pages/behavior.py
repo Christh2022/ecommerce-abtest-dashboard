@@ -281,7 +281,7 @@ def update_main_funnel(_):
     fig.update_layout(
         title=f"Funnel de Conversion (Total: {total_views:,} views → {total_purchases:,} transactions)",
         height=450,
-        template='plotly_white',
+        template='plotly_dark',
         showlegend=False
     )
     
@@ -329,7 +329,7 @@ def update_segment_funnel(_):
         title="Taux de Conversion par Segment (View → Purchase)",
         xaxis_title="Segment",
         yaxis_title="Taux de Conversion (%)",
-        template='plotly_white',
+        template='plotly_dark',
         height=400,
         showlegend=False,
         yaxis=dict(range=[0, max(df_sorted['conversion_rate']) * 1.2])
@@ -386,7 +386,7 @@ def update_weekday_funnel(_):
         title="Conversion par Jour de la Semaine",
         xaxis_title="Jour",
         yaxis_title="Taux de Conversion (%)",
-        template='plotly_white',
+        template='plotly_dark',
         height=400,
         barmode='group',
         legend=dict(
@@ -439,7 +439,7 @@ def update_conversion_heatmap(_):
         title="Heatmap: Taux de Conversion par Jour et Semaine",
         xaxis_title="Semaine de l'année",
         yaxis_title="Jour de la semaine",
-        template='plotly_white',
+        template='plotly_dark',
         height=400
     )
     
@@ -484,7 +484,7 @@ def update_traffic_heatmap(_):
         title="Heatmap: Trafic Utilisateurs par Jour et Semaine",
         xaxis_title="Semaine de l'année",
         yaxis_title="Jour de la semaine",
-        template='plotly_white',
+        template='plotly_dark',
         height=400
     )
     
@@ -535,7 +535,7 @@ def update_dropoff_chart(_):
     fig.update_layout(
         title="Analyse des Abandons dans le Funnel (Waterfall)",
         yaxis_title="Pourcentage",
-        template='plotly_white',
+        template='plotly_dark',
         height=400,
         showlegend=False
     )

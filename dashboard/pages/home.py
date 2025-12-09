@@ -490,7 +490,7 @@ def update_traffic_chart(_):
         xaxis_title="Date",
         yaxis_title="Utilisateurs Uniques",
         hovermode='x unified',
-        template='plotly_white',
+        template='plotly_dark',
         height=350,
         showlegend=True,
         legend=dict(
@@ -543,7 +543,7 @@ def update_revenue_chart(_):
         xaxis_title="Date",
         yaxis_title="Revenue (€)",
         hovermode='x unified',
-        template='plotly_white',
+        template='plotly_dark',
         height=350,
         showlegend=True,
         legend=dict(
@@ -608,7 +608,7 @@ def update_conversion_chart(_):
         xaxis_title="Date",
         yaxis_title="Taux de Conversion (%)",
         hovermode='x unified',
-        template='plotly_white',
+        template='plotly_dark',
         height=350,
         showlegend=True,
         legend=dict(
@@ -693,7 +693,7 @@ def update_weekday_chart(_):
             side='right'
         ),
         hovermode='x unified',
-        template='plotly_white',
+        template='plotly_dark',
         height=350,
         showlegend=True,
         legend=dict(
@@ -749,7 +749,7 @@ def update_ab_roi_chart(_):
         title="ROI Annuel par Scénario A/B (Top 8)",
         xaxis_title="ROI Annuel (%)",
         yaxis_title="",
-        template='plotly_white',
+        template='plotly_dark',
         height=400,
         showlegend=False,
         xaxis=dict(

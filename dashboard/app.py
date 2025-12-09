@@ -13,7 +13,7 @@ app = Dash(
     __name__,
     use_pages=True,  # Enable multi-page functionality
     external_stylesheets=[
-        dbc.themes.BOOTSTRAP,
+        dbc.themes.DARKLY,  # Dark theme
         dbc.icons.FONT_AWESOME,  # For icons
     ],
     suppress_callback_exceptions=True,
