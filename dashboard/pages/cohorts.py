@@ -56,7 +56,7 @@ def create_cohort_data(df):
     
     weekly_data = df.groupby('week').agg({
         'unique_users': 'sum',
-        'total_sessions': 'sum',
+        'unique_sessions': 'sum',
         'transactions': 'sum'
     }).reset_index()
     
