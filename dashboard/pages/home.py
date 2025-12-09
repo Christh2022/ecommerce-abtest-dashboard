@@ -31,8 +31,81 @@ try:
 except FileNotFoundError:
     df_ab = None
 
+# Get date range and categories if data available
+if df_daily is not None:
+    min_date = df_daily['date'].min()
+    max_date = df_daily['date'].max()
+else:
+    min_date = datetime(2015, 5, 3)
+    max_date = datetime(2015, 9, 18)
+
 # Layout for the home page
 layout = dbc.Container([
+    # Filters Section
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.H5([
+                        html.I(className="fas fa-filter me-2"),
+                        "Filtres"
+                    ], className="mb-3"),
+                    
+                    dbc.Row([
+                        dbc.Col([
+                            html.Label("Période:", className="fw-bold mb-2"),
+                            dcc.DatePickerRange(
+                                id='home-date-range',
+                                start_date=min_date,
+                                end_date=max_date,
+                                min_date_allowed=min_date,
+                                max_date_allowed=max_date,
+                                display_format='DD/MM/YYYY',
+                                className='mb-2',
+                                style={'width': '100%'}
+                            ),
+                        ], width=6),
+                        
+                        dbc.Col([
+                            html.Label("Jour de la semaine:", className="fw-bold mb-2"),
+                            dcc.Dropdown(
+                                id='home-weekday-filter',
+                                options=[
+                                    {'label': 'Tous', 'value': 'all'},
+                                    {'label': 'Lundi', 'value': 'Monday'},
+                                    {'label': 'Mardi', 'value': 'Tuesday'},
+                                    {'label': 'Mercredi', 'value': 'Wednesday'},
+                                    {'label': 'Jeudi', 'value': 'Thursday'},
+                                    {'label': 'Vendredi', 'value': 'Friday'},
+                                    {'label': 'Samedi', 'value': 'Saturday'},
+                                    {'label': 'Dimanche', 'value': 'Sunday'},
+                                ],
+                                value='all',
+                                clearable=False,
+                                className='mb-2'
+                            ),
+                        ], width=3),
+                        
+                        dbc.Col([
+                            html.Label("Type de jour:", className="fw-bold mb-2"),
+                            dcc.Dropdown(
+                                id='home-daytype-filter',
+                                options=[
+                                    {'label': 'Tous', 'value': 'all'},
+                                    {'label': 'Semaine', 'value': 'weekday'},
+                                    {'label': 'Weekend', 'value': 'weekend'},
+                                ],
+                                value='all',
+                                clearable=False,
+                                className='mb-2'
+                            ),
+                        ], width=3),
+                    ]),
+                ], className="p-3")
+            ], className="shadow-sm border-0 mb-4")
+        ])
+    ]),
+    
     # Welcome Section
     dbc.Row([
         dbc.Col([
@@ -449,12 +522,37 @@ layout = dbc.Container([
 ], fluid=True)
 
 
+# Helper function to filter data
+def filter_data(df, start_date, end_date, weekday, daytype):
+    """Filter dataframe based on selected filters"""
+    if df is None:
+        return None
+    
+    # Filter by date range
+    df_filtered = df[(df['date'] >= start_date) & (df['date'] <= end_date)].copy()
+    
+    # Filter by weekday
+    if weekday != 'all':
+        df_filtered = df_filtered[df_filtered['day_of_week'] == weekday]
+    
+    # Filter by day type
+    if daytype == 'weekday':
+        df_filtered = df_filtered[df_filtered['is_weekend'] == False]
+    elif daytype == 'weekend':
+        df_filtered = df_filtered[df_filtered['is_weekend'] == True]
+    
+    return df_filtered
+
+
 # Callbacks for interactive charts
 @callback(
     Output('traffic-chart', 'figure'),
-    Input('traffic-chart', 'id')
+    [Input('home-date-range', 'start_date'),
+     Input('home-date-range', 'end_date'),
+     Input('home-weekday-filter', 'value'),
+     Input('home-daytype-filter', 'value')]
 )
-def update_traffic_chart(_):
+def update_traffic_chart(start_date, end_date, weekday, daytype):
     """Create traffic evolution chart"""
     if df_daily is None:
         return go.Figure().add_annotation(
@@ -463,12 +561,22 @@ def update_traffic_chart(_):
             x=0.5, y=0.5, showarrow=False
         )
     
+    # Filter data
+    df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
+    
+    if df_filtered is None or len(df_filtered) == 0:
+        return go.Figure().add_annotation(
+            text="Aucune donnée pour cette sélection",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
+    
     fig = go.Figure()
     
     # Daily traffic
     fig.add_trace(go.Scatter(
-        x=df_daily['date'],
-        y=df_daily['unique_users'],
+        x=df_filtered['date'],
+        y=df_filtered['unique_users'],
         mode='lines',
         name='Utilisateurs Quotidiens',
         line=dict(color='#667eea', width=2),
@@ -478,8 +586,8 @@ def update_traffic_chart(_):
     
     # 7-day moving average
     fig.add_trace(go.Scatter(
-        x=df_daily['date'],
-        y=df_daily['ma7_users'],
+        x=df_filtered['date'],
+        y=df_filtered['ma7_users'],
         mode='lines',
         name='Moyenne Mobile 7j',
         line=dict(color='#764ba2', width=2, dash='dash')
@@ -507,9 +615,12 @@ def update_traffic_chart(_):
 
 @callback(
     Output('revenue-chart', 'figure'),
-    Input('revenue-chart', 'id')
+    [Input('home-date-range', 'start_date'),
+     Input('home-date-range', 'end_date'),
+     Input('home-weekday-filter', 'value'),
+     Input('home-daytype-filter', 'value')]
 )
-def update_revenue_chart(_):
+def update_revenue_chart(start_date, end_date, weekday, daytype):
     """Create revenue evolution chart"""
     if df_daily is None:
         return go.Figure().add_annotation(
@@ -518,12 +629,22 @@ def update_revenue_chart(_):
             x=0.5, y=0.5, showarrow=False
         )
     
+    # Filter data
+    df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
+    
+    if df_filtered is None or len(df_filtered) == 0:
+        return go.Figure().add_annotation(
+            text="Aucune donnée pour cette sélection",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
+    
     fig = go.Figure()
     
     # Daily revenue
     fig.add_trace(go.Bar(
-        x=df_daily['date'],
-        y=df_daily['daily_revenue'],
+        x=df_filtered['date'],
+        y=df_filtered['daily_revenue'],
         name='Revenue Quotidien',
         marker_color='#2ecc71',
         opacity=0.7
@@ -531,8 +652,8 @@ def update_revenue_chart(_):
     
     # 7-day moving average
     fig.add_trace(go.Scatter(
-        x=df_daily['date'],
-        y=df_daily['ma7_revenue'],
+        x=df_filtered['date'],
+        y=df_filtered['ma7_revenue'],
         mode='lines',
         name='Moyenne Mobile 7j',
         line=dict(color='#e74c3c', width=3)
@@ -560,9 +681,12 @@ def update_revenue_chart(_):
 
 @callback(
     Output('conversion-chart', 'figure'),
-    Input('conversion-chart', 'id')
+    [Input('home-date-range', 'start_date'),
+     Input('home-date-range', 'end_date'),
+     Input('home-weekday-filter', 'value'),
+     Input('home-daytype-filter', 'value')]
 )
-def update_conversion_chart(_):
+def update_conversion_chart(start_date, end_date, weekday, daytype):
     """Create conversion rates evolution chart"""
     if df_daily is None:
         return go.Figure().add_annotation(
@@ -571,12 +695,22 @@ def update_conversion_chart(_):
             x=0.5, y=0.5, showarrow=False
         )
     
+    # Filter data
+    df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
+    
+    if df_filtered is None or len(df_filtered) == 0:
+        return go.Figure().add_annotation(
+            text="Aucune donnée pour cette sélection",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
+    
     fig = go.Figure()
     
     # View to Cart
     fig.add_trace(go.Scatter(
-        x=df_daily['date'],
-        y=df_daily['view_to_cart_rate'],
+        x=df_filtered['date'],
+        y=df_filtered['view_to_cart_rate'],
         mode='lines+markers',
         name='View → Cart',
         line=dict(color='#3498db', width=2),
@@ -585,8 +719,8 @@ def update_conversion_chart(_):
     
     # Cart to Purchase
     fig.add_trace(go.Scatter(
-        x=df_daily['date'],
-        y=df_daily['cart_to_purchase_rate'],
+        x=df_filtered['date'],
+        y=df_filtered['cart_to_purchase_rate'],
         mode='lines+markers',
         name='Cart → Purchase',
         line=dict(color='#e74c3c', width=2),
@@ -595,8 +729,8 @@ def update_conversion_chart(_):
     
     # View to Purchase
     fig.add_trace(go.Scatter(
-        x=df_daily['date'],
-        y=df_daily['view_to_purchase_rate'],
+        x=df_filtered['date'],
+        y=df_filtered['view_to_purchase_rate'],
         mode='lines+markers',
         name='View → Purchase',
         line=dict(color='#2ecc71', width=2),
@@ -625,9 +759,12 @@ def update_conversion_chart(_):
 
 @callback(
     Output('weekday-chart', 'figure'),
-    Input('weekday-chart', 'id')
+    [Input('home-date-range', 'start_date'),
+     Input('home-date-range', 'end_date'),
+     Input('home-weekday-filter', 'value'),
+     Input('home-daytype-filter', 'value')]
 )
-def update_weekday_chart(_):
+def update_weekday_chart(start_date, end_date, weekday, daytype):
     """Create weekday effect chart"""
     if df_daily is None:
         return go.Figure().add_annotation(
@@ -636,8 +773,18 @@ def update_weekday_chart(_):
             x=0.5, y=0.5, showarrow=False
         )
     
+    # Filter data
+    df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
+    
+    if df_filtered is None or len(df_filtered) == 0:
+        return go.Figure().add_annotation(
+            text="Aucune donnée pour cette sélection",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
+    
     # Aggregate by day of week
-    weekday_stats = df_daily.groupby('day_of_week').agg({
+    weekday_stats = df_filtered.groupby('day_of_week').agg({
         'unique_users': 'mean',
         'daily_revenue': 'mean',
         'view_to_purchase_rate': 'mean'
@@ -710,9 +857,12 @@ def update_weekday_chart(_):
 
 @callback(
     Output('ab-roi-chart', 'figure'),
-    Input('ab-roi-chart', 'id')
+    [Input('home-date-range', 'start_date'),
+     Input('home-date-range', 'end_date'),
+     Input('home-weekday-filter', 'value'),
+     Input('home-daytype-filter', 'value')]
 )
-def update_ab_roi_chart(_):
+def update_ab_roi_chart(start_date, end_date, weekday, daytype):
     """Create A/B test ROI comparison chart"""
     if df_ab is None:
         return go.Figure().add_annotation(
@@ -720,6 +870,9 @@ def update_ab_roi_chart(_):
             xref="paper", yref="paper",
             x=0.5, y=0.5, showarrow=False
         )
+    
+    # Note: df_ab doesn't have date filtering as it's summary data
+    # But we keep the callback signature consistent for future enhancements
     
     # Sort by annual ROI
     df_sorted = df_ab.sort_values('annual_roi_pct', ascending=True)
