@@ -1,0 +1,5 @@
+segment,num_users,total_revenue,avg_transaction,num_transactions,revenue_per_user,transactions_per_user,revenue_share,user_share,value_index
+Premium,209,1671960.74,258.1,6478,7999.81,31.0,29.16,1.78,16.38
+Regular,1316,909164.11,253.04,3593,690.85,2.73,15.86,11.23,1.41
+Occasional,4957,1765016.35,253.59,6960,356.07,1.4,30.79,42.3,0.73
+New,5237,1386726.62,255.57,5426,264.79,1.04,24.19,44.69,0.54

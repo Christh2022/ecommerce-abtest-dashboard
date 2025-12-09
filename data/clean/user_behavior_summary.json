@@ -1,0 +1,114 @@
+{
+  "engagement_metrics": {
+    "avg_events_per_user": 1.6661870503597125,
+    "median_events_per_user": 1.67,
+    "max_events_per_user": 1.87,
+    "min_events_per_user": 1.42,
+    "total_events": 2755641,
+    "total_views": 2664218,
+    "total_add_to_carts": 68966,
+    "total_transactions": 22457
+  },
+  "conversion_rates": {
+    "avg_view_to_cart": 2.5863309352517985,
+    "avg_view_to_purchase": 0.8276978417266186,
+    "avg_cart_to_purchase": 31.88453237410072,
+    "overall_conversion": 1.3614147995736978
+  },
+  "segments": {
+    "new": {
+      "users": 5237,
+      "users_pct": 44.688113320249165,
+      "revenue": 1386726.62,
+      "revenue_pct": 24.189056220033343,
+      "revenue_per_user": 264.79,
+      "transactions": 5426,
+      "avg_transaction": 255.57,
+      "transactions_per_user": 1.0360893641397746
+    },
+    "occasional": {
+      "users": 4957,
+      "users_pct": 42.298830958272895,
+      "revenue": 1765016.35,
+      "revenue_pct": 30.787668675047176,
+      "revenue_per_user": 356.07,
+      "transactions": 6960,
+      "avg_transaction": 253.59,
+      "transactions_per_user": 1.404075045390357
+    },
+    "premium": {
+      "users": 209,
+      "users_pct": 1.783428620189436,
+      "revenue": 1671960.74,
+      "revenue_pct": 29.164473915953636,
+      "revenue_per_user": 7999.81,
+      "transactions": 6478,
+      "avg_transaction": 258.1,
+      "transactions_per_user": 30.995215311004785
+    },
+    "regular": {
+      "users": 1316,
+      "users_pct": 11.229627101288505,
+      "revenue": 909164.11,
+      "revenue_pct": 15.858801188965838,
+      "revenue_per_user": 690.85,
+      "transactions": 3593,
+      "avg_transaction": 253.04,
+      "transactions_per_user": 2.730243161094225
+    }
+  },
+  "funnel": {
+    "viewers": 1649534,
+    "cart_users": 68966,
+    "buyers": 22457,
+    "viewer_to_cart_rate": 4.180938374110506,
+    "cart_to_buyer_rate": 32.56242206304556,
+    "viewer_to_buyer_rate": 1.3614147995736978,
+    "dropoff_viewer_to_cart": 95.81906162588949,
+    "dropoff_cart_to_buyer": 67.43757793695444
+  },
+  "temporal_patterns": {
+    "weekday": {
+      "events_per_user": 1.6779000000000002,
+      "view_to_cart_rate": 2.6684,
+      "view_to_purchase_rate": 0.9088999999999998,
+      "cart_to_purchase_rate": 34.07749999999999,
+      "revenue_per_user": 3.7626
+    },
+    "weekend": {
+      "events_per_user": 1.6361538461538463,
+      "view_to_cart_rate": 2.3758974358974356,
+      "view_to_purchase_rate": 0.6194871794871795,
+      "cart_to_purchase_rate": 26.261538461538464,
+      "revenue_per_user": 2.524102564102564
+    },
+    "events_per_user_weekend_variation": -2.488000110027644,
+    "view_to_cart_rate_weekend_variation": -10.9617210351733,
+    "revenue_per_user_weekend_variation": -32.916000528821456
+  },
+  "evolution": {
+    "period1": {
+      "dates": "2015-05-03 → 2015-06-17",
+      "events_per_user": 1.7154347826086955,
+      "conversion_rate": 0.8006521739130434,
+      "revenue_per_user": 3.3832608695652167
+    },
+    "period2": {
+      "dates": "2015-06-18 → 2015-08-02",
+      "events_per_user": 1.6843478260869562,
+      "conversion_rate": 0.8428260869565216,
+      "revenue_per_user": 3.5597826086956523
+    },
+    "period3": {
+      "dates": "2015-08-03 → 2015-09-18",
+      "events_per_user": 1.600212765957447,
+      "conversion_rate": 0.8393617021276594,
+      "revenue_per_user": 3.304680851063829
+    }
+  },
+  "metadata": {
+    "generated_at": "2025-12-09T02:05:58.870223",
+    "script": "user_behavior_analysis.py",
+    "issue": "#10"
+  }
+}
