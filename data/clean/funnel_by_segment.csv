@@ -1,0 +1,5 @@
+segment,num_users,user_percentage,num_transactions,transactions_per_user,revenue_per_user,total_revenue,revenue_percentage,avg_transaction_value,conversion_rate
+Premium,209,1.78,6478,31.0,7999.81,1671960.74,29.16,258.1,3099.52
+Regular,1316,11.23,3593,2.73,690.85,909164.11,15.86,253.04,273.02
+Occasional,4957,42.3,6960,1.4,356.07,1765016.35,30.79,253.59,140.41
+New,5237,44.69,5426,1.04,264.79,1386726.62,24.19,255.57,103.61

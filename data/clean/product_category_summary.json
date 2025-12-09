@@ -1,0 +1,73 @@
+{
+  "categories": {
+    "High Revenue": {
+      "num_products": 223952,
+      "product_share": 95.27,
+      "total_users": 1695102,
+      "total_views": 2022142,
+      "total_purchases": 1291,
+      "total_revenue": 327441.97,
+      "revenue_share": 5.71,
+      "conversion_rate": 0.08,
+      "avg_price": 1.04,
+      "avg_revenue_per_product": 1.46,
+      "avg_revenue_per_user": 0.02
+    },
+    "Top Performer": {
+      "num_products": 11109,
+      "product_share": 4.73,
+      "total_users": 476015,
+      "total_views": 642076,
+      "total_purchases": 21166,
+      "total_revenue": 5405425.85,
+      "revenue_share": 94.29,
+      "conversion_rate": 4.45,
+      "avg_price": 255.32,
+      "avg_revenue_per_product": 486.58,
+      "avg_revenue_per_user": 22.76
+    }
+  },
+  "top_performers": {
+    "count": 11109,
+    "avg_users": 42.84949140336664,
+    "avg_views": 57.79782158610136,
+    "avg_purchases": 1.9053020073814024,
+    "avg_revenue": 486.5807768476011,
+    "avg_conversion": 7.072319740750742,
+    "total_revenue": 5405425.850000001,
+    "revenue_share": 94.28833909517908
+  },
+  "distribution": {
+    "total_products": 235061,
+    "products_with_sales": 12025,
+    "products_with_sales_pct": 5.115693373209507,
+    "products_without_sales": 223036,
+    "products_without_sales_pct": 94.88430662679049,
+    "avg_revenue_per_product": 24.38885148961333,
+    "median_revenue_per_product": 0.0,
+    "top_1pct_products": 2350,
+    "top_1pct_revenue": 2926039.69,
+    "top_1pct_revenue_share": 51.039720116903034
+  },
+  "price_analysis": {
+    "avg_price": 13.061828982410757,
+    "median_price": 0.0,
+    "min_price": 0.0,
+    "max_price": 499.96,
+    "std_price": 62.88648574414384
+  },
+  "long_tail": {
+    "products_for_50pct_revenue": 2256,
+    "products_for_50pct_pct": 0.9597508731776008,
+    "products_for_80pct_revenue": 5990,
+    "products_for_80pct_pct": 2.548274703162158,
+    "remaining_products": 229071,
+    "remaining_products_revenue_share": 20.0
+  },
+  "metadata": {
+    "generated_at": "2025-12-09T02:22:05.776259",
+    "script": "product_category_analysis.py",
+    "issue": "#12",
+    "total_products_analyzed": 235061
+  }
+}

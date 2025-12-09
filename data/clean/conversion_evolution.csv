@@ -1,0 +1,4 @@
+period,dates,days,avg_conversion_rate,avg_aov,total_transactions,total_revenue,conversion_change_pct,aov_change_pct
+Early,2015-05-03 → 2015-06-17,46,0.8,253.5,7487,1901111.78,0.0,0.0
+Mid,2015-06-18 → 2015-08-02,46,0.84,258.88,8153,2107578.33,5.0,2.12
+Late,2015-08-03 → 2015-09-18,47,0.84,253.72,6817,1724177.71,5.0,0.09
