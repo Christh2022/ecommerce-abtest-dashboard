@@ -61,7 +61,6 @@ app.layout = html.Div([
         "left": "0",
         "right": "0",
         "zIndex": "1000",
-        "padding": "1rem 0",
         "backgroundColor": "#161b22",
         "borderBottom": "1px solid #30363d"
     }),
