@@ -388,11 +388,16 @@ docker-compose.yml
 ```bash
 # Python 3.12+
 pip install -r dashboard/requirements.txt
+
+# Configuration Kaggle API (optionnel pour téléchargement données)
+export KAGGLE_USERNAME=<votre_username>
+export KAGGLE_KEY=<votre_key>
 ```
 
 ### Lancer le Dashboard
 ```bash
 # Depuis le dossier racine
+# Depuis le dossier dashboard
 cd dashboard
 python app.py
 
@@ -426,6 +431,10 @@ python scripts/generate_products_summary.py
 ### Avec Docker (à venir - Milestone 5)
 ```bash
 # Build et run tous les services
+=======
+### Avec Docker (à venir)
+```bash
+# Build et run
 docker-compose up --build
 
 # Services disponibles
