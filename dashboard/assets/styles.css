@@ -1,0 +1,930 @@
+/* ============================================
+   E-Commerce A/B Test Dashboard - Professional UI/UX
+   Dark Theme with Modern Design Patterns
+   Issue #26: Enhanced CSS Styling
+   ============================================ */
+
+/* ============================================
+   1. GLOBAL FOUNDATION
+   ============================================ */
+
+/* Root Variables for Consistent Design System */
+:root {
+    /* Color Palette */
+    --primary-blue: #667eea;
+    --primary-purple: #764ba2;
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --border-color: #30363d;
+    --text-primary: #c9d1d9;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    
+    /* Accent Colors */
+    --success: #2ecc71;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --info: #3498db;
+    
+    /* Spacing System */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    --shadow-md: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    --shadow-lg: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    --shadow-xl: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base HTML & Body */
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   2. TYPOGRAPHY SYSTEM
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+h1 { font-size: 2.5rem; letter-spacing: -0.02em; }
+h2 { font-size: 2rem; letter-spacing: -0.01em; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+p {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.7;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+small, .small {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   3. BOOTSTRAP OVERRIDES
+   ============================================ */
+
+.bg-light {
+    background-color: var(--bg-secondary) !important;
+}
+
+.bg-dark {
+    background-color: var(--bg-primary) !important;
+}
+
+.bg-white {
+    background-color: var(--bg-secondary) !important;
+}
+
+.text-dark {
+    color: var(--text-primary) !important;
+}
+
+.text-black-50 {
+    color: var(--text-secondary) !important;
+}
+
+hr {
+    border-color: var(--border-color) !important;
+    opacity: 1 !important;
+    margin: var(--spacing-lg) 0;
+}
+
+/* ============================================
+   4. FIXED HEADER
+   ============================================ */
+
+.shadow-lg {
+    box-shadow: var(--shadow-lg) !important;
+}
+
+/* Fixed Header Typography */
+.shadow-lg h1 {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    font-size: 1.8rem !important;
+    font-weight: 600 !important;
+}
+
+.shadow-lg p {
+    font-size: 0.95rem !important;
+    opacity: 0.9;
+}
+
+/* ============================================
+   5. SIDEBAR NAVIGATION
+   ============================================ */
+
+/* Navigation Links */
+.nav-link {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    transition: all var(--transition-base);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem !important;
+    margin-bottom: var(--spacing-xs);
+    border-left: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--primary-blue), var(--primary-purple));
+    transform: scaleY(0);
+    transition: transform var(--transition-base);
+}
+
+.nav-link:hover {
+    background-color: rgba(102, 126, 234, 0.08) !important;
+    color: var(--text-primary) !important;
+    transform: translateX(6px);
+}
+
+.nav-link:hover::before {
+    transform: scaleY(1);
+}
+
+.nav-link.active {
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.08) 100%) !important;
+    color: white !important;
+    font-weight: 600;
+    border-left-color: var(--primary-blue);
+}
+
+.nav-link.active::before {
+    transform: scaleY(1);
+}
+
+.nav-link i {
+    width: 24px;
+    text-align: center;
+    font-size: 1.1rem;
+    margin-right: var(--spacing-sm);
+    transition: transform var(--transition-base);
+}
+
+.nav-link:hover i {
+    transform: scale(1.1);
+}
+
+/* Sidebar Scrollbar */
+.nav-link::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nav-link::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+.nav-link::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.nav-link::-webkit-scrollbar-thumb:hover {
+    background: #667eea;
+}
+
+/* Sidebar Section Headers */
+h6.text-muted {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted) !important;
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
+    padding: 0 var(--spacing-md);
+}
+
+/* ============================================
+   6. CARDS & CONTAINERS
+   ============================================ */
+
+.card {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-lg) !important;
+    transition: all var(--transition-base);
+    color: var(--text-primary);
+    overflow: hidden;
+    position: relative;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--primary-purple));
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(102, 126, 234, 0.3) !important;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+.card-header {
+    background-color: var(--bg-tertiary) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    font-weight: 600;
+    color: var(--text-primary) !important;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1.1rem;
+}
+
+.card-header i {
+    color: var(--primary-blue);
+    margin-right: var(--spacing-sm);
+}
+
+.card-body {
+    color: var(--text-primary) !important;
+    padding: var(--spacing-lg);
+}
+
+/* ============================================
+   7. BUTTONS & INTERACTIONS
+   ============================================ */
+
+.btn {
+    font-weight: 600;
+    transition: all var(--transition-base);
+    border-radius: var(--radius-md);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple)) !important;
+    color: white !important;
+}
+
+.btn-success {
+    background: var(--success) !important;
+}
+
+.btn-warning {
+    background: var(--warning) !important;
+}
+
+.btn-danger {
+    background: var(--danger) !important;
+}
+
+.btn-info {
+    background: var(--info) !important;
+}
+
+/* Badges */
+.badge {
+    font-weight: 600;
+    padding: 0.5em 0.8em;
+    border-radius: 6px;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px;
+    border: none;
+    background-color: #161b22 !important;
+    border: 1px solid #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+.alert-success {
+    background-color: #1a3a2b !important;
+    border-color: #238636 !important;
+}
+
+.alert-info {
+    background-color: #1a2942 !important;
+    border-color: #1f6feb !important;
+}
+
+.alert-warning {
+    background-color: #3d2e1a !important;
+    border-color: #9e6a03 !important;
+}
+
+.alert-danger {
+    background-color: #3a1a1a !important;
+    border-color: #da3633 !important;
+}
+
+/* Text colors */
+.text-muted {
+    color: #8b949e !important;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    color: #c9d1d9 !important;
+}
+
+.lead {
+    color: #8b949e !important;
+}
+
+/* Plotly Charts */
+.js-plotly-plot {
+    border-radius: 10px;
+}
+
+/* Loading Spinner */
+._dash-loading-callback {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+/* Tables */
+.dash-table-container {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.dash-spreadsheet {
+    font-family: inherit;
+}
+
+.dash-spreadsheet-container .dash-spreadsheet-inner table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.dash-spreadsheet-container .dash-cell {
+    padding: 12px 15px;
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+    border-color: #30363d !important;
+}
+
+.dash-header {
+    background-color: #667eea !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+.table {
+    color: #c9d1d9 !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #161b22 !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #0d1117 !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #1c2128 !important;
+}
+
+.table-bordered {
+    border-color: #30363d !important;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border-color: #30363d !important;
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #6c757d;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: transparent;
+    border-bottom: 3px solid #667eea;
+    color: #667eea;
+    font-weight: 600;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0d1117;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #484f58;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-link {
+        font-size: 0.9rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem !important;
+    }
+    
+    h2 {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card, .alert {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Metric Cards */
+.metric-card {
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer a {
+    color: #667eea;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* List Groups */
+.list-group-item {
+    transition: background-color 0.3s ease;
+    background-color: #161b22 !important;
+    border-color: #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+.list-group-item:hover {
+    background-color: #1c2128 !important;
+}
+
+/* Progress bars */
+.progress {
+    border-radius: 10px;
+    height: 25px;
+}
+
+.progress-bar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-weight: 600;
+}
+
+/* Tooltips */
+.tooltip-inner {
+    background-color: #212529;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+}
+
+/* Input groups */
+.input-group {
+    border-radius: 8px;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 2px solid #30363d;
+    background-color: #0d1117 !important;
+    color: #c9d1d9 !important;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Dropdowns */
+.dropdown-menu {
+    border-radius: 8px;
+    background-color: #161b22 !important;
+    border: 1px solid #30363d !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.dropdown-item {
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    margin: 2px 5px;
+    color: #c9d1d9 !important;
+}
+
+.dropdown-item:hover {
+    background-color: #667eea;
+    color: white !important;
+}
+
+/* Dash Dropdown (dcc.Dropdown) */
+.Select-control {
+    background-color: #0d1117 !important;
+    border: 1px solid #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+.Select-menu-outer {
+    background-color: #161b22 !important;
+    border: 1px solid #30363d !important;
+}
+
+.Select-option {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+}
+
+.Select-option:hover {
+    background-color: #667eea !important;
+    color: white !important;
+}
+
+.Select-option.is-selected {
+    background-color: #764ba2 !important;
+    color: white !important;
+}
+
+.Select-value-label {
+    color: #c9d1d9 !important;
+}
+
+.Select-placeholder {
+    color: #8b949e !important;
+}
+
+.Select-arrow {
+    border-color: #8b949e transparent transparent !important;
+}
+
+/* DatePickerRange */
+.DateInput {
+    background-color: #0d1117 !important;
+}
+
+.DateInput_input {
+    background-color: #0d1117 !important;
+    color: #c9d1d9 !important;
+    border: 1px solid #30363d !important;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.DateInput_input:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.DateInput_input::placeholder {
+    color: #8b949e !important;
+}
+
+.DateRangePickerInput {
+    background-color: #0d1117 !important;
+}
+
+.DateRangePickerInput_arrow {
+    color: #8b949e !important;
+}
+
+.DayPicker {
+    background-color: #161b22 !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.DayPickerNavigation_button {
+    background-color: #0d1117 !important;
+    border: 1px solid #30363d !important;
+}
+
+.DayPickerNavigation_button:hover {
+    background-color: #667eea !important;
+    border-color: #667eea !important;
+}
+
+.CalendarMonth {
+    background-color: #161b22 !important;
+}
+
+.CalendarMonth_caption {
+    color: #c9d1d9 !important;
+}
+
+.CalendarDay {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+    border: 1px solid #30363d !important;
+}
+
+.CalendarDay:hover {
+    background-color: #667eea !important;
+    color: white !important;
+    border-color: #667eea !important;
+}
+
+.CalendarDay__selected {
+    background-color: #764ba2 !important;
+    color: white !important;
+    border-color: #764ba2 !important;
+}
+
+.CalendarDay__selected:hover {
+    background-color: #667eea !important;
+    border-color: #667eea !important;
+}
+
+.CalendarDay__selected_span {
+    background-color: rgba(102, 126, 234, 0.3) !important;
+    color: #c9d1d9 !important;
+    border-color: #667eea !important;
+}
+
+.CalendarDay__blocked_out_of_range {
+    color: #484f58 !important;
+    background-color: #0d1117 !important;
+}
+
+.DayPickerKeyboardShortcuts_buttonReset {
+    background-color: #0d1117 !important;
+    border: 1px solid #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+.DayPickerKeyboardShortcuts_show__bottomRight::before {
+    border-right-color: #30363d !important;
+}
+
+/* Plotly dark theme */
+.js-plotly-plot .plotly {
+    background-color: #161b22 !important;
+}
+
+/* Container background */
+.container-fluid {
+    background-color: #0d1117 !important;
+}
+
+.container {
+    background-color: #0d1117 !important;
+}
+
+/* Modal */
+.modal-content {
+    background-color: #161b22 !important;
+    border-color: #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+.modal-header {
+    border-bottom-color: #30363d !important;
+}
+
+.modal-footer {
+    border-top-color: #30363d !important;
+}
+
+.modal-title {
+    color: #c9d1d9 !important;
+}
+
+.close {
+    color: #c9d1d9 !important;
+}
+
+/* Nav pills */
+.nav-pills .nav-link {
+    color: #8b949e !important;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background-color: #161b22 !important;
+}
+
+.breadcrumb-item {
+    color: #8b949e !important;
+}
+
+.breadcrumb-item.active {
+    color: #c9d1d9 !important;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: #8b949e !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+    background-color: #161b22 !important;
+    border-color: #30363d !important;
+    color: #8b949e !important;
+}
+
+.pagination .page-link:hover {
+    background-color: #1c2128 !important;
+    color: #c9d1d9 !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #667eea !important;
+    border-color: #667eea !important;
+}
+
+/* Accordion */
+.accordion-item {
+    background-color: #161b22 !important;
+    border-color: #30363d !important;
+}
+
+.accordion-button {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #0d1117 !important;
+    color: #c9d1d9 !important;
+}
+
+.accordion-body {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+}
+
+/* Offcanvas */
+.offcanvas {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+}
+
+/* Toast */
+.toast {
+    background-color: #161b22 !important;
+    border-color: #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+.toast-header {
+    background-color: #0d1117 !important;
+    border-bottom-color: #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+/* Small text */
+.small, small {
+    color: #8b949e !important;
+}
+
+/* Links */
+a {
+    color: #58a6ff !important;
+}
+
+a:hover {
+    color: #79c0ff !important;
+}
+
+/* Code blocks */
+code {
+    background-color: #161b22 !important;
+    color: #ff7b72 !important;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+pre {
+    background-color: #161b22 !important;
+    border: 1px solid #30363d !important;
+    color: #c9d1d9 !important;
+    padding: 16px;
+    border-radius: 6px;
+}
+
+/* Select dropdown */
+select.form-control,
+select.form-select {
+    background-color: #0d1117 !important;
+    color: #c9d1d9 !important;
+    border-color: #30363d !important;
+}
+
+select.form-control option,
+select.form-select option {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+}
