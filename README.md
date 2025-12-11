@@ -1,4 +1,4 @@
-"# E-commerce Dashboard & A/B Testing
+# E-commerce Dashboard & A/B Testing 🚀
 
 Plateforme d'analyse e-commerce avec dashboard interactif et outils d'A/B testing utilisant Python, Dash, PostgreSQL, Docker et Grafana.
 
@@ -7,10 +7,29 @@ Plateforme d'analyse e-commerce avec dashboard interactif et outils d'A/B testin
 Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1.4M utilisateurs, 235K produits) pour créer un dashboard de visualisation et des outils d'analyse de performance e-commerce.
 
 ### Objectifs
-- 📈 **Dashboard interactif** : Visualisation en temps réel des KPIs e-commerce
-- 🧪 **A/B Testing** : Comparaison de segments utilisateurs et analyse de conversion
+- 📈 **Dashboard interactif** : 12+ pages de visualisation en temps réel des KPIs e-commerce
+- 🧪 **A/B Testing** : 16 scénarios de test simulés avec analyse statistique complète
 - 📉 **Analyse de tendances** : Métriques quotidiennes, entonnoirs de conversion, performance produits
-- 🎯 **Recommandations** : Identification des produits top performers et opportunités d'optimisation
+- 🎯 **Méthodologie** : Guide complet des bonnes pratiques en A/B testing
+- 🐳 **Déploiement** : Application containerisée avec Docker, PostgreSQL et Grafana
+
+## ✨ Démo en Ligne
+
+**Dashboard accessible à** : http://127.0.0.1:8050
+
+**Pages disponibles** :
+- 🏠 Accueil - Vue d'ensemble et KPIs
+- 👥 Trafic - Analyse des visiteurs
+- 🖱️ Comportement - Patterns d'engagement
+- 🛒 Conversions - Funnel analysis
+- 📦 Produits - Performance et Pareto
+- 🔄 Funnel - Visualisation tunnel
+- 🧪 Simulations A/B - 16 scénarios
+- 📊 Résultats A/B - Analyse statistique
+- 🧮 Calculateur Z-Test - Outil interactif
+- 📈 Visualisations - Graphiques avancés
+- 📚 Méthodologie - Guide complet
+- ℹ️ À Propos - Documentation projet
 
 ---
 
@@ -250,22 +269,174 @@ python scripts/generate_products_summary.py
 
 ---
 
-## 🎯 Prochaines étapes : Milestone 2
+## 🎯 Milestones du Projet
 
-### Dashboard & Visualisation
-- [ ] **Issue #9** : Créer le dashboard Dash avec visualisations interactives
-- [ ] **Issue #10** : Implémenter les filtres (segment, période, produit)
-- [ ] **Issue #11** : Configurer Docker + PostgreSQL
-- [ ] **Issue #12** : Intégrer Grafana pour monitoring avancé
-- [ ] **Issue #13** : Déployer l'application complète
+### ✅ Milestone 1 : Dataset & Préparation des Données
+**Statut** : COMPLÉTÉ (8/8 issues)  
+**Branche** : `feature/data-preprocessing`  
+**Date** : Décembre 2025
+
+**Livrables** :
+- ✅ Téléchargement et nettoyage des données RetailRocket
+- ✅ 8 tables enrichies (490 MB)
+- ✅ Scripts de transformation et agrégation
+- ✅ Métriques quotidiennes et analyse produits
+
+---
+
+### ✅ Milestone 2 : KPIs & Métriques Business
+**Statut** : COMPLÉTÉ (6/6 issues)  
+**Branche** : `feature/kpi-metrics`  
+**Date** : Décembre 2025
+
+**Livrables** :
+- ✅ Calcul des KPIs principaux (conversion, revenu, engagement)
+- ✅ Segmentation utilisateurs (New, Occasional, Regular, Premium)
+- ✅ Analyse temporelle (daily, weekly, monthly)
+- ✅ Moyennes mobiles et tendances
+- ✅ Métriques par produit et catégorie
+
+---
+
+### ✅ Milestone 3 : A/B Testing & Simulations
+**Statut** : COMPLÉTÉ (10/10 issues)  
+**Branche** : `feature/ab-testing`  
+**Date** : Décembre 2025
+
+**Livrables** :
+- ✅ 16 scénarios de test A/B simulés
+- ✅ Simulations Monte Carlo (10,000 itérations/scenario)
+- ✅ Tests statistiques (Chi-Square, Z-Test)
+- ✅ Calcul puissance statistique (78-81%)
+- ✅ Données de simulation sur 30 jours (480 lignes)
+- ✅ Métriques : lift, confidence, p-value, ROI
+
+---
+
+### ✅ Milestone 4 : Dashboard Interactif
+**Statut** : COMPLÉTÉ (19/19 issues)  
+**Branche** : `feature/dashboard-home`  
+**Date** : Décembre 2025
+
+**Livrables** :
+- ✅ Application Dash multi-pages (12 pages)
+- ✅ Visualisations Plotly interactives (60+ graphiques)
+- ✅ Filtres dynamiques (date, segment, produit)
+- ✅ Page Accueil avec KPIs temps réel
+- ✅ Pages d'analyse : Trafic, Comportement, Conversions
+- ✅ Pages produits : Performance, Pareto, Funnel
+- ✅ Pages A/B : Simulations, Résultats, Calculateur
+- ✅ Page Visualisations avancées
+- ✅ Page Méthodologie (guide complet)
+- ✅ Page À Propos (documentation)
+- ✅ Thème dark moderne avec Bootstrap 5
+- ✅ Gestion d'erreurs et callbacks optimisés
+
+**Technologies** :
+- Python 3.12+
+- Dash 2.14.2
+- Plotly 5.18.0
+- Pandas, NumPy, SciPy
+- Bootstrap 5 + Font Awesome
+
+---
+
+### 🚧 Milestone 5 : Docker & Déploiement
+**Statut** : EN COURS (0/14 issues)  
+**Branche** : `feature/docker-setup`  
+**Date** : Décembre 2025
+
+**Objectif** : Rendre l'application portable et exécutable avec Docker
+
+#### Containerisation Dash App (Issues #28-31)
+- [ ] **#28** - Créer Dockerfile pour l'application Dash
+- [ ] **#29** - Créer docker-compose.yml multi-services
+- [ ] **#30** - Tester build de l'image Docker
+- [ ] **#31** - Tester run et accès port 8050
+
+#### PostgreSQL Integration (Issues #41-43)
+- [ ] **#41** - Créer service Postgres dans docker-compose
+- [ ] **#42** - Créer script de migration/init SQL
+- [ ] **#43** - Importer les KPIs dans Postgres automatiquement
+
+#### Grafana Monitoring (Issues #44-48)
+- [ ] **#44** - Ajouter Grafana dans docker-compose
+- [ ] **#45** - Configurer datasource Postgres
+- [ ] **#46** - Créer dashboard Grafana (JSON)
+- [ ] **#47** - Panels : sessions, conversion, revenues, erreurs
+- [ ] **#48** - Test accès http://localhost:3000
+
+#### Tests & Optimisation (Issues #49-50)
+- [ ] **#49** - docker-compose up — tests complets
+- [ ] **#50** - Optimiser volumes et réseaux
+
+**Architecture cible** :
+```
+docker-compose.yml
+├── dash-app (port 8050)
+├── postgres (port 5432)
+├── grafana (port 3000)
+├── loki (logs)
+└── promtail (agent)
+```
+
+---
+
+## 🚀 Installation & Démarrage
+
+### Prérequis
+```bash
+# Python 3.12+
+pip install -r dashboard/requirements.txt
+
+# Configuration Kaggle API (optionnel pour téléchargement données)
+export KAGGLE_USERNAME=<votre_username>
+export KAGGLE_KEY=<votre_key>
+```
+
+### Lancer le Dashboard
+```bash
+# Depuis le dossier dashboard
+cd dashboard
+python app.py
+
+# Accéder au dashboard
+http://127.0.0.1:8050
+```
+
+### Avec Docker (à venir)
+```bash
+# Build et run
+docker-compose up --build
+
+# Services disponibles
+# - Dashboard: http://localhost:8050
+# - Grafana: http://localhost:3000
+# - PostgreSQL: localhost:5432
+```
+
+---
+
+## 📦 Dépendances
+
+```txt
+dash==2.14.2
+dash-bootstrap-components==1.5.0
+plotly==5.18.0
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.11.0
+```
 
 ---
 
 ## 👥 Équipe & Contribution
 
-**Auteur** : E-commerce Dashboard Team  
+**Développé par** : Christh Mampassi  
+**Email** : cmampassi273@gmail.com  
 **Repository** : [Christh2022/ecommerce-abtest-dashboard](https://github.com/Christh2022/ecommerce-abtest-dashboard)  
-**Branche active** : `feature/data-preprocessing`
+**Branche main** : `main`  
+**Branche dev** : `dev`
 
 ---
 
@@ -275,5 +446,7 @@ Ce projet utilise le dataset RetailRocket sous licence publique Kaggle.
 
 ---
 
-**Dernière mise à jour** : 9 décembre 2025  
-**Milestone 1** : ✅ COMPLÉTÉ (8/8 issues)" 
+**Dernière mise à jour** : 11 décembre 2025  
+**Version** : 1.0.0  
+**Milestones complétés** : 4/5 ✅  
+**Issues résolues** : 43/57 
