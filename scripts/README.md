@@ -3,8 +3,25 @@
 This directory contains all analysis and data processing scripts organized by milestone.
 
 ## Structure
+### üóÑÔ∏è Database Scripts
 
-### Ì≥Å data_prep/ - Milestone 1: Data Preparation & Cleaning
+#### Initialization & Migrations
+- `init_db.sql` - Complete database initialization (auto-run with Docker)
+- `run_migrations.py` - Migration runner with version tracking
+- `test_migrations.sh` - Migration test suite
+- `import_data_to_postgres.py` - Import CSV data to PostgreSQL
+
+#### migrations/
+Versioned SQL migration files:
+- `001_initial_schema.sql` - Core tables (analytics, A/B testing, monitoring)
+- `002_indexes_and_views.sql` - Performance indexes + 3 analytical views
+- `003_functions_and_triggers.sql` - Utility functions + automated triggers
+- `004_seed_data.sql` - Initial A/B test scenarios
+
+**Documentation:** See `MIGRATIONS.md` for detailed migration guide
+
+---
+### ÔøΩÔøΩÔøΩ data_prep/ - Milestone 1: Data Preparation & Cleaning
 Data acquisition, cleaning, preprocessing, and preparation scripts.
 
 **Scripts:**
@@ -24,7 +41,7 @@ Data acquisition, cleaning, preprocessing, and preparation scripts.
 
 ---
 
-### Ì≥Å kpi_analysis/ - Milestone 2: KPI & Metrics Analysis
+### ÔøΩÔøΩÔøΩ kpi_analysis/ - Milestone 2: KPI & Metrics Analysis
 Analysis scripts for traffic, behavior, conversion, products, and funnel (Issues #9-#13).
 
 **Scripts:**
@@ -45,7 +62,7 @@ Analysis scripts for traffic, behavior, conversion, products, and funnel (Issues
 
 ---
 
-### Ì≥Å ab_testing/ - Milestone 3: A/B Testing Simulation
+### ÔøΩÔøΩÔøΩ ab_testing/ - Milestone 3: A/B Testing Simulation
 A/B testing simulation and optimization scenarios.
 
 **Scripts:**
