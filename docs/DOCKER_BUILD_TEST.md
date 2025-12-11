@@ -6,19 +6,19 @@
 📦 **Image ID**: 6258befc4ce5  
 📏 **Image Size**: 699MB  
 🐍 **Python Version**: 3.12.12  
-🏗️ **Build Strategy**: Multi-stage build  
+🏗️ **Build Strategy**: Multi-stage build
 
 ## Image Layers Breakdown
 
-| Layer | Component | Size | Notes |
-|-------|-----------|------|-------|
-| Base | Debian Trixie | 87.4MB | debian:slim base |
-| Python | Python 3.12.12 | 41.3MB | Compiled Python |
-| Dependencies | pip packages | 398MB | Dash, Plotly, Pandas, etc. |
-| Data | CSV files | 21.7MB | Clean data from data/clean/ |
-| Application | Dashboard code | 733KB | Python source files |
-| User | dashuser | 22.5MB | Non-root user setup |
-| Config | ENV, WORKDIR, etc. | ~12KB | Configuration layers |
+| Layer        | Component          | Size   | Notes                       |
+| ------------ | ------------------ | ------ | --------------------------- |
+| Base         | Debian Trixie      | 87.4MB | debian:slim base            |
+| Python       | Python 3.12.12     | 41.3MB | Compiled Python             |
+| Dependencies | pip packages       | 398MB  | Dash, Plotly, Pandas, etc.  |
+| Data         | CSV files          | 21.7MB | Clean data from data/clean/ |
+| Application  | Dashboard code     | 733KB  | Python source files         |
+| User         | dashuser           | 22.5MB | Non-root user setup         |
+| Config       | ENV, WORKDIR, etc. | ~12KB  | Configuration layers        |
 
 ## Optimizations Applied
 
@@ -27,7 +27,7 @@
 ✅ **No cache pip** - `PIP_NO_CACHE_DIR=1`  
 ✅ **Non-root user** - Security best practice (dashuser:1000)  
 ✅ **.dockerignore** - Excluded unnecessary files  
-✅ **Health check** - Automated health monitoring  
+✅ **Health check** - Automated health monitoring
 
 ## Build Command Used
 
@@ -56,11 +56,13 @@ FROM python:3.12-slim
 
 **Current**: 699MB  
 **Breakdown**:
+
 - Python + packages: ~440MB (63%)
 - Data files: 21.7MB (3%)
 - System: 237MB (34%)
 
 **Possible improvements**:
+
 - Use Alpine base: Could reduce to ~450MB (-35%)
 - Exclude large CSV files: -21.7MB if data is external
 - Use requirements.txt with only needed packages: -50MB potential
@@ -71,7 +73,7 @@ FROM python:3.12-slim
 ✅ Minimal base image (slim)  
 ✅ No build tools in final image  
 ✅ Explicit USER directive  
-✅ Health check configured  
+✅ Health check configured
 
 ## Next Steps (Issue #31)
 
