@@ -388,15 +388,11 @@ docker-compose.yml
 ```bash
 # Python 3.12+
 pip install -r dashboard/requirements.txt
-
-# Configuration Kaggle API (optionnel pour téléchargement données)
-export KAGGLE_USERNAME=<votre_username>
-export KAGGLE_KEY=<votre_key>
 ```
 
 ### Lancer le Dashboard
 ```bash
-# Depuis le dossier dashboard
+# Depuis le dossier racine
 cd dashboard
 python app.py
 
@@ -404,9 +400,32 @@ python app.py
 http://127.0.0.1:8050
 ```
 
-### Avec Docker (à venir)
+> **Note** : Les données sont déjà nettoyées et prêtes à l'emploi dans le dossier `data/clean/`. Aucune configuration Kaggle API n'est nécessaire pour utiliser le dashboard.
+
+### Préparation des données (optionnel)
+
+Si vous souhaitez télécharger et retraiter les données depuis zéro :
+
 ```bash
-# Build et run
+# 1. Configurer Kaggle API
+export KAGGLE_USERNAME=votre_username
+export KAGGLE_KEY=votre_key
+
+# 2. Télécharger le dataset
+python scripts/download_data.py
+
+# 3. Nettoyer et enrichir les données
+python scripts/clean_events.py
+python scripts/clean_item_properties.py
+python scripts/merge_data.py
+python scripts/generate_data_clean_simple.py
+python scripts/generate_daily_metrics.py
+python scripts/generate_products_summary.py
+```
+
+### Avec Docker (à venir - Milestone 5)
+```bash
+# Build et run tous les services
 docker-compose up --build
 
 # Services disponibles
