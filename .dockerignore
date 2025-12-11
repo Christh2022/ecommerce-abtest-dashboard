@@ -1,0 +1,79 @@
+# .dockerignore
+# Ignore unnecessary files to reduce build context size
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+README.md
+
+# Data (uncomment if you don't want to include data in image)
+# data/raw/
+# data/clean/*.csv
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+dashboard/pages/*.bak
+dashboard/pages/*.py.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Test files
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Scripts (if not needed in container)
+scripts/download_data.py
+scripts/inspect_csv.py
