@@ -57,19 +57,18 @@ layout = dbc.Container([
                     html.Label("Sélectionner un scénario:", className="fw-bold mb-2"),
                     dcc.Dropdown(
                         id='scenario-selector',
-                        options=[
-                            {'label': f"{row['scenario_name']} (Priority: {row['priority']})", 
-                             'value': row['scenario_id']}
-                            for _, row in df_results.iterrows()
-                        ] if df_results is not None else [],
-                        value=0 if df_results is not None and len(df_results) > 0 else None,
+                        options=[],
+                        value=None,
                         clearable=False,
-                        className='mb-2'
-                    )
-                ])
-            ], className="shadow-sm border-0 mb-4")
+                        className='mb-2',
+                        maxHeight=400,
+                        style={'zIndex': 9999}
+                    ),
+                    dcc.Store(id='scenario-store', data=None)
+                ], style={'overflow': 'visible'})
+            ], className="shadow-sm border-0 mb-4", style={'overflow': 'visible'})
         ])
-    ]),
+    ], style={'zIndex': 1000, 'position': 'relative'}),
     
     # KPI Cards
     dbc.Row([
@@ -265,6 +264,34 @@ layout = dbc.Container([
 
 # Callbacks
 @callback(
+    [Output('scenario-selector', 'options'),
+     Output('scenario-selector', 'value')],
+    Input('scenario-store', 'data')
+)
+def populate_scenario_dropdown(_):
+    """Populate scenario dropdown with current data - reload from file"""
+    try:
+        # Reload data from file to get latest scenarios
+        df_results_fresh = pd.read_csv(os.path.join(data_path, 'ab_test_simulation_results.csv'))
+        
+        if df_results_fresh is None or len(df_results_fresh) == 0:
+            return [], None
+        
+        options = [
+            {'label': f"{row['scenario_name']} (Priority: {row['priority']})", 
+             'value': row['scenario_id']}
+            for _, row in df_results_fresh.iterrows()
+        ]
+        
+        default_value = df_results_fresh.iloc[0]['scenario_id']
+        
+        return options, default_value
+    except Exception as e:
+        print(f"[ERROR] Loading scenarios: {e}")
+        return [], None
+
+
+@callback(
     [Output('sim-expected-lift', 'children'),
      Output('sim-statistical-power', 'children'),
      Output('sim-sample-size', 'children'),
@@ -276,14 +303,17 @@ def update_kpis(scenario_id):
     if df_results is None or scenario_id is None:
         return "N/A", "N/A", "N/A", "N/A"
     
-    scenario = df_results[df_results['scenario_id'] == scenario_id].iloc[0]
-    
-    return (
-        f"{scenario['expected_lift_pct']:.1f}%",
-        f"{scenario['statistical_power']:.1f}%",
-        f"{scenario['sample_size_per_group']:,.0f}",
-        f"${scenario['implementation_cost']:,.0f}"
-    )
+    try:
+        scenario = df_results[df_results['scenario_id'] == scenario_id].iloc[0]
+        
+        return (
+            f"+{scenario['expected_lift_pct']:.1f}%",
+            f"{scenario['statistical_power'] * 100:.1f}%",
+            f"{scenario['sample_size_per_group']:,.0f}",
+            f"${scenario['implementation_cost']:,.0f}"
+        )
+    except Exception as e:
+        return "Erreur", "Erreur", "Erreur", "Erreur"
 
 
 @callback(
@@ -395,15 +425,29 @@ def update_lift_metrics(scenario_id):
             x=0.5, y=0.5, showarrow=False
         )
     
-    scenario_data = df_simulation[df_simulation['scenario_id'] == scenario_id]
-    last_day = scenario_data[scenario_data['day_number'] == scenario_data['day_number'].max()].iloc[0]
-    
-    metrics = ['View → Cart', 'Cart → Purchase', 'View → Purchase']
-    values = [
-        last_day['lift_view_to_cart_pct'],
-        last_day['lift_cart_to_purchase_pct'],
-        last_day['lift_view_to_purchase_pct']
-    ]
+    try:
+        scenario_data = df_simulation[df_simulation['scenario_id'] == scenario_id]
+        if len(scenario_data) == 0:
+            return go.Figure().add_annotation(
+                text="Aucune donnée pour ce scénario",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        last_day = scenario_data[scenario_data['day_number'] == scenario_data['day_number'].max()].iloc[0]
+        
+        metrics = ['View → Cart', 'Cart → Purchase', 'View → Purchase']
+        values = [
+            last_day['lift_view_to_cart_pct'],
+            last_day['lift_cart_to_purchase_pct'],
+            last_day['lift_view_to_purchase_pct']
+        ]
+    except Exception as e:
+        return go.Figure().add_annotation(
+            text=f"Erreur: {str(e)}",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
     
     colors = ['#3498db', '#f39c12', '#2ecc71']
     
@@ -612,48 +656,63 @@ def update_control_variant_compare(scenario_id):
             x=0.5, y=0.5, showarrow=False
         )
     
-    scenario_data = df_simulation[df_simulation['scenario_id'] == scenario_id]
-    last_day = scenario_data[scenario_data['day_number'] == scenario_data['day_number'].max()].iloc[0]
-    
-    categories = ['Views', 'Carts', 'Purchases', 'Revenue']
-    control_values = [
-        last_day['control_views'],
-        last_day['control_carts'],
-        last_day['control_purchases'],
-        last_day['control_revenue'] / 100  # Scale down for visibility
-    ]
-    variant_values = [
-        last_day['variant_views'],
-        last_day['variant_carts'],
-        last_day['variant_purchases'],
-        last_day['variant_revenue'] / 100
-    ]
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        name='Control',
-        x=categories,
-        y=control_values,
-        marker_color='#e74c3c'
-    ))
-    
-    fig.add_trace(go.Bar(
-        name='Variant',
-        x=categories,
-        y=variant_values,
-        marker_color='#2ecc71'
-    ))
-    
-    fig.update_layout(
-        title="Control vs Variant (Jour 30)",
-        yaxis_title="Valeur",
-        barmode='group',
-        template='plotly_dark',
-        height=400
-    )
-    
-    return fig
+    try:
+        scenario_data = df_simulation[df_simulation['scenario_id'] == scenario_id]
+        if len(scenario_data) == 0:
+            return go.Figure().add_annotation(
+                text="Aucune donnée pour ce scénario",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        last_day = scenario_data[scenario_data['day_number'] == scenario_data['day_number'].max()].iloc[0]
+        
+        categories = ['Views', 'Carts', 'Purchases', 'Revenue']
+        control_values = [
+            last_day['control_views'],
+            last_day['control_carts'],
+            last_day['control_purchases'],
+            last_day['control_revenue'] / 100  # Scale down for visibility
+        ]
+        variant_values = [
+            last_day['variant_views'],
+            last_day['variant_carts'],
+            last_day['variant_purchases'],
+            last_day['variant_revenue'] / 100
+        ]
+        
+        fig = go.Figure()
+        
+        fig.add_trace(go.Bar(
+            name='Control',
+            x=categories,
+            y=control_values,
+            marker_color='#e74c3c'
+        ))
+        
+        fig.add_trace(go.Bar(
+            name='Variant',
+            x=categories,
+            y=variant_values,
+            marker_color='#2ecc71'
+        ))
+        
+        fig.update_layout(
+            title="Control vs Variant (Jour 30)",
+            yaxis_title="Valeur",
+            barmode='group',
+            template='plotly_dark',
+            height=400
+        )
+        
+        return fig
+        
+    except Exception as e:
+        return go.Figure().add_annotation(
+            text=f"Erreur: {str(e)}",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False
+        )
 
 
 @callback(

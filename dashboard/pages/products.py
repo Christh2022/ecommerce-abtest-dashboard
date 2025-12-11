@@ -9,6 +9,7 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
+import numpy as np
 from pathlib import Path
 
 # Register this page
@@ -288,59 +289,81 @@ def update_top_products_revenue(_):
 )
 def update_products_conversion(_):
     """Create products conversion rate chart"""
-    if df_products is None:
-        return go.Figure()
+    if df_products is None or len(df_products) == 0:
+        return go.Figure().update_layout(
+            title="Aucune donnée disponible",
+            template='plotly_dark',
+            height=500
+        )
     
-    # Filter products with purchases and reasonable conversion rates
-    df_with_sales = df_products[(df_products['purchases'] > 0) & 
-                                (df_products['view_to_purchase_rate'] < 100)].copy()
-    
-    if len(df_with_sales) == 0:
-        return go.Figure()
-    
-    # Drop any NaN values
-    df_with_sales = df_with_sales.dropna(subset=['view_to_purchase_rate', 'total_revenue'])
-    
-    if len(df_with_sales) == 0:
-        return go.Figure()
-    
-    # Top 30 by conversion
-    top30 = df_with_sales.nlargest(30, 'view_to_purchase_rate')
-    
-    fig = go.Figure()
-    
-    # Calculate marker sizes (clip between 10 and 30)
-    marker_sizes = (top30['total_revenue'] / 500).clip(10, 30)
-    
-    fig.add_trace(go.Scatter(
-        x=top30['view_to_purchase_rate'],
-        y=range(len(top30)),
-        mode='markers',
-        marker=dict(
-            size=marker_sizes,
-            color=top30['view_to_purchase_rate'],
-            colorscale='Greens',
-            showscale=True,
-            colorbar=dict(title="Conv. %"),
-            line=dict(color='white', width=1)
-        ),
-        text=[f"Produit {pid}" for pid in top30['product_id']],
-        hovertemplate='<b>%{text}</b><br>' +
-                      'Conversion: %{x:.2f}%<br>' +
-                      '<extra></extra>'
-    ))
-    
-    fig.update_layout(
-        title="Taux de Conversion View → Purchase (Top 30)",
-        xaxis_title="Taux de Conversion (%)",
-        yaxis_title="Rank",
-        template='plotly_dark',
-        height=500,
-        showlegend=False,
-        yaxis=dict(showticklabels=False)
-    )
-    
-    return fig
+    try:
+        # Filter products with purchases and reasonable conversion rates
+        df_with_sales = df_products[(df_products['purchases'] > 0) & 
+                                    (df_products['view_to_purchase_rate'] < 100) &
+                                    (df_products['view_to_purchase_rate'] > 0)].copy()
+        
+        if len(df_with_sales) == 0:
+            return go.Figure().update_layout(
+                title="Aucun produit avec conversions",
+                template='plotly_dark',
+                height=500
+            )
+        
+        # Drop any NaN/inf values
+        df_with_sales = df_with_sales.replace([np.inf, -np.inf], np.nan)
+        df_with_sales = df_with_sales.dropna(subset=['view_to_purchase_rate', 'total_revenue'])
+        
+        if len(df_with_sales) == 0:
+            return go.Figure().update_layout(
+                title="Données invalides",
+                template='plotly_dark',
+                height=500
+            )
+        
+        # Top 30 by conversion
+        top30 = df_with_sales.nlargest(30, 'view_to_purchase_rate')
+        
+        fig = go.Figure()
+        
+        # Calculate marker sizes (clip between 10 and 30)
+        marker_sizes = (top30['total_revenue'] / 500).clip(10, 30)
+        
+        fig.add_trace(go.Scatter(
+            x=top30['view_to_purchase_rate'],
+            y=list(range(len(top30))),
+            mode='markers',
+            marker=dict(
+                size=marker_sizes,
+                color=top30['view_to_purchase_rate'],
+                colorscale='Greens',
+                showscale=True,
+                colorbar=dict(title="Conv. %"),
+                line=dict(color='white', width=1)
+            ),
+            text=[f"Produit {pid}" for pid in top30['product_id']],
+            hovertemplate='<b>%{text}</b><br>' +
+                          'Conversion: %{x:.2f}%<br>' +
+                          '<extra></extra>'
+        ))
+        
+        fig.update_layout(
+            title="Taux de Conversion View → Purchase (Top 30)",
+            xaxis_title="Taux de Conversion (%)",
+            yaxis_title="Rank",
+            template='plotly_dark',
+            height=500,
+            showlegend=False,
+            yaxis=dict(showticklabels=False)
+        )
+        
+        return fig
+        
+    except Exception as e:
+        return go.Figure().update_layout(
+            title=f"Erreur: {str(e)}",
+            template='plotly_dark',
+            height=500
+        )
 
 
 @callback(
@@ -392,75 +415,109 @@ def update_products_aov(_):
 )
 def update_pareto_chart(_):
     """Create Pareto analysis chart"""
-    if df_products is None:
-        return go.Figure()
-    
-    # Filter products with revenue > 0
-    df_with_revenue = df_products[df_products['total_revenue'] > 0].copy()
-    
-    if len(df_with_revenue) == 0:
-        return go.Figure()
-    
-    # Drop any NaN values
-    df_with_revenue = df_with_revenue.dropna(subset=['total_revenue'])
-    
-    if len(df_with_revenue) == 0:
-        return go.Figure()
-    
-    # Sort by revenue and calculate cumulative
-    df_sorted = df_with_revenue.sort_values('total_revenue', ascending=False).reset_index(drop=True)
-    df_sorted['cumulative_revenue_pct'] = (df_sorted['total_revenue'].cumsum() / df_sorted['total_revenue'].sum()) * 100
-    df_sorted['product_pct'] = ((df_sorted.index + 1) / len(df_with_revenue)) * 100
-    
-    fig = go.Figure()
-    
-    # Revenue bars
-    fig.add_trace(go.Bar(
-        x=df_sorted['product_pct'][:100],
-        y=df_sorted['total_revenue'][:100],
-        name='Revenue',
-        marker_color='#3498db',
-        yaxis='y',
-        opacity=0.6
-    ))
-    
-    # Cumulative line
-    fig.add_trace(go.Scatter(
-        x=df_sorted['product_pct'],
-        y=df_sorted['cumulative_revenue_pct'],
-        name='Revenue Cumulé (%)',
-        mode='lines',
-        line=dict(color='#e74c3c', width=3),
-        yaxis='y2'
-    ))
-    
-    # 80% line
-    fig.add_hline(y=80, line_dash="dash", line_color="green", 
-                  annotation_text="80% du revenue", yaxis='y2')
-    
-    fig.update_layout(
-        title="Analyse Pareto: 2.55% des produits = 80% du revenue",
-        xaxis_title="% des Produits",
-        yaxis_title="Revenue (€)",
-        yaxis2=dict(
-            title="Revenue Cumulé (%)",
-            overlaying='y',
-            side='right',
-            range=[0, 100]
-        ),
-        template='plotly_dark',
-        height=400,
-        hovermode='x unified',
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
+    if df_products is None or len(df_products) == 0:
+        return go.Figure().update_layout(
+            title="Aucune donnée disponible",
+            template='plotly_dark',
+            height=500
         )
-    )
     
-    return fig
+    try:
+        # Filter products with revenue > 0
+        df_with_revenue = df_products[df_products['total_revenue'] > 0].copy()
+        
+        if len(df_with_revenue) == 0:
+            return go.Figure().update_layout(
+                title="Aucun produit avec revenue",
+                template='plotly_dark',
+                height=500
+            )
+        
+        # Drop any NaN/inf values
+        df_with_revenue = df_with_revenue.replace([np.inf, -np.inf], np.nan)
+        df_with_revenue = df_with_revenue.dropna(subset=['total_revenue'])
+        
+        if len(df_with_revenue) == 0:
+            return go.Figure().update_layout(
+                title="Données invalides",
+                template='plotly_dark',
+                height=500
+            )
+        
+        # Sort by revenue and calculate cumulative
+        df_sorted = df_with_revenue.sort_values('total_revenue', ascending=False).reset_index(drop=True)
+        df_sorted['cumulative_revenue_pct'] = (df_sorted['total_revenue'].cumsum() / df_sorted['total_revenue'].sum()) * 100
+        df_sorted['product_pct'] = ((df_sorted.index + 1) / len(df_with_revenue)) * 100
+        
+        fig = go.Figure()
+        
+        # Revenue bars
+        fig.add_trace(go.Bar(
+            x=df_sorted['product_pct'][:100],
+            y=df_sorted['total_revenue'][:100],
+            name='Revenue',
+            marker_color='#3498db',
+            yaxis='y',
+            opacity=0.6
+        ))
+        
+        # Cumulative line
+        fig.add_trace(go.Scatter(
+            x=df_sorted['product_pct'],
+            y=df_sorted['cumulative_revenue_pct'],
+            name='Revenue Cumulé (%)',
+            mode='lines',
+            line=dict(color='#e74c3c', width=3),
+            yaxis='y2'
+        ))
+        
+        # 80% line - add as a shape on y2 axis
+        fig.add_shape(
+            type="line",
+            x0=0, x1=100,
+            y0=80, y1=80,
+            yref='y2',
+            line=dict(color="green", width=2, dash="dash")
+        )
+        fig.add_annotation(
+            x=50, y=80,
+            yref='y2',
+            text="80% du revenue",
+            showarrow=False,
+            yshift=10,
+            font=dict(color="green")
+        )
+        
+        fig.update_layout(
+            title="Analyse Pareto: 2.55% des produits = 80% du revenue",
+            xaxis_title="% des Produits",
+            yaxis_title="Revenue (€)",
+            yaxis2=dict(
+                title="Revenue Cumulé (%)",
+                overlaying='y',
+                side='right',
+                range=[0, 100]
+            ),
+            template='plotly_dark',
+            height=400,
+            hovermode='x unified',
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
+        
+        return fig
+        
+    except Exception as e:
+        return go.Figure().update_layout(
+            title=f"Erreur: {str(e)}",
+            template='plotly_dark',
+            height=500
+        )
 
 
 @callback(

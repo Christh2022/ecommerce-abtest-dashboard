@@ -533,11 +533,16 @@ def filter_data(df, start_date, end_date, weekday, daytype):
     
     # Filter by date range if provided
     if start_date is not None and end_date is not None:
-        # Convert string dates to datetime if needed
+        # Convert to pandas datetime for comparison
         if isinstance(start_date, str):
-            start_date = pd.to_datetime(start_date).date()
+            start_date = pd.to_datetime(start_date)
+        else:
+            start_date = pd.to_datetime(start_date)
+            
         if isinstance(end_date, str):
-            end_date = pd.to_datetime(end_date).date()
+            end_date = pd.to_datetime(end_date)
+        else:
+            end_date = pd.to_datetime(end_date)
         
         df_filtered = df_filtered[(df_filtered['date'] >= start_date) & (df_filtered['date'] <= end_date)]
     
@@ -564,63 +569,70 @@ def filter_data(df, start_date, end_date, weekday, daytype):
 )
 def update_traffic_chart(start_date, end_date, weekday, daytype):
     """Create traffic evolution chart"""
-    if df_daily is None:
+    try:
+        if df_daily is None:
+            return go.Figure().add_annotation(
+                text="Données non disponibles",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        # Filter data
+        df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
+        
+        if df_filtered is None or len(df_filtered) == 0:
+            return go.Figure().add_annotation(
+                text="Aucune donnée pour cette sélection",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        fig = go.Figure()
+        
+        # Daily traffic
+        fig.add_trace(go.Scatter(
+            x=df_filtered['date'],
+            y=df_filtered['unique_users'],
+            mode='lines',
+            name='Utilisateurs Quotidiens',
+            line=dict(color='#667eea', width=2),
+            fill='tozeroy',
+            fillcolor='rgba(102, 126, 234, 0.1)'
+        ))
+        
+        # 7-day moving average
+        fig.add_trace(go.Scatter(
+            x=df_filtered['date'],
+            y=df_filtered['ma7_users'],
+            mode='lines',
+            name='Moyenne Mobile 7j',
+            line=dict(color='#764ba2', width=2, dash='dash')
+        ))
+        
+        fig.update_layout(
+            title="Évolution du Trafic (Mai - Sept 2015)",
+            xaxis_title="Date",
+            yaxis_title="Utilisateurs Uniques",
+            hovermode='x unified',
+            template='plotly_dark',
+            height=350,
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
+        
+        return fig
+    except Exception as e:
         return go.Figure().add_annotation(
-            text="Données non disponibles",
+            text=f"Erreur: {str(e)}",
             xref="paper", yref="paper",
             x=0.5, y=0.5, showarrow=False
         )
-    
-    # Filter data
-    df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
-    
-    if df_filtered is None or len(df_filtered) == 0:
-        return go.Figure().add_annotation(
-            text="Aucune donnée pour cette sélection",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False
-        )
-    
-    fig = go.Figure()
-    
-    # Daily traffic
-    fig.add_trace(go.Scatter(
-        x=df_filtered['date'],
-        y=df_filtered['unique_users'],
-        mode='lines',
-        name='Utilisateurs Quotidiens',
-        line=dict(color='#667eea', width=2),
-        fill='tozeroy',
-        fillcolor='rgba(102, 126, 234, 0.1)'
-    ))
-    
-    # 7-day moving average
-    fig.add_trace(go.Scatter(
-        x=df_filtered['date'],
-        y=df_filtered['ma7_users'],
-        mode='lines',
-        name='Moyenne Mobile 7j',
-        line=dict(color='#764ba2', width=2, dash='dash')
-    ))
-    
-    fig.update_layout(
-        title="Évolution du Trafic (Mai - Sept 2015)",
-        xaxis_title="Date",
-        yaxis_title="Utilisateurs Uniques",
-        hovermode='x unified',
-        template='plotly_dark',
-        height=350,
-        showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        )
-    )
-    
-    return fig
 
 
 @callback(
@@ -632,61 +644,68 @@ def update_traffic_chart(start_date, end_date, weekday, daytype):
 )
 def update_revenue_chart(start_date, end_date, weekday, daytype):
     """Create revenue evolution chart"""
-    if df_daily is None:
+    try:
+        if df_daily is None:
+            return go.Figure().add_annotation(
+                text="Données non disponibles",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        # Filter data
+        df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
+        
+        if df_filtered is None or len(df_filtered) == 0:
+            return go.Figure().add_annotation(
+                text="Aucune donnée pour cette sélection",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        fig = go.Figure()
+        
+        # Daily revenue
+        fig.add_trace(go.Bar(
+            x=df_filtered['date'],
+            y=df_filtered['daily_revenue'],
+            name='Revenue Quotidien',
+            marker_color='#2ecc71',
+            opacity=0.7
+        ))
+        
+        # 7-day moving average
+        fig.add_trace(go.Scatter(
+            x=df_filtered['date'],
+            y=df_filtered['ma7_revenue'],
+            mode='lines',
+            name='Moyenne Mobile 7j',
+            line=dict(color='#e74c3c', width=3)
+        ))
+        
+        fig.update_layout(
+            title="Évolution du Revenue (Mai - Sept 2015)",
+            xaxis_title="Date",
+            yaxis_title="Revenue (€)",
+            hovermode='x unified',
+            template='plotly_dark',
+            height=350,
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
+        
+        return fig
+    except Exception as e:
         return go.Figure().add_annotation(
-            text="Données non disponibles",
+            text=f"Erreur: {str(e)}",
             xref="paper", yref="paper",
             x=0.5, y=0.5, showarrow=False
         )
-    
-    # Filter data
-    df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
-    
-    if df_filtered is None or len(df_filtered) == 0:
-        return go.Figure().add_annotation(
-            text="Aucune donnée pour cette sélection",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False
-        )
-    
-    fig = go.Figure()
-    
-    # Daily revenue
-    fig.add_trace(go.Bar(
-        x=df_filtered['date'],
-        y=df_filtered['daily_revenue'],
-        name='Revenue Quotidien',
-        marker_color='#2ecc71',
-        opacity=0.7
-    ))
-    
-    # 7-day moving average
-    fig.add_trace(go.Scatter(
-        x=df_filtered['date'],
-        y=df_filtered['ma7_revenue'],
-        mode='lines',
-        name='Moyenne Mobile 7j',
-        line=dict(color='#e74c3c', width=3)
-    ))
-    
-    fig.update_layout(
-        title="Évolution du Revenue (Mai - Sept 2015)",
-        xaxis_title="Date",
-        yaxis_title="Revenue (€)",
-        hovermode='x unified',
-        template='plotly_dark',
-        height=350,
-        showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        )
-    )
-    
-    return fig
 
 
 @callback(
@@ -698,73 +717,80 @@ def update_revenue_chart(start_date, end_date, weekday, daytype):
 )
 def update_conversion_chart(start_date, end_date, weekday, daytype):
     """Create conversion rates evolution chart"""
-    if df_daily is None:
+    try:
+        if df_daily is None:
+            return go.Figure().add_annotation(
+                text="Données non disponibles",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        # Filter data
+        df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
+        
+        if df_filtered is None or len(df_filtered) == 0:
+            return go.Figure().add_annotation(
+                text="Aucune donnée pour cette sélection",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        fig = go.Figure()
+        
+        # View to Cart
+        fig.add_trace(go.Scatter(
+            x=df_filtered['date'],
+            y=df_filtered['view_to_cart_rate'],
+            mode='lines+markers',
+            name='View → Cart',
+            line=dict(color='#3498db', width=2),
+            marker=dict(size=4)
+        ))
+        
+        # Cart to Purchase
+        fig.add_trace(go.Scatter(
+            x=df_filtered['date'],
+            y=df_filtered['cart_to_purchase_rate'],
+            mode='lines+markers',
+            name='Cart → Purchase',
+            line=dict(color='#e74c3c', width=2),
+            marker=dict(size=4)
+        ))
+        
+        # View to Purchase
+        fig.add_trace(go.Scatter(
+            x=df_filtered['date'],
+            y=df_filtered['view_to_purchase_rate'],
+            mode='lines+markers',
+            name='View → Purchase',
+            line=dict(color='#2ecc71', width=2),
+            marker=dict(size=4)
+        ))
+        
+        fig.update_layout(
+            title="Taux de Conversion par Étape du Funnel",
+            xaxis_title="Date",
+            yaxis_title="Taux de Conversion (%)",
+            hovermode='x unified',
+            template='plotly_dark',
+            height=350,
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
+        
+        return fig
+    except Exception as e:
         return go.Figure().add_annotation(
-            text="Données non disponibles",
+            text=f"Erreur: {str(e)}",
             xref="paper", yref="paper",
             x=0.5, y=0.5, showarrow=False
         )
-    
-    # Filter data
-    df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
-    
-    if df_filtered is None or len(df_filtered) == 0:
-        return go.Figure().add_annotation(
-            text="Aucune donnée pour cette sélection",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False
-        )
-    
-    fig = go.Figure()
-    
-    # View to Cart
-    fig.add_trace(go.Scatter(
-        x=df_filtered['date'],
-        y=df_filtered['view_to_cart_rate'],
-        mode='lines+markers',
-        name='View → Cart',
-        line=dict(color='#3498db', width=2),
-        marker=dict(size=4)
-    ))
-    
-    # Cart to Purchase
-    fig.add_trace(go.Scatter(
-        x=df_filtered['date'],
-        y=df_filtered['cart_to_purchase_rate'],
-        mode='lines+markers',
-        name='Cart → Purchase',
-        line=dict(color='#e74c3c', width=2),
-        marker=dict(size=4)
-    ))
-    
-    # View to Purchase
-    fig.add_trace(go.Scatter(
-        x=df_filtered['date'],
-        y=df_filtered['view_to_purchase_rate'],
-        mode='lines+markers',
-        name='View → Purchase',
-        line=dict(color='#2ecc71', width=2),
-        marker=dict(size=4)
-    ))
-    
-    fig.update_layout(
-        title="Taux de Conversion par Étape du Funnel",
-        xaxis_title="Date",
-        yaxis_title="Taux de Conversion (%)",
-        hovermode='x unified',
-        template='plotly_dark',
-        height=350,
-        showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        )
-    )
-    
-    return fig
 
 
 @callback(
@@ -776,93 +802,100 @@ def update_conversion_chart(start_date, end_date, weekday, daytype):
 )
 def update_weekday_chart(start_date, end_date, weekday, daytype):
     """Create weekday effect chart"""
-    if df_daily is None:
+    try:
+        if df_daily is None:
+            return go.Figure().add_annotation(
+                text="Données non disponibles",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        # Filter data
+        df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
+        
+        if df_filtered is None or len(df_filtered) == 0:
+            return go.Figure().add_annotation(
+                text="Aucune donnée pour cette sélection",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+        
+        # Aggregate by day of week
+        weekday_stats = df_filtered.groupby('day_of_week').agg({
+            'unique_users': 'mean',
+            'daily_revenue': 'mean',
+            'view_to_purchase_rate': 'mean'
+        }).reset_index()
+        
+        # Order days correctly
+        days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        weekday_stats['day_of_week'] = pd.Categorical(weekday_stats['day_of_week'], categories=days_order, ordered=True)
+        weekday_stats = weekday_stats.sort_values('day_of_week')
+        
+        # French day names
+        french_days = {
+            'Monday': 'Lundi',
+            'Tuesday': 'Mardi',
+            'Wednesday': 'Mercredi',
+            'Thursday': 'Jeudi',
+            'Friday': 'Vendredi',
+            'Saturday': 'Samedi',
+            'Sunday': 'Dimanche'
+        }
+        weekday_stats['day_fr'] = weekday_stats['day_of_week'].map(french_days)
+        
+        fig = go.Figure()
+        
+        # Users bar
+        fig.add_trace(go.Bar(
+            x=weekday_stats['day_fr'],
+            y=weekday_stats['unique_users'],
+            name='Utilisateurs Moy.',
+            marker_color='#667eea',
+            yaxis='y',
+            opacity=0.7
+        ))
+        
+        # Conversion rate line
+        fig.add_trace(go.Scatter(
+            x=weekday_stats['day_fr'],
+            y=weekday_stats['view_to_purchase_rate'],
+            name='Taux Conversion (%)',
+            mode='lines+markers',
+            line=dict(color='#e74c3c', width=3),
+            marker=dict(size=8),
+            yaxis='y2'
+        ))
+        
+        fig.update_layout(
+            title="Performance par Jour de la Semaine",
+            xaxis_title="Jour",
+            yaxis_title="Utilisateurs Moyens",
+            yaxis2=dict(
+                title="Taux de Conversion (%)",
+                overlaying='y',
+                side='right'
+            ),
+            hovermode='x unified',
+            template='plotly_dark',
+            height=350,
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
+        
+        return fig
+    except Exception as e:
         return go.Figure().add_annotation(
-            text="Données non disponibles",
+            text=f"Erreur: {str(e)}",
             xref="paper", yref="paper",
             x=0.5, y=0.5, showarrow=False
         )
-    
-    # Filter data
-    df_filtered = filter_data(df_daily, start_date, end_date, weekday, daytype)
-    
-    if df_filtered is None or len(df_filtered) == 0:
-        return go.Figure().add_annotation(
-            text="Aucune donnée pour cette sélection",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False
-        )
-    
-    # Aggregate by day of week
-    weekday_stats = df_filtered.groupby('day_of_week').agg({
-        'unique_users': 'mean',
-        'daily_revenue': 'mean',
-        'view_to_purchase_rate': 'mean'
-    }).reset_index()
-    
-    # Order days correctly
-    days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    weekday_stats['day_of_week'] = pd.Categorical(weekday_stats['day_of_week'], categories=days_order, ordered=True)
-    weekday_stats = weekday_stats.sort_values('day_of_week')
-    
-    # French day names
-    french_days = {
-        'Monday': 'Lundi',
-        'Tuesday': 'Mardi',
-        'Wednesday': 'Mercredi',
-        'Thursday': 'Jeudi',
-        'Friday': 'Vendredi',
-        'Saturday': 'Samedi',
-        'Sunday': 'Dimanche'
-    }
-    weekday_stats['day_fr'] = weekday_stats['day_of_week'].map(french_days)
-    
-    fig = go.Figure()
-    
-    # Users bar
-    fig.add_trace(go.Bar(
-        x=weekday_stats['day_fr'],
-        y=weekday_stats['unique_users'],
-        name='Utilisateurs Moy.',
-        marker_color='#667eea',
-        yaxis='y',
-        opacity=0.7
-    ))
-    
-    # Conversion rate line
-    fig.add_trace(go.Scatter(
-        x=weekday_stats['day_fr'],
-        y=weekday_stats['view_to_purchase_rate'],
-        name='Taux Conversion (%)',
-        mode='lines+markers',
-        line=dict(color='#e74c3c', width=3),
-        marker=dict(size=8),
-        yaxis='y2'
-    ))
-    
-    fig.update_layout(
-        title="Performance par Jour de la Semaine",
-        xaxis_title="Jour",
-        yaxis_title="Utilisateurs Moyens",
-        yaxis2=dict(
-            title="Taux de Conversion (%)",
-            overlaying='y',
-            side='right'
-        ),
-        hovermode='x unified',
-        template='plotly_dark',
-        height=350,
-        showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        )
-    )
-    
-    return fig
 
 
 @callback(
