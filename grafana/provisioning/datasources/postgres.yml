@@ -18,3 +18,16 @@ datasources:
       timescaledb: false
     editable: true
     isDefault: true
+  
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        - datasourceUid: PostgreSQL-Ecommerce
+          matcherRegex: "user_id=(\\d+)"
+          name: UserID
+          url: "http://localhost:3000/explore?left={\"queries\":[{\"refId\":\"A\",\"datasource\":\"PostgreSQL-Ecommerce\",\"rawSql\":\"SELECT * FROM user_behavior WHERE user_id='${__value.raw}'\"}]}"
+    editable: true
