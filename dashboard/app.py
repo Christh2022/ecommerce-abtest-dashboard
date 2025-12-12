@@ -225,7 +225,7 @@ if __name__ == '__main__':
     
     app.run_server(
         debug=True,
-        host='127.0.0.1',
+        host='0.0.0.0',
         port=8050,
         dev_tools_hot_reload=True,
         dev_tools_ui=True,
