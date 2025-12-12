@@ -55,6 +55,7 @@ docker exec -it ecommerce-postgres psql -U dashuser -d ecommerce_db
 ## 📋 Détail des Migrations
 
 ### Migration 001: Initial Schema
+
 - Création de toutes les tables principales
 - Tables d'analytics (daily_metrics, user_behavior, products_summary)
 - Tables A/B testing (ab_test_scenarios, ab_test_results)
@@ -62,6 +63,7 @@ docker exec -it ecommerce-postgres psql -U dashuser -d ecommerce_db
 - Table de tracking des migrations (schema_migrations)
 
 ### Migration 002: Indexes and Views
+
 - **15+ indexes** pour optimiser les performances
 - **3 vues** SQL pour requêtes courantes:
   - `v_daily_kpis`: KPIs quotidiens agrégés
@@ -69,6 +71,7 @@ docker exec -it ecommerce-postgres psql -U dashuser -d ecommerce_db
   - `v_ab_test_summary`: Résumé des tests A/B
 
 ### Migration 003: Functions and Triggers
+
 - **Fonctions utilitaires**:
   - `update_updated_at_column()`: MAJ automatique des timestamps
   - `calculate_conversion_rate()`: Calcul du taux de conversion
@@ -76,6 +79,7 @@ docker exec -it ecommerce-postgres psql -U dashuser -d ecommerce_db
 - **Triggers** sur daily_metrics, products_summary, ab_test_scenarios
 
 ### Migration 004: Seed Data
+
 - Données de test pour ab_test_scenarios (5 scénarios)
 - Permissions pour l'utilisateur dashuser
 
@@ -93,18 +97,18 @@ POSTGRES_PORT=5432
 
 ## 📊 Tables Créées
 
-| Table                | Description                          | Lignes estimées |
-|----------------------|--------------------------------------|-----------------|
-| daily_metrics        | Métriques quotidiennes agrégées      | ~365/an         |
-| user_behavior        | Comportement utilisateur détaillé    | ~10K+/jour      |
-| products_summary     | Performance des produits             | ~500-1000       |
-| traffic_sources      | Analyse des sources de trafic        | ~50/jour        |
-| ab_test_scenarios    | Scénarios de test A/B                | ~20-50          |
-| ab_test_results      | Résultats quotidiens des tests A/B   | ~1000+          |
-| funnel_stages        | Étapes du funnel de conversion       | ~100/jour       |
-| dashboard_logs       | Logs de l'application                | ~1000+/jour     |
-| query_performance    | Performance des requêtes             | ~500+/jour      |
-| schema_migrations    | Historique des migrations            | Variable        |
+| Table             | Description                        | Lignes estimées |
+| ----------------- | ---------------------------------- | --------------- |
+| daily_metrics     | Métriques quotidiennes agrégées    | ~365/an         |
+| user_behavior     | Comportement utilisateur détaillé  | ~10K+/jour      |
+| products_summary  | Performance des produits           | ~500-1000       |
+| traffic_sources   | Analyse des sources de trafic      | ~50/jour        |
+| ab_test_scenarios | Scénarios de test A/B              | ~20-50          |
+| ab_test_results   | Résultats quotidiens des tests A/B | ~1000+          |
+| funnel_stages     | Étapes du funnel de conversion     | ~100/jour       |
+| dashboard_logs    | Logs de l'application              | ~1000+/jour     |
+| query_performance | Performance des requêtes           | ~500+/jour      |
+| schema_migrations | Historique des migrations          | Variable        |
 
 ## 🛠️ Maintenance
 
@@ -147,6 +151,7 @@ docker exec ecommerce-postgres pg_dump -U dashuser ecommerce_db > backup_$(date 
 ## 🔍 Dépannage
 
 ### Problème de connexion
+
 ```bash
 # Vérifier que PostgreSQL est démarré
 docker ps | grep postgres
@@ -156,6 +161,7 @@ docker logs ecommerce-postgres
 ```
 
 ### Migration échouée
+
 ```bash
 # Voir la dernière migration appliquée
 python scripts/run_migrations.py --status
@@ -165,6 +171,7 @@ docker exec -it ecommerce-postgres psql -U dashuser -d ecommerce_db
 ```
 
 ### Réinitialiser complètement
+
 ```bash
 # Arrêter et supprimer les volumes
 docker-compose down -v

@@ -14,6 +14,7 @@ Créer un système complet de migration et d'initialisation SQL pour la base de 
 Créé **4 migrations SQL** dans `scripts/migrations/`:
 
 #### Migration 001: Initial Schema
+
 - **10 tables** créées:
   - `daily_metrics` - Métriques quotidiennes agrégées
   - `user_behavior` - Comportement utilisateur détaillé
@@ -27,6 +28,7 @@ Créé **4 migrations SQL** dans `scripts/migrations/`:
   - `schema_migrations` - Tracking des migrations
 
 #### Migration 002: Indexes and Views
+
 - **15+ indexes** pour optimiser les performances
 - **3 vues SQL** pour requêtes courantes:
   - `v_daily_kpis` - KPIs quotidiens agrégés
@@ -34,6 +36,7 @@ Créé **4 migrations SQL** dans `scripts/migrations/`:
   - `v_ab_test_summary` - Résumé des tests A/B
 
 #### Migration 003: Functions and Triggers
+
 - **3 fonctions utilitaires**:
   - `update_updated_at_column()` - MAJ auto des timestamps
   - `calculate_conversion_rate()` - Calcul taux de conversion
@@ -41,12 +44,14 @@ Créé **4 migrations SQL** dans `scripts/migrations/`:
 - **3 triggers** sur tables principales
 
 #### Migration 004: Seed Data
+
 - **5 scénarios A/B** de test
 - Permissions complètes pour dashuser
 
 ### 2. ✅ Script Python de Migration
 
 **`scripts/run_migrations.py`** - Gestionnaire de migration avec:
+
 - ✅ Connexion PostgreSQL automatique
 - ✅ Tracking des migrations appliquées
 - ✅ Exécution ordonnée des migrations
@@ -56,6 +61,7 @@ Créé **4 migrations SQL** dans `scripts/migrations/`:
 - ✅ Gestion d'erreurs robuste
 
 **Fonctionnalités**:
+
 ```bash
 # Voir migrations en attente
 python scripts/run_migrations.py --dry-run
@@ -70,6 +76,7 @@ python scripts/run_migrations.py --status
 ### 3. ✅ Script de Test
 
 **`scripts/test_migrations.sh`** - Suite de tests complète:
+
 - Vérification de Docker et PostgreSQL
 - Exécution des migrations
 - Validation des tables, indexes, vues, fonctions
@@ -80,6 +87,7 @@ python scripts/run_migrations.py --status
 ### 4. ✅ Documentation Complète
 
 **`scripts/MIGRATIONS.md`** - Guide détaillé incluant:
+
 - Structure des migrations
 - 3 options d'utilisation (Docker, Python, SQL manuel)
 - Détail de chaque migration
@@ -171,6 +179,7 @@ scripts/
 ### Intégration Docker
 
 Le fichier `init_db.sql` existant reste utilisé pour l'initialisation Docker automatique, et les migrations peuvent être appliquées manuellement pour:
+
 - Mises à jour futures
 - Environnements de développement
 - Rollbacks contrôlés
@@ -179,12 +188,14 @@ Le fichier `init_db.sql` existant reste utilisé pour l'initialisation Docker au
 ## 🔧 Utilisation
 
 ### Option 1: Docker Compose (Auto)
+
 ```bash
 docker-compose up -d postgres
 # init_db.sql est automatiquement exécuté
 ```
 
 ### Option 2: Migrations Python
+
 ```bash
 # Appliquer les migrations
 python scripts/run_migrations.py
@@ -194,6 +205,7 @@ python scripts/run_migrations.py --status
 ```
 
 ### Option 3: Bash Test
+
 ```bash
 # Tester tout le système
 bash scripts/test_migrations.sh
@@ -216,6 +228,7 @@ bash scripts/test_migrations.sh
 ## 🚀 Prochaines Étapes
 
 Issue #42 est **complétée**. Les prochaines étapes possibles:
+
 - Issue #43: Import des données CSV dans PostgreSQL
 - Issue #44: Connexion du dashboard à PostgreSQL
 - Issue #45: Optimisation des requêtes et performance

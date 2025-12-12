@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Data Import Script for PostgreSQL
-Imports CSV data from data/clean/ into PostgreSQL database
+KPI Data Import Script for PostgreSQL
+Automatically imports CSV data from data/clean/ into PostgreSQL database
+Imports: Daily Metrics, Products, Traffic, A/B Tests, Funnel data
 """
 
 import os
@@ -11,6 +12,7 @@ import psycopg2
 from psycopg2.extras import execute_values
 from datetime import datetime
 import logging
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
@@ -28,7 +30,7 @@ DB_CONFIG = {
     'password': os.getenv('DB_PASSWORD', 'dashpass')
 }
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean')
+DATA_DIR = Path(__file__).parent.parent / 'data' / 'clean'
 
 
 def get_db_connection():
@@ -48,49 +50,98 @@ def import_ab_test_simulations(conn):
         logger.info("📊 Importing A/B test simulations...")
         
         # Read CSV files
-        simulations_file = os.path.join(DATA_DIR, 'ab_test_simulation.csv')
-        results_file = os.path.join(DATA_DIR, 'ab_test_simulation_results.csv')
+        simulations_file = DATA_DIR / 'ab_test_simulation.csv'
+        results_file = DATA_DIR / 'ab_test_simulation_results.csv'
+        scenarios_file = DATA_DIR / 'ab_test_scenarios.csv'
         
-        if not os.path.exists(simulations_file) or not os.path.exists(results_file):
-            logger.warning("⚠️  A/B test CSV files not found, skipping...")
+        if not simulations_file.exists():
+            logger.warning("⚠️  A/B test simulation CSV not found, skipping...")
             return
-        
-        # Read simulations data
-        df_sim = pd.read_csv(simulations_file)
-        df_results = pd.read_csv(results_file)
         
         cursor = conn.cursor()
         
-        # Import scenarios (unique from results)
-        scenarios = df_results[['scenario_id', 'scenario_name', 'description', 'hypothesis']].drop_duplicates()
+        # Import scenarios from scenarios file or results file
+        if scenarios_file.exists():
+            df_scenarios = pd.read_csv(scenarios_file)
+            for _, row in df_scenarios.iterrows():
+                cursor.execute("""
+                    INSERT INTO ab_test_scenarios (scenario_id, scenario_name, description, hypothesis, status)
+                    VALUES (%s, %s, %s, %s, %s)
+                    ON CONFLICT (scenario_id) DO UPDATE
+                    SET scenario_name = EXCLUDED.scenario_name,
+                        description = EXCLUDED.description,
+                        hypothesis = EXCLUDED.hypothesis,
+                        status = EXCLUDED.status
+                """, (
+                    row['id'],  # Column is 'id' not 'scenario_id'
+                    row['name'],  # Column is 'name' not 'scenario_name'
+                    row.get('description', ''),
+                    f"Expected lift: {row.get('expected_lift', 0)*100:.1f}% on {row.get('target_metric', 'conversion')}",
+                    'active'
+                ))
+            logger.info(f"✅ Imported {len(df_scenarios)} A/B test scenarios from scenarios file")
+        elif results_file.exists():
+            df_results = pd.read_csv(results_file)
+            scenarios = df_results[['scenario_id', 'scenario_name']].drop_duplicates()
+            
+            for _, row in scenarios.iterrows():
+                cursor.execute("""
+                    INSERT INTO ab_test_scenarios (scenario_id, scenario_name, status)
+                    VALUES (%s, %s, 'active')
+                    ON CONFLICT (scenario_id) DO UPDATE
+                    SET scenario_name = EXCLUDED.scenario_name
+                """, (row['scenario_id'], row['scenario_name']))
+            logger.info(f"✅ Imported {len(scenarios)} A/B test scenarios from results file")
         
-        for _, row in scenarios.iterrows():
-            cursor.execute("""
-                INSERT INTO ab_test_scenarios (scenario_id, scenario_name, description, hypothesis, status)
-                VALUES (%s, %s, %s, %s, 'active')
-                ON CONFLICT (scenario_id) DO UPDATE
-                SET scenario_name = EXCLUDED.scenario_name,
-                    description = EXCLUDED.description,
-                    hypothesis = EXCLUDED.hypothesis
-            """, (row['scenario_id'], row['scenario_name'], row['description'], row['hypothesis']))
         
-        logger.info(f"✅ Imported {len(scenarios)} A/B test scenarios")
-        
-        # Import daily results
+        # Import daily results - transform control/variant structure
+        df_sim = pd.read_csv(simulations_file)
         df_sim['date'] = pd.to_datetime(df_sim['date']).dt.date
         
         records = []
         for _, row in df_sim.iterrows():
+            # Skip rows with NaN values
+            if pd.isna(row.get('control_users')) or pd.isna(row.get('variant_users')):
+                continue
+                
+            # Control variant (A)
+            control_conv_rate = row.get('control_view_to_purchase_pct', 0)
+            control_revenue = row.get('control_revenue', 0)
+            control_purchases = row.get('control_purchases', 0)
+            control_users = row.get('control_users', 0)
+            control_aov = control_revenue / control_purchases if control_purchases > 0 else 0
+            
             records.append((
                 row['scenario_id'],
                 row['date'],
-                row['variant'],
-                row['visitors'],
-                row['conversions'],
-                row['conversion_rate'],
-                row['revenue'],
-                row.get('avg_order_value', 0),
-                row.get('statistical_significance', 0)
+                'A',  # Control
+                int(control_users),
+                int(control_purchases),
+                float(control_conv_rate),
+                float(control_revenue),
+                float(control_aov),
+                0.0  # No significance for control
+            ))
+            
+            # Variant (B)
+            variant_conv_rate = row.get('variant_view_to_purchase_pct', 0)
+            variant_revenue = row.get('variant_revenue', 0)
+            variant_purchases = row.get('variant_purchases', 0)
+            variant_users = row.get('variant_users', 0)
+            variant_aov = variant_revenue / variant_purchases if variant_purchases > 0 else 0
+            p_value = row.get('p_value', 1.0)
+            significance = (1 - p_value) * 100 if p_value < 1 else 0
+            
+            records.append((
+                row['scenario_id'],
+                row['date'],
+                'B',  # Variant
+                int(variant_users),
+                int(variant_purchases),
+                float(variant_conv_rate),
+                float(variant_revenue),
+                float(variant_aov),
+                float(significance)
             ))
         
         execute_values(cursor, """
@@ -102,11 +153,13 @@ def import_ab_test_simulations(conn):
             SET visitors = EXCLUDED.visitors,
                 conversions = EXCLUDED.conversions,
                 conversion_rate = EXCLUDED.conversion_rate,
-                revenue = EXCLUDED.revenue
+                revenue = EXCLUDED.revenue,
+                avg_order_value = EXCLUDED.avg_order_value,
+                statistical_significance = EXCLUDED.statistical_significance
         """, records)
         
         conn.commit()
-        logger.info(f"✅ Imported {len(records)} A/B test result records")
+        logger.info(f"✅ Imported {len(records)} A/B test result records ({len(records)//2} days x 2 variants)")
         
     except Exception as e:
         conn.rollback()
@@ -188,55 +241,226 @@ def import_user_behavior(conn):
 
 
 def import_daily_metrics(conn):
-    """Calculate and import daily metrics"""
+    """Import daily metrics from CSV"""
     try:
-        logger.info("📈 Calculating daily metrics...")
+        logger.info("📈 Importing daily metrics from CSV...")
+        
+        csv_file = DATA_DIR / 'daily_metrics.csv'
+        
+        if not csv_file.exists():
+            logger.warning("⚠️  daily_metrics.csv not found, skipping...")
+            return
+        
+        df = pd.read_csv(csv_file)
+        df['date'] = pd.to_datetime(df['date']).dt.date
         
         cursor = conn.cursor()
+        records = []
         
-        # Calculate metrics from user_behavior table
-        cursor.execute("""
+        for _, row in df.iterrows():
+            # Conversion rate in CSV is percentage (e.g., 32.56), but DB expects decimal (0-100)
+            # So we keep it as is since DECIMAL(5,4) can hold 0-9.9999
+            # But cart_to_purchase_rate is actually in percentage already, so we use it directly
+            conv_rate = float(row.get('cart_to_purchase_rate', 0))
+            # If it's > 10, it's already in percentage format, just cap at 100
+            if conv_rate > 100:
+                conv_rate = 100.0
+            
+            records.append((
+                row['date'],
+                int(row['unique_users']),
+                int(row['unique_sessions']),
+                float(row.get('daily_revenue', 0)),
+                int(row.get('transactions', 0)),
+                conv_rate,
+                float(row.get('avg_order_value', 0))
+            ))
+        
+        execute_values(cursor, """
             INSERT INTO daily_metrics 
             (date, total_users, total_sessions, total_revenue, total_conversions, 
-             conversion_rate, avg_order_value, avg_session_duration)
-            SELECT 
-                session_date as date,
-                COUNT(DISTINCT user_id) as total_users,
-                COUNT(*) as total_sessions,
-                SUM(revenue) as total_revenue,
-                SUM(CASE WHEN converted THEN 1 ELSE 0 END) as total_conversions,
-                ROUND(
-                    SUM(CASE WHEN converted THEN 1 ELSE 0 END)::DECIMAL / 
-                    NULLIF(COUNT(*), 0) * 100, 
-                    4
-                ) as conversion_rate,
-                ROUND(
-                    SUM(revenue) / 
-                    NULLIF(SUM(CASE WHEN converted THEN 1 ELSE 0 END), 0), 
-                    2
-                ) as avg_order_value,
-                ROUND(AVG(session_duration), 2) as avg_session_duration
-            FROM user_behavior
-            GROUP BY session_date
+             conversion_rate, avg_order_value)
+            VALUES %s
             ON CONFLICT (date) DO UPDATE
             SET total_users = EXCLUDED.total_users,
                 total_sessions = EXCLUDED.total_sessions,
                 total_revenue = EXCLUDED.total_revenue,
                 total_conversions = EXCLUDED.total_conversions,
                 conversion_rate = EXCLUDED.conversion_rate,
-                avg_order_value = EXCLUDED.avg_order_value,
-                avg_session_duration = EXCLUDED.avg_session_duration
-        """)
+                avg_order_value = EXCLUDED.avg_order_value
+        """, records)
         
         conn.commit()
-        
-        cursor.execute("SELECT COUNT(*) FROM daily_metrics")
-        count = cursor.fetchone()[0]
-        logger.info(f"✅ Daily metrics calculated: {count} days")
+        logger.info(f"✅ Imported {len(records)} daily metric records")
         
     except Exception as e:
         conn.rollback()
-        logger.error(f"❌ Failed to calculate daily metrics: {e}")
+        logger.error(f"❌ Failed to import daily metrics: {e}")
+        raise
+
+
+def import_products_summary(conn):
+    """Import products summary from CSV"""
+    try:
+        logger.info("📦 Importing products summary...")
+        
+        csv_file = DATA_DIR / 'products_summary.csv'
+        
+        if not csv_file.exists():
+            logger.warning("⚠️  products_summary.csv not found, skipping...")
+            return
+        
+        df = pd.read_csv(csv_file)
+        
+        cursor = conn.cursor()
+        records = []
+        
+        for _, row in df.iterrows():
+            records.append((
+                str(row['product_id']),
+                row.get('product_name', f"Product {row['product_id']}"),
+                row.get('category', 'Unknown'),
+                int(row.get('total_views', 0)),
+                int(row.get('total_purchases', 0)),
+                float(row.get('total_revenue', 0)),
+                float(row.get('avg_rating', 0)),
+                float(row.get('conversion_rate', 0))
+            ))
+        
+        execute_values(cursor, """
+            INSERT INTO products_summary 
+            (product_id, product_name, category, total_views, total_purchases,
+             total_revenue, avg_rating, conversion_rate)
+            VALUES %s
+            ON CONFLICT (product_id) DO UPDATE
+            SET total_views = EXCLUDED.total_views,
+                total_purchases = EXCLUDED.total_purchases,
+                total_revenue = EXCLUDED.total_revenue,
+                avg_rating = EXCLUDED.avg_rating,
+                conversion_rate = EXCLUDED.conversion_rate
+        """, records)
+        
+        conn.commit()
+        logger.info(f"✅ Imported {len(records)} product records")
+        
+    except Exception as e:
+        conn.rollback()
+        logger.error(f"❌ Failed to import products: {e}")
+        raise
+
+
+def import_traffic_sources(conn):
+    """Import traffic data from CSV"""
+    try:
+        logger.info("🚦 Importing traffic data...")
+        
+        csv_file = DATA_DIR / 'traffic_daily.csv'
+        
+        if not csv_file.exists():
+            logger.warning("⚠️  traffic_daily.csv not found, skipping...")
+            return
+        
+        df = pd.read_csv(csv_file)
+        df['date'] = pd.to_datetime(df['date']).dt.date
+        
+        cursor = conn.cursor()
+        records = []
+        
+        for _, row in df.iterrows():
+            records.append((
+                row['date'],
+                'organic',  # default source
+                'direct',   # default medium
+                'none',     # default campaign
+                int(row.get('unique_sessions', 0)),
+                int(row.get('unique_users', 0)),
+                int(row.get('transactions', 0)),
+                float(row.get('daily_revenue', 0))
+            ))
+        
+        execute_values(cursor, """
+            INSERT INTO traffic_sources 
+            (date, source, medium, campaign, sessions, users, conversions, revenue)
+            VALUES %s
+            ON CONFLICT (date, source, medium, campaign) DO UPDATE
+            SET sessions = EXCLUDED.sessions,
+                users = EXCLUDED.users,
+                conversions = EXCLUDED.conversions,
+                revenue = EXCLUDED.revenue
+        """, records)
+        
+        conn.commit()
+        logger.info(f"✅ Imported {len(records)} traffic records")
+        
+    except Exception as e:
+        conn.rollback()
+        logger.error(f"❌ Failed to import traffic data: {e}")
+        raise
+
+
+def import_funnel_stages(conn):
+    """Import funnel stages from CSV"""
+    try:
+        logger.info("🔄 Importing funnel data...")
+        
+        csv_file = DATA_DIR / 'daily_funnel.csv'
+        
+        if not csv_file.exists():
+            logger.warning("⚠️  daily_funnel.csv not found, skipping...")
+            return
+        
+        df = pd.read_csv(csv_file)
+        df['date'] = pd.to_datetime(df['date']).dt.date
+        
+        cursor = conn.cursor()
+        records = []
+        
+        # Create funnel stages from the data
+        for _, row in df.iterrows():
+            # View stage
+            records.append((
+                row['date'],
+                'view',
+                1,
+                int(row.get('unique_viewers', 0)),
+                int(row.get('unique_viewers', 0)) - int(row.get('unique_add_to_carts', 0)),
+                100.0
+            ))
+            # Cart stage
+            records.append((
+                row['date'],
+                'add_to_cart',
+                2,
+                int(row.get('unique_add_to_carts', 0)),
+                int(row.get('unique_add_to_carts', 0)) - int(row.get('unique_purchasers', 0)),
+                float(row.get('view_to_cart_rate', 0))
+            ))
+            # Purchase stage
+            records.append((
+                row['date'],
+                'purchase',
+                3,
+                int(row.get('unique_purchasers', 0)),
+                0,
+                float(row.get('view_to_purchase_rate', 0))
+            ))
+        
+        execute_values(cursor, """
+            INSERT INTO funnel_stages 
+            (date, stage_name, stage_order, visitors, drop_off, conversion_rate)
+            VALUES %s
+            ON CONFLICT (date, stage_name) DO UPDATE
+            SET visitors = EXCLUDED.visitors,
+                drop_off = EXCLUDED.drop_off,
+                conversion_rate = EXCLUDED.conversion_rate
+        """, records)
+        
+        conn.commit()
+        logger.info(f"✅ Imported {len(records)} funnel stage records")
+        
+    except Exception as e:
+        conn.rollback()
+        logger.error(f"❌ Failed to import funnel data: {e}")
         raise
 
 
@@ -248,16 +472,20 @@ def verify_import(conn):
         cursor = conn.cursor()
         
         tables = [
+            'daily_metrics',
+            'products_summary',
+            'traffic_sources',
+            'funnel_stages',
             'ab_test_scenarios',
-            'ab_test_results',
-            'user_behavior',
-            'daily_metrics'
+            'ab_test_results'
         ]
         
+        logger.info("\n  📊 Row Counts:")
         for table in tables:
             cursor.execute(f"SELECT COUNT(*) FROM {table}")
             count = cursor.fetchone()[0]
-            logger.info(f"  📊 {table}: {count:,} rows")
+            status = "✅" if count > 0 else "⚠️"
+            logger.info(f"    {status} {table}: {count:,} rows")
         
         logger.info("\n✅ Data verification completed")
         
@@ -267,27 +495,56 @@ def verify_import(conn):
 
 def main():
     """Main import process"""
-    logger.info("="*60)
-    logger.info("🚀 Starting PostgreSQL Data Import")
-    logger.info("="*60)
+    logger.info("="*80)
+    logger.info("🚀 Starting Automated KPI Data Import to PostgreSQL")
+    logger.info("="*80)
     
     conn = get_db_connection()
     
     try:
-        # Import data in order
-        import_ab_test_simulations(conn)
-        import_user_behavior(conn)
+        # Import all KPI data
+        logger.info("\n📊 Importing KPI datasets...")
         import_daily_metrics(conn)
+        import_products_summary(conn)
+        import_traffic_sources(conn)
+        import_funnel_stages(conn)
+        import_ab_test_simulations(conn)
         
         # Verify
         verify_import(conn)
         
-        logger.info("\n" + "="*60)
-        logger.info("✅ Data import completed successfully!")
-        logger.info("="*60)
+        # Show sample data
+        logger.info("\n📈 Sample Data Preview:")
+        cursor = conn.cursor()
+        
+        # Show latest daily metrics
+        cursor.execute("""
+            SELECT date, total_users, total_revenue, conversion_rate 
+            FROM daily_metrics 
+            ORDER BY date DESC LIMIT 5
+        """)
+        logger.info("\n  Latest Daily Metrics:")
+        for row in cursor.fetchall():
+            logger.info(f"    {row[0]}: {row[1]} users, €{row[2]:.2f} revenue, {row[3]:.2f}% conv")
+        
+        # Show top products
+        cursor.execute("""
+            SELECT product_id, total_revenue, total_purchases
+            FROM products_summary 
+            ORDER BY total_revenue DESC LIMIT 5
+        """)
+        logger.info("\n  Top Products by Revenue:")
+        for row in cursor.fetchall():
+            logger.info(f"    Product {row[0]}: €{row[1]:.2f} ({row[2]} purchases)")
+        
+        logger.info("\n" + "="*80)
+        logger.info("✅ KPI Data Import Completed Successfully!")
+        logger.info("="*80)
         
     except Exception as e:
         logger.error(f"\n❌ Import process failed: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
     finally:
         conn.close()
