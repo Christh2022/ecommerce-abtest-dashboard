@@ -64,6 +64,9 @@ realtime_conversion_rate = Gauge('ecommerce_realtime_conversion_rate', 'Current 
 realtime_aov = Gauge('ecommerce_realtime_aov', 'Current average order value')
 realtime_sessions_today = Gauge('ecommerce_realtime_sessions_today', 'Sessions today')
 
+# Error tracking metric
+ecommerce_error_count = Gauge('ecommerce_error_count', 'Number of errors tracked')
+
 
 def get_db_connection():
     """Create database connection"""
@@ -276,9 +279,14 @@ def collect_metrics():
         
         cur.close()
         conn.close()
+        
+        # Set error count to 0 if everything went well
+        ecommerce_error_count.set(0)
         print(f"Metrics collected successfully at {time.strftime('%Y-%m-%d %H:%M:%S')}")
         
     except Exception as e:
+        # Increment error count on failure
+        ecommerce_error_count.inc()
         print(f"Error collecting metrics: {e}")
 
 
