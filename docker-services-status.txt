@@ -1,0 +1,7 @@
+NAMES                         STATUS                   PORTS
+ecommerce-dashboard           Up 5 minutes (healthy)   0.0.0.0:8050->8050/tcp
+ecommerce-exporter            Up 5 minutes             0.0.0.0:9200->9200/tcp
+ecommerce-grafana             Up 5 minutes             0.0.0.0:3000->3000/tcp
+ecommerce-postgres-exporter   Up 5 minutes             0.0.0.0:9187->9187/tcp
+ecommerce-postgres            Up 5 minutes (healthy)   0.0.0.0:5432->5432/tcp
+ecommerce-prometheus          Up 5 minutes             0.0.0.0:9090->9090/tcp

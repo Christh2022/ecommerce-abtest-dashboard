@@ -18,7 +18,7 @@ datasources:
       postgresVersion: 1600
       timescaledb: false
     editable: false
-    isDefault: true
+    isDefault: false
 
   - name: Prometheus
     type: prometheus
@@ -28,3 +28,4 @@ datasources:
     jsonData:
       timeInterval: 15s
     editable: false
+    isDefault: true
