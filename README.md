@@ -383,7 +383,7 @@ python scripts/generate_products_summary.py
 
 ### 🚧 Milestone 5 : Docker & Déploiement
 
-**Statut** : EN COURS (0/14 issues)  
+**Statut** : EN COURS (11/14 issues complétées)  
 **Branche** : `feature/docker-setup`  
 **Date** : Décembre 2025
 
@@ -391,29 +391,34 @@ python scripts/generate_products_summary.py
 
 #### Containerisation Dash App (Issues #28-31)
 
-- [ ] **#28** - Créer Dockerfile pour l'application Dash
-- [ ] **#29** - Créer docker-compose.yml multi-services
-- [ ] **#30** - Tester build de l'image Docker
-- [ ] **#31** - Tester run et accès port 8050
+- [x] **#28** - Créer Dockerfile pour l'application Dash ✅
+- [x] **#29** - Créer docker-compose.yml multi-services ✅
+- [x] **#30** - Tester build de l'image Docker ✅
+- [x] **#31** - Tester run et accès port 8050 ✅
 
 #### PostgreSQL Integration (Issues #41-43)
 
-- [ ] **#41** - Créer service Postgres dans docker-compose
-- [ ] **#42** - Créer script de migration/init SQL
-- [ ] **#43** - Importer les KPIs dans Postgres automatiquement
+- [x] **#41** - Créer service Postgres dans docker-compose ✅
+- [x] **#42** - Créer script de migration/init SQL ✅
+- [x] **#43** - Importer les KPIs dans Postgres automatiquement ✅
 
 #### Grafana Monitoring (Issues #44-48)
 
-- [ ] **#44** - Ajouter Grafana dans docker-compose
-- [ ] **#45** - Configurer datasource Postgres
-- [ ] **#46** - Créer dashboard Grafana (JSON)
+- [x] **#44** - Ajouter Grafana dans docker-compose ✅
+- [x] **#45** - Configurer datasource Postgres ✅
+- [x] **#46** - Créer dashboard Grafana (JSON) ✅
 - [ ] **#47** - Panels : sessions, conversion, revenues, erreurs
-- [ ] **#48** - Test accès http://localhost:3000
+- [x] **#48** - Test accès http://localhost:3000 ✅
 
-#### Tests & Optimisation (Issues #49-50)
+#### Sécurité & Monitoring (Issues #50, #52-53)
 
-- [ ] **#49** - docker-compose up — tests complets
-- [ ] **#50** - Optimiser volumes et réseaux
+- [x] **#50** - Optimiser volumes et réseaux ✅
+- [x] **#52** - Configurer Falco pour monitoring sécurité ✅
+- [x] **#53** - Ajouter Loki et Promtail pour collecte logs ✅
+
+#### Tests Complets (Issue #49)
+
+- [ ] **#49** - docker-compose up — tests complets end-to-end
 
 **Architecture cible** :
 

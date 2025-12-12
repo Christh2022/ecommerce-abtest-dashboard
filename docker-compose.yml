@@ -205,6 +205,58 @@ services:
           cpus: "0.1"
           memory: 128M
 
+  # Loki for Log Aggregation
+  loki:
+    image: grafana/loki:latest
+    container_name: ecommerce-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - dashboard-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # Promtail for Log Collection
+  promtail:
+    image: grafana/promtail:latest
+    container_name: ecommerce-promtail
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - dash-logs:/var/log/dash:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    networks:
+      - dashboard-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
 volumes:
   # PostgreSQL persistent data
   postgres-data:
@@ -237,6 +289,14 @@ volumes:
     labels:
       com.ecommerce.description: "Dash application logs"
       com.ecommerce.service: "dash-app"
+
+  # Loki logs and indexes
+  loki-data:
+    driver: local
+    name: ecommerce-loki-data
+    labels:
+      com.ecommerce.description: "Loki log aggregation data"
+      com.ecommerce.service: "loki"
 
 networks:
   # Optimized internal network for all services
