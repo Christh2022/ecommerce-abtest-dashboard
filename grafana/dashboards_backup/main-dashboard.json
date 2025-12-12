@@ -761,7 +761,7 @@
           },
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n  source || ' / ' || medium as metric,\n  SUM(total_revenue) as value\nFROM traffic_sources\nGROUP BY source, medium\nORDER BY value DESC\nLIMIT 10",
+          "rawSql": "SELECT \n  source || ' / ' || medium as metric,\n  SUM(revenue) as value\nFROM traffic_sources\nGROUP BY source, medium\nORDER BY value DESC\nLIMIT 10",
           "refId": "A"
         }
       ],
@@ -1193,7 +1193,7 @@
           },
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n  source,\n  medium,\n  SUM(total_sessions) as total_sessions,\n  SUM(total_revenue) as total_revenue,\n  AVG(conversion_rate) as conversion_rate,\n  AVG(bounce_rate) as bounce_rate\nFROM traffic_sources\nGROUP BY source, medium\nORDER BY total_sessions DESC\nLIMIT 15",
+          "rawSql": "SELECT \n  source,\n  medium,\n  SUM(sessions) as total_sessions,\n  SUM(revenue) as total_revenue,\n  SUM(conversions)::decimal / NULLIF(SUM(sessions), 0) * 100 as conversion_rate,\n  0 as bounce_rate\nFROM traffic_sources\nGROUP BY source, medium\nORDER BY total_sessions DESC\nLIMIT 15",
           "refId": "A"
         }
       ],
@@ -1214,8 +1214,8 @@
     "list": []
   },
   "time": {
-    "from": "now-30d",
-    "to": "now"
+    "from": "2015-05-01T00:00:00.000Z",
+    "to": "2015-10-01T00:00:00.000Z"
   },
   "timepicker": {
     "refresh_intervals": [

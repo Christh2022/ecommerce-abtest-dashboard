@@ -14,6 +14,7 @@ Créer un système d'import automatique des KPIs depuis les fichiers CSV vers Po
 **`scripts/import_data_to_postgres.py`** - Import complet des KPIs:
 
 #### Fonctionnalités
+
 - Import automatique de 6 types de données
 - Gestion des duplicatas (ON CONFLICT DO UPDATE)
 - Transformation des données (pivot control/variant pour A/B tests)
@@ -23,18 +24,19 @@ Créer un système d'import automatique des KPIs depuis les fichiers CSV vers Po
 
 #### Données Importées
 
-| Dataset | Source CSV | Lignes | Contenu |
-|---------|-----------|--------|---------|
-| **Daily Metrics** | `daily_metrics.csv` | 139 | Métriques quotidiennes (users, revenue, conversions) |
-| **Products** | `products_summary.csv` | 235,061 | Performance des produits (vues, achats, revenue) |
-| **Traffic** | `traffic_daily.csv` | 139 | Sources de trafic quotidiennes |
-| **Funnel** | `daily_funnel.csv` | 417 | Étapes du funnel (view → cart → purchase) |
-| **A/B Scenarios** | `ab_test_scenarios.csv` | 8 | Scénarios de tests A/B |
-| **A/B Results** | `ab_test_simulation.csv` | 480 | Résultats quotidiens (240 jours × 2 variants) |
+| Dataset           | Source CSV               | Lignes  | Contenu                                              |
+| ----------------- | ------------------------ | ------- | ---------------------------------------------------- |
+| **Daily Metrics** | `daily_metrics.csv`      | 139     | Métriques quotidiennes (users, revenue, conversions) |
+| **Products**      | `products_summary.csv`   | 235,061 | Performance des produits (vues, achats, revenue)     |
+| **Traffic**       | `traffic_daily.csv`      | 139     | Sources de trafic quotidiennes                       |
+| **Funnel**        | `daily_funnel.csv`       | 417     | Étapes du funnel (view → cart → purchase)            |
+| **A/B Scenarios** | `ab_test_scenarios.csv`  | 8       | Scénarios de tests A/B                               |
+| **A/B Results**   | `ab_test_simulation.csv` | 480     | Résultats quotidiens (240 jours × 2 variants)        |
 
 ### 2. ✅ Migration de Correction
 
 **Migration 005**: Correction de la précision des colonnes
+
 - Conversion de `DECIMAL(5,4)` → `DECIMAL(6,2)` pour les pourcentages
 - Colonnes affectées:
   - `daily_metrics.conversion_rate`
@@ -47,6 +49,7 @@ Créer un système d'import automatique des KPIs depuis les fichiers CSV vers Po
 ### 3. ✅ Transformation des Données
 
 #### Daily Metrics
+
 ```python
 # Mapping CSV → Database
 date → date
@@ -59,6 +62,7 @@ avg_order_value → avg_order_value
 ```
 
 #### Products Summary
+
 ```python
 # 235K products importés
 product_id, product_name, category
@@ -67,6 +71,7 @@ avg_rating, conversion_rate
 ```
 
 #### A/B Test Results
+
 ```python
 # Transformation control/variant → A/B
 Control → Variant A
@@ -113,11 +118,13 @@ Significance = (1 - p_value) × 100
 ### Échantillon de Données
 
 **Latest Daily Metrics:**
+
 - 2015-09-18: 1,016 users, €4,558.88 revenue, 44.12% conversion
 - 2015-09-17: 6,270 users, €9,496.17 revenue, 17.93% conversion
 - 2015-09-16: 6,824 users, €38,187.70 revenue, 40.90% conversion
 
 **Top Products by Revenue:**
+
 - Product 461686: €34,781.58
 - Product 119736: €25,282.27
 - Product 213834: €22,802.08
@@ -134,6 +141,7 @@ python scripts/import_data_to_postgres.py
 ### Import Automatique (Docker)
 
 Ajouter au `docker-compose.yml`:
+
 ```yaml
 volumes:
   - ./scripts/import_data_to_postgres.py:/app/scripts/import.py
@@ -148,6 +156,7 @@ command: >
 ### Mise à Jour Incrémentale
 
 Le script gère automatiquement les mises à jour:
+
 ```sql
 ON CONFLICT (date) DO UPDATE SET ...
 ON CONFLICT (product_id) DO UPDATE SET ...
@@ -156,30 +165,33 @@ ON CONFLICT (scenario_id, date, variant) DO UPDATE SET ...
 
 ## 📈 Performance
 
-| Opération | Temps | Volume |
-|-----------|-------|--------|
-| Daily Metrics | 140ms | 139 lignes |
-| Products | 2min 5s | 235K lignes |
-| Traffic | 80ms | 139 lignes |
-| Funnel | 145ms | 417 lignes |
-| A/B Tests | 330ms | 488 lignes |
-| **TOTAL** | **~2min 8s** | **236K+ lignes** |
+| Opération     | Temps        | Volume           |
+| ------------- | ------------ | ---------------- |
+| Daily Metrics | 140ms        | 139 lignes       |
+| Products      | 2min 5s      | 235K lignes      |
+| Traffic       | 80ms         | 139 lignes       |
+| Funnel        | 145ms        | 417 lignes       |
+| A/B Tests     | 330ms        | 488 lignes       |
+| **TOTAL**     | **~2min 8s** | **236K+ lignes** |
 
 ## 🛠️ Améliorations Techniques
 
 ### Gestion des Erreurs
+
 - ✅ Validation des valeurs NaN
 - ✅ Conversion sûre des types (int, float)
 - ✅ Gestion des divisions par zéro
 - ✅ Rollback automatique en cas d'erreur
 
 ### Optimisations
+
 - ✅ Bulk insert avec `execute_values()`
 - ✅ Index sur les clés primaires
 - ✅ ON CONFLICT pour les upserts
 - ✅ Transactions atomiques par dataset
 
 ### Logging
+
 - ✅ Progression détaillée
 - ✅ Statistiques d'import
 - ✅ Échantillons de données
@@ -213,6 +225,7 @@ docs/
 ## 🔄 Intégration Dashboard
 
 Les données sont maintenant disponibles dans PostgreSQL pour:
+
 - ✅ Graphiques de métriques quotidiennes
 - ✅ Analyse de performance produits
 - ✅ Visualisation du funnel
@@ -222,6 +235,7 @@ Les données sont maintenant disponibles dans PostgreSQL pour:
 ## 🚀 Prochaines Étapes
 
 Issue #43 est **complétée**. Prochaines étapes:
+
 - Issue #44: Connexion du dashboard Dash à PostgreSQL
 - Issue #45: Mise à jour automatique des données (scheduler)
 - Issue #46: Optimisation des requêtes et cache
@@ -239,7 +253,7 @@ docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db \
 
 # Compter les lignes
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db \
-  -c "SELECT 
+  -c "SELECT
         (SELECT COUNT(*) FROM daily_metrics) as daily,
         (SELECT COUNT(*) FROM products_summary) as products,
         (SELECT COUNT(*) FROM ab_test_results) as ab_tests;"

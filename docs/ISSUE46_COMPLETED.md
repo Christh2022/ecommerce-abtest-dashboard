@@ -5,6 +5,7 @@
 **Related Issues**: #44 (Grafana setup), #45 (PostgreSQL datasource)
 
 ## Objectif
+
 Créer un dashboard Grafana complet au format JSON pour visualiser tous les KPIs e-commerce avec des graphiques interactifs et des tableaux de données.
 
 ## Implémentation
@@ -14,29 +15,33 @@ Créer un dashboard Grafana complet au format JSON pour visualiser tous les KPIs
 Un dashboard Grafana complet avec 13 panels couvrant tous les aspects de l'analyse e-commerce.
 
 #### 📊 Panels KPIs (Row 1)
+
 1. **Total Users** - Nombre total d'utilisateurs
    - Type: Stat panel
    - Couleur: Bleu
    - Calcul: SUM(total_users)
-   
 2. **Total Revenue** - Revenu total
+
    - Type: Stat panel
    - Couleur: Vert
    - Format: EUR currency
    - Calcul: SUM(total_revenue)
 
 3. **Total Conversions** - Conversions totales
+
    - Type: Stat panel
    - Couleur: Orange
    - Calcul: SUM(total_conversions)
 
 4. **Avg Conversion Rate** - Taux de conversion moyen
+
    - Type: Stat panel
    - Couleur: Violet → Vert (seuil à 2%)
    - Format: Percentage
    - Calcul: AVG(conversion_rate)
 
 5. **Average Order Value** - Panier moyen
+
    - Type: Stat panel
    - Couleur: Jaune → Vert (seuil à €200)
    - Format: EUR currency
@@ -49,6 +54,7 @@ Un dashboard Grafana complet avec 13 panels couvrant tous les aspects de l'analy
 #### 📈 Graphiques Temporels (Row 2)
 
 7. **Daily Metrics Trends** - Évolution des métriques quotidiennes
+
    - Type: Time series
    - Métriques: Users, Sessions, Conversions, Revenue
    - Double axe Y (count + EUR)
@@ -65,6 +71,7 @@ Un dashboard Grafana complet avec 13 panels couvrant tous les aspects de l'analy
 #### 📦 Produits & Trafic (Row 3)
 
 9. **Top 10 Products by Revenue** - Top produits
+
    - Type: Table
    - Colonnes: product_id, product_name, total_purchases, total_revenue, avg_price
    - Tri: Par revenue décroissant
@@ -90,6 +97,7 @@ Un dashboard Grafana complet avec 13 panels couvrant tous les aspects de l'analy
 #### 🔄 Funnel & Traffic (Row 5)
 
 12. **Conversion Funnel Analysis** - Analyse du tunnel
+
     - Type: Bar chart
     - Métriques: avg_visitors, avg_drop_off, avg_conversion_rate
     - Gradient de couleur (hue mode)
@@ -107,6 +115,7 @@ Un dashboard Grafana complet avec 13 panels couvrant tous les aspects de l'analy
 ## Configuration du Dashboard
 
 ### Paramètres Généraux
+
 ```json
 {
   "title": "E-commerce Analytics - Main Dashboard",
@@ -122,11 +131,13 @@ Un dashboard Grafana complet avec 13 panels couvrant tous les aspects de l'analy
 ```
 
 ### Datasource
+
 - **Type**: PostgreSQL
 - **UID**: `PostgreSQL-Ecommerce`
 - **Connection**: Configurée via provisioning
 
 ### Time Range
+
 - **Default**: Last 30 days
 - **Picker**: 5s à 1 day intervals
 - **Timezone**: Browser local time
@@ -134,6 +145,7 @@ Un dashboard Grafana complet avec 13 panels couvrant tous les aspects de l'analy
 ## Requêtes SQL Utilisées
 
 ### KPI Summary
+
 ```sql
 SELECT SUM(total_users) as "Total Users"
 FROM daily_metrics
@@ -141,8 +153,9 @@ WHERE date >= $__timeFrom()::date AND date <= $__timeTo()::date
 ```
 
 ### Daily Trends
+
 ```sql
-SELECT 
+SELECT
   date as time,
   total_users as "Total Users",
   total_sessions as "Total Sessions",
@@ -153,8 +166,9 @@ ORDER BY date
 ```
 
 ### Top Products
+
 ```sql
-SELECT 
+SELECT
   product_id,
   product_name,
   total_purchases,
@@ -167,17 +181,18 @@ LIMIT 10
 ```
 
 ### A/B Test Summary
+
 ```sql
-SELECT 
+SELECT
   scenario_id,
   scenario_name,
   status,
   variant_a_conv_rate as control_rate,
   variant_b_conv_rate as variant_rate,
-  CASE 
-    WHEN variant_a_conv_rate > 0 
+  CASE
+    WHEN variant_a_conv_rate > 0
     THEN ((variant_b_conv_rate - variant_a_conv_rate) / variant_a_conv_rate * 100)
-    ELSE 0 
+    ELSE 0
   END as lift,
   max_significance as significance
 FROM v_ab_test_summary
@@ -185,14 +200,15 @@ ORDER BY lift DESC
 ```
 
 ### Funnel Analysis
+
 ```sql
-SELECT 
+SELECT
   stage_name,
   avg_visitors,
   avg_drop_off,
   avg_conversion_rate
 FROM (
-  SELECT 
+  SELECT
     stage_name,
     stage_order,
     AVG(visitors) as avg_visitors,
@@ -205,8 +221,9 @@ FROM (
 ```
 
 ### Traffic Sources
+
 ```sql
-SELECT 
+SELECT
   source,
   medium,
   SUM(total_sessions) as total_sessions,
@@ -222,12 +239,14 @@ LIMIT 15
 ## Fonctionnalités Avancées
 
 ### Seuils de Couleur (Thresholds)
+
 - **Conversion Rate**: Rouge → Jaune (2%) → Vert
 - **AOV**: Jaune → Vert (€200)
 - **A/B Lift**: Rouge (négatif) → Jaune (0%) → Vert (10%+)
 - **Significance**: Rouge → Jaune (90%) → Vert (95%+)
 
 ### Visualisations Personnalisées
+
 - **Stat panels**: Mode "value and name" avec graphiques area
 - **Time series**: Smooth interpolation, multi-tooltip
 - **Tables**: Gradient backgrounds, color-coded cells
@@ -235,6 +254,7 @@ LIMIT 15
 - **Bar chart**: Gradient hue mode
 
 ### Légendes Enrichies
+
 - **Tables**: Footer avec totaux
 - **Time series**: Calculs (mean, max, sum/min)
 - **Pie chart**: Valeurs + pourcentages
@@ -265,12 +285,14 @@ LIMIT 15
 Le projet dispose maintenant de **3 dashboards** :
 
 1. **`main-dashboard.json`** ✨ NOUVEAU
+
    - Dashboard principal complet
    - 13 panels couvrant tous les KPIs
    - Visualisations avancées
    - 🎯 **À utiliser en priorité**
 
 2. **`ecommerce-kpis.json`** (existant)
+
    - Dashboard KPIs basique
    - Focus sur métriques quotidiennes
 
@@ -281,17 +303,20 @@ Le projet dispose maintenant de **3 dashboards** :
 ## Accès au Dashboard
 
 ### Via Grafana UI
+
 1. Accéder à http://localhost:3000
 2. Login: admin / admin123
 3. Dashboards → Browse
 4. Sélectionner "E-commerce Analytics - Main Dashboard"
 
 ### Via URL directe
+
 ```
 http://localhost:3000/d/ecommerce-main-dashboard/e-commerce-analytics-main-dashboard
 ```
 
 ### Provisioning Automatique
+
 Le dashboard est automatiquement chargé au démarrage de Grafana via le volume mount :
 
 ```yaml
@@ -304,26 +329,31 @@ grafana:
 ## Fichiers Créés
 
 ### Nouveaux fichiers
+
 - ✅ `grafana/dashboards/main-dashboard.json` (1087 lignes)
 
 ### Dashboards existants
+
 - `grafana/dashboards/ecommerce-kpis.json`
 - `grafana/dashboards/ab-testing-analysis.json`
 
 ## Variables d'Environnement
 
 Aucune variable supplémentaire requise. Le dashboard utilise :
+
 - Datasource: `PostgreSQL-Ecommerce` (déjà configurée)
 - Time range: Variables Grafana (`$__timeFrom()`, `$__timeTo()`)
 
 ## Test du Dashboard
 
 ### Redémarrer Grafana
+
 ```bash
 docker-compose restart grafana
 ```
 
 ### Vérifier le chargement
+
 ```bash
 # Logs Grafana
 docker-compose logs grafana | grep -i dashboard
@@ -334,6 +364,7 @@ docker-compose logs grafana | grep -i dashboard
 ```
 
 ### Accéder au dashboard
+
 1. http://localhost:3000
 2. Login avec admin/admin123
 3. Dashboards → Browse → "E-commerce Analytics - Main Dashboard"
@@ -341,22 +372,26 @@ docker-compose logs grafana | grep -i dashboard
 ## Bénéfices
 
 ### Visibilité Complète
+
 - **13 panels** couvrant tous les aspects e-commerce
 - **KPIs en temps réel** avec time range ajustable
 - **Visualisations avancées** (time series, tables, pie, bar charts)
 
 ### Interactivité
+
 - **Time picker** pour analyser n'importe quelle période
 - **Drill-down** dans les tables triables
 - **Tooltips enrichis** sur les graphiques
 - **Légendes interactives** avec statistiques
 
 ### Performance
+
 - **Requêtes optimisées** utilisant les vues PostgreSQL
 - **Connection pooling** via datasource Grafana
 - **Refresh automatique** configurable (5s à 1d)
 
 ### Maintenance
+
 - **Provisioning automatique** via docker-compose
 - **Version contrôlée** (JSON dans Git)
 - **Facilement extensible** (ajouter panels/rows)
@@ -364,19 +399,23 @@ docker-compose logs grafana | grep -i dashboard
 ## Personnalisation
 
 ### Ajouter un panel
+
 ```json
 {
   "id": 14,
   "gridPos": { "h": 8, "w": 12, "x": 0, "y": 40 },
   "type": "timeseries",
   "title": "Mon nouveau panel",
-  "targets": [{
-    "rawSql": "SELECT * FROM ma_table"
-  }]
+  "targets": [
+    {
+      "rawSql": "SELECT * FROM ma_table"
+    }
+  ]
 }
 ```
 
 ### Modifier les couleurs
+
 ```json
 "thresholds": {
   "steps": [
@@ -388,6 +427,7 @@ docker-compose logs grafana | grep -i dashboard
 ```
 
 ### Ajouter des variables
+
 ```json
 "templating": {
   "list": [{
@@ -402,23 +442,27 @@ docker-compose logs grafana | grep -i dashboard
 ## Prochaines Améliorations Possibles
 
 ### Variables Template
+
 - [ ] Filtre par produit
 - [ ] Filtre par source de trafic
 - [ ] Filtre par scénario A/B test
 - [ ] Sélecteur de date prédéfini
 
 ### Panels Additionnels
+
 - [ ] Heatmap des conversions par heure/jour
 - [ ] Carte géographique du trafic
 - [ ] Graphique de cohort analysis
 - [ ] Alert rules pour KPIs critiques
 
 ### Annotations
+
 - [ ] Marqueurs pour lancements de tests A/B
 - [ ] Événements marketing/promotions
 - [ ] Changements de prix produits
 
 ### Export & Reporting
+
 - [ ] Snapshots automatiques
 - [ ] Export PDF programmé
 - [ ] Alertes email sur seuils
@@ -468,11 +512,13 @@ docker-compose logs grafana | grep -i dashboard
 ## Dépendances
 
 ### Services Docker
+
 - ✅ Grafana (port 3000)
 - ✅ PostgreSQL (port 5432)
 - ✅ Datasource configurée
 
 ### Tables & Vues
+
 - ✅ daily_metrics (139 rows)
 - ✅ products_summary (235K rows)
 - ✅ ab_test_scenarios (8 rows)
@@ -486,6 +532,7 @@ docker-compose logs grafana | grep -i dashboard
 ## Conclusion
 
 Dashboard Grafana complet créé avec succès ! Le système dispose maintenant d'une interface de visualisation professionnelle pour :
+
 - Monitorer les KPIs e-commerce en temps réel
 - Analyser les tendances quotidiennes
 - Évaluer la performance des produits
@@ -494,4 +541,3 @@ Dashboard Grafana complet créé avec succès ! Le système dispose maintenant d
 - Analyser les sources de trafic
 
 **Issue #46 : COMPLÉTÉ** ✅
-

@@ -385,8 +385,8 @@
     "list": []
   },
   "time": {
-    "from": "now-30d",
-    "to": "now"
+    "from": "2015-05-01T00:00:00.000Z",
+    "to": "2015-10-01T00:00:00.000Z"
   },
   "timepicker": {},
   "timezone": "browser",

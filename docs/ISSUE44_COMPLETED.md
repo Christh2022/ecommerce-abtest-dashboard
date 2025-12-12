@@ -12,6 +12,7 @@ Intégrer Grafana dans le stack Docker Compose pour la visualisation en temps r�
 ### 1. ✅ Services Docker Configurés
 
 #### Grafana
+
 ```yaml
 grafana:
   image: grafana/grafana:latest
@@ -29,6 +30,7 @@ grafana:
 ```
 
 **Fonctionnalités**:
+
 - ✅ Port 3000 exposé
 - ✅ Volumes persistants pour les données
 - ✅ Provisioning automatique des datasources
@@ -37,6 +39,7 @@ grafana:
 - ✅ Plugins pré-installés
 
 #### Loki (Log Aggregation)
+
 ```yaml
 loki:
   image: grafana/loki:latest
@@ -48,12 +51,14 @@ loki:
 ```
 
 **Fonctionnalités**:
+
 - ✅ Agrégation des logs
 - ✅ API disponible sur port 3100
 - ✅ Volume persistant
 - ✅ Health check
 
 #### Promtail (Log Collection)
+
 ```yaml
 promtail:
   image: grafana/promtail:latest
@@ -63,6 +68,7 @@ promtail:
 ```
 
 **Fonctionnalités**:
+
 - ✅ Collection automatique des logs dashboard
 - ✅ Envoi vers Loki
 - ✅ Mode lecture seule
@@ -70,6 +76,7 @@ promtail:
 ### 2. ✅ Datasources Configurées
 
 #### PostgreSQL Datasource
+
 **Fichier**: `grafana/provisioning/datasources/postgres.yml`
 
 ```yaml
@@ -83,12 +90,14 @@ promtail:
 ```
 
 **Configuration avancée**:
+
 - ✅ Max connections: 10
 - ✅ SSL désactivé (environnement Docker)
 - ✅ PostgreSQL 16
 - ✅ Éditable depuis l'UI
 
 #### Loki Datasource
+
 **Ajouté dans le même fichier**:
 
 ```yaml
@@ -99,6 +108,7 @@ promtail:
 ```
 
 **Fonctionnalités**:
+
 - ✅ Accès aux logs agrégés
 - ✅ Liens vers PostgreSQL (derived fields)
 - ✅ Limite de 1000 lignes par requête
@@ -106,26 +116,33 @@ promtail:
 ### 3. ✅ Dashboards Créés
 
 #### Dashboard 1: E-commerce KPIs
+
 **Fichier**: `grafana/dashboards/ecommerce-kpis.json`
 
 **Panels**:
+
 1. **Total Users** (Stat)
+
    - Somme des utilisateurs uniques
    - Requête: `SELECT SUM(total_users) FROM daily_metrics`
 
 2. **Total Revenue** (Stat)
+
    - Revenue total cumulé
    - Requête: `SELECT SUM(total_revenue) FROM daily_metrics`
 
 3. **Conversion Rate** (Gauge)
+
    - Taux de conversion moyen
    - Requête: `SELECT AVG(conversion_rate) FROM daily_metrics`
 
 4. **Daily Metrics Timeline** (Time Series)
+
    - Évolution des métriques quotidiennes
    - Users, Revenue, Conversions
 
 5. **Top Products** (Table)
+
    - Top 10 produits par revenue
    - Requête: `SELECT * FROM v_top_products LIMIT 10`
 
@@ -133,18 +150,23 @@ promtail:
    - Conversion funnel view → cart → purchase
 
 #### Dashboard 2: A/B Testing Analysis (Nouveau)
+
 **Fichier**: `grafana/dashboards/ab-testing-analysis.json`
 
 **Panels**:
+
 1. **Conversion Rates Over Time** (Time Series)
+
    - Évolution des taux par variant (A vs B)
    - Multi-séries pour chaque scénario
 
 2. **Visitors Distribution** (Pie Chart)
+
    - Répartition des visiteurs par scénario
    - Somme des visitors par test
 
 3. **A/B Test Summary** (Table)
+
    - Tableau récapitulatif des tests
    - Control vs Variant avec lift %
    - Statistical significance
@@ -155,6 +177,7 @@ promtail:
    - Visualisation du gain/perte
 
 **Fonctionnalités avancées**:
+
 - ✅ Auto-refresh toutes les 30s
 - ✅ Time range: Last 30 days
 - ✅ Colored cells pour les lifts
@@ -166,8 +189,8 @@ promtail:
 
 ```yaml
 providers:
-  - name: 'E-commerce Dashboards'
-    folder: ''
+  - name: "E-commerce Dashboards"
+    folder: ""
     type: file
     updateIntervalSeconds: 10
     allowUiUpdates: true
@@ -176,6 +199,7 @@ providers:
 ```
 
 **Avantages**:
+
 - ✅ Chargement automatique des dashboards au démarrage
 - ✅ Mise à jour toutes les 10 secondes
 - ✅ Éditable depuis l'UI
@@ -186,6 +210,7 @@ providers:
 **Fichier**: `grafana/README.md`
 
 **Contenu**:
+
 - Architecture du stack de monitoring
 - Configuration détaillée de chaque service
 - Guide d'utilisation (démarrage, accès, navigation)
@@ -222,6 +247,7 @@ $ curl http://localhost:3000/api/health
 ### Datasources ✅
 
 Vérification via API:
+
 ```bash
 $ curl -s -u admin:admin123 http://localhost:3000/api/datasources
 [
@@ -248,8 +274,9 @@ $ curl -s -u admin:admin123 http://localhost:3000/api/datasources
 ## 🎨 Requêtes SQL Utiles
 
 ### KPIs Quotidiens
+
 ```sql
-SELECT 
+SELECT
   date,
   total_users,
   total_revenue,
@@ -261,8 +288,9 @@ LIMIT 30;
 ```
 
 ### Top Products
+
 ```sql
-SELECT 
+SELECT
   product_name,
   category,
   total_revenue,
@@ -274,8 +302,9 @@ LIMIT 20;
 ```
 
 ### A/B Test Performance
+
 ```sql
-SELECT 
+SELECT
   scenario_name,
   variant,
   AVG(conversion_rate) as avg_conv_rate,
@@ -288,8 +317,9 @@ ORDER BY scenario_name, variant;
 ```
 
 ### Funnel Analysis
+
 ```sql
-SELECT 
+SELECT
   stage_name,
   AVG(visitors) as avg_visitors,
   AVG(drop_off) as avg_drop_off,
@@ -300,8 +330,9 @@ ORDER BY stage_order;
 ```
 
 ### Revenue Trend
+
 ```sql
-SELECT 
+SELECT
   date,
   total_revenue,
   total_conversions,
@@ -425,6 +456,7 @@ docker logs -f ecommerce-grafana
 ## 🎯 Prochaines Étapes
 
 Issue #44 est **complétée**. Améliorations possibles:
+
 - Issue #45: Alerting Grafana (notifications)
 - Issue #46: Dashboards additionnels (cohorts, segments)
 - Issue #47: Intégration Prometheus pour métriques système
@@ -434,6 +466,7 @@ Issue #44 est **complétée**. Améliorations possibles:
 ## 🔐 Sécurité
 
 **Recommandations**:
+
 - ✅ Changer le mot de passe admin par défaut
 - ⚠️ Utiliser HTTPS en production
 - ⚠️ Configurer OAuth/LDAP pour authentification

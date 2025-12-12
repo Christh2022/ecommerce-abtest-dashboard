@@ -5,6 +5,7 @@ Configuration complète de Grafana pour le monitoring et la visualisation des KP
 ## 🎯 Vue d'ensemble
 
 Grafana est intégré dans le stack Docker Compose pour:
+
 - ✅ Visualisation en temps réel des KPIs
 - ✅ Monitoring des métriques quotidiennes
 - ✅ Analyse des tests A/B
@@ -38,6 +39,7 @@ Grafana est intégré dans le stack Docker Compose pour:
 ## 📦 Services Docker
 
 ### Grafana
+
 ```yaml
 grafana:
   image: grafana/grafana:latest
@@ -62,6 +64,7 @@ grafana:
 ```
 
 ### Loki (Log Aggregation)
+
 ```yaml
 loki:
   image: grafana/loki:latest
@@ -76,6 +79,7 @@ loki:
 ```
 
 ### Promtail (Log Collection)
+
 ```yaml
 promtail:
   image: grafana/promtail:latest
@@ -94,6 +98,7 @@ promtail:
 ### Datasources
 
 **PostgreSQL Datasource** (`grafana/provisioning/datasources/postgres.yml`):
+
 ```yaml
 apiVersion: 1
 
@@ -105,9 +110,9 @@ datasources:
     database: ecommerce_db
     user: dashuser
     secureJsonData:
-      password: 'dashpass'
+      password: "dashpass"
     jsonData:
-      sslmode: 'disable'
+      sslmode: "disable"
       maxOpenConns: 10
       maxIdleConns: 10
       connMaxLifetime: 14400
@@ -117,26 +122,28 @@ datasources:
 ```
 
 **Loki Datasource** (à ajouter):
+
 ```yaml
-  - name: Loki
-    type: loki
-    access: proxy
-    url: http://loki:3100
-    jsonData:
-      maxLines: 1000
-    editable: true
+- name: Loki
+  type: loki
+  access: proxy
+  url: http://loki:3100
+  jsonData:
+    maxLines: 1000
+  editable: true
 ```
 
 ### Dashboard Provisioning
 
 **Configuration** (`grafana/provisioning/dashboards/dashboards.yml`):
+
 ```yaml
 apiVersion: 1
 
 providers:
-  - name: 'E-commerce Dashboards'
+  - name: "E-commerce Dashboards"
     orgId: 1
-    folder: ''
+    folder: ""
     type: file
     disableDeletion: false
     updateIntervalSeconds: 10
@@ -151,6 +158,7 @@ providers:
 ### 1. E-commerce KPIs (`ecommerce-kpis.json`)
 
 **Panels inclus:**
+
 - 📈 Total Users
 - 💰 Total Revenue
 - 🛒 Conversion Rate
@@ -159,21 +167,22 @@ providers:
 - 🧪 A/B Test Results
 
 **Requêtes SQL:**
+
 ```sql
 -- Total Users
-SELECT SUM(total_users) as "Total Users" 
+SELECT SUM(total_users) as "Total Users"
 FROM daily_metrics;
 
 -- Total Revenue
-SELECT SUM(total_revenue) as "Total Revenue" 
+SELECT SUM(total_revenue) as "Total Revenue"
 FROM daily_metrics;
 
 -- Conversion Rate (Average)
-SELECT AVG(conversion_rate) as "Avg Conversion Rate" 
+SELECT AVG(conversion_rate) as "Avg Conversion Rate"
 FROM daily_metrics;
 
 -- Daily Timeline
-SELECT 
+SELECT
   date as time,
   total_users,
   total_revenue,
@@ -182,7 +191,7 @@ FROM daily_metrics
 ORDER BY date;
 
 -- Top Products
-SELECT 
+SELECT
   product_name,
   total_revenue,
   total_purchases
@@ -209,11 +218,13 @@ docker ps
 ### Accès
 
 **Grafana Web UI:**
+
 - URL: http://localhost:3000
 - Username: `admin`
 - Password: `admin123`
 
 **Loki (API):**
+
 - URL: http://localhost:3100
 
 ### Navigation
@@ -237,7 +248,7 @@ docker ps
 ### Exemple de Panel: Revenue par Jour
 
 ```sql
-SELECT 
+SELECT
   date as time,
   total_revenue as "Revenue €",
   total_conversions as "Conversions"
@@ -251,7 +262,7 @@ ORDER BY date;
 ### Exemple de Panel: A/B Test Comparison
 
 ```sql
-SELECT 
+SELECT
   scenario_name,
   AVG(CASE WHEN variant = 'A' THEN conversion_rate END) as "Control (A)",
   AVG(CASE WHEN variant = 'B' THEN conversion_rate END) as "Variant (B)"
@@ -268,7 +279,7 @@ GROUP BY scenario_name;
 
 ```sql
 -- Métriques du jour
-SELECT 
+SELECT
   date,
   total_users,
   total_revenue,
@@ -282,7 +293,7 @@ WHERE date = CURRENT_DATE;
 
 ```sql
 -- Top 20 produits par revenue
-SELECT 
+SELECT
   product_name,
   category,
   total_revenue,
@@ -296,7 +307,7 @@ LIMIT 20;
 
 ```sql
 -- Funnel de conversion
-SELECT 
+SELECT
   stage_name,
   AVG(visitors) as avg_visitors,
   AVG(conversion_rate) as avg_conversion_rate
@@ -318,11 +329,13 @@ WHERE status = 'active';
 Ajouter des variables pour des dashboards dynamiques:
 
 ### Date Range Variable
+
 - **Name:** `date_from`
 - **Type:** Text box
 - **Default:** `NOW() - INTERVAL '30 days'`
 
 ### Scenario Variable
+
 - **Name:** `scenario`
 - **Type:** Query
 - **Query:** `SELECT DISTINCT scenario_id FROM ab_test_scenarios`

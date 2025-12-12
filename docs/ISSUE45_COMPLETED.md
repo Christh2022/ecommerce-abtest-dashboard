@@ -5,6 +5,7 @@
 **Related Issues**: #41 (PostgreSQL service), #42 (Migrations), #43 (Data import)
 
 ## Objectif
+
 Configurer et tester la source de données PostgreSQL pour le dashboard et Grafana, permettant l'accès aux données depuis les visualisations.
 
 ## Implémentation
@@ -27,6 +28,7 @@ engine = create_engine(
 ```
 
 #### Fonctionnalités
+
 - ✅ Connection pooling (5 connexions + 10 overflow)
 - ✅ Context manager pour gestion sécurisée
 - ✅ Error handling et logging
@@ -36,6 +38,7 @@ engine = create_engine(
 ### 2. Fonctions de requêtes
 
 #### KPIs et métriques quotidiennes
+
 ```python
 # Récupération des KPIs
 get_kpi_summary()              # Vue d'ensemble agrégée
@@ -44,12 +47,14 @@ get_daily_metrics(start_date, end_date)  # Métriques sur période
 ```
 
 #### Produits
+
 ```python
 get_top_products(limit=10)     # Top produits par revenu
 get_product_performance()      # Vue v_top_products
 ```
 
 #### A/B Testing
+
 ```python
 get_ab_test_summary()          # Vue v_ab_test_summary
 get_ab_test_results(scenario_id)  # Résultats détaillés
@@ -57,12 +62,14 @@ get_ab_test_scenarios()        # Liste des scénarios
 ```
 
 #### Funnel et Traffic
+
 ```python
 get_funnel_analysis()          # Analyse funnel de conversion
 get_traffic_sources()          # Sources de trafic
 ```
 
 #### Utilitaires
+
 ```python
 test_connection()              # Test de connexion
 get_database_stats()           # Statistiques tables
@@ -78,6 +85,7 @@ python scripts/test_postgres_datasource.py
 ```
 
 #### Tests effectués
+
 1. ✅ **Connection Test** - Validation connexion PostgreSQL
 2. ✅ **Database Stats** - Comptage rows par table
 3. ✅ **KPI Summary** - KPIs agrégés globaux
@@ -103,7 +111,7 @@ datasources:
     user: dashuser
     isDefault: true
     jsonData:
-      sslmode: 'disable'
+      sslmode: "disable"
       maxOpenConns: 10
       maxIdleConns: 5
       connMaxLifetime: 14400
@@ -170,6 +178,7 @@ datasources:
 ## Architecture
 
 ### Connection Pooling
+
 ```
 ┌─────────────────┐
 │  Dash App       │
@@ -191,6 +200,7 @@ datasources:
 ```
 
 ### Grafana Integration
+
 ```
 ┌─────────────────┐
 │  Grafana        │
@@ -240,13 +250,13 @@ Les dashboards peuvent utiliser directement la datasource `PostgreSQL-Ecommerce`
 
 ```sql
 -- Exemple de requête Grafana
-SELECT 
+SELECT
     date,
     total_users,
     total_revenue,
     conversion_rate
 FROM daily_metrics
-WHERE date >= $__timeFrom() 
+WHERE date >= $__timeFrom()
   AND date <= $__timeTo()
 ORDER BY date
 ```
@@ -254,10 +264,12 @@ ORDER BY date
 ## Fichiers Créés/Modifiés
 
 ### Nouveaux fichiers
+
 - ✅ `dashboard/db.py` (343 lignes) - Module connexion PostgreSQL
 - ✅ `scripts/test_postgres_datasource.py` (218 lignes) - Script de test
 
 ### Configuration existante
+
 - ✅ `grafana/provisioning/datasources/postgres.yml` - Datasource Grafana
 - ✅ `docker-compose.yml` - Service postgres déjà configuré
 - ✅ `requirements.txt` - SQLAlchemy et psycopg2-binary présents
@@ -265,21 +277,25 @@ ORDER BY date
 ## Bénéfices
 
 ### Performance
+
 - **Connection pooling** : Réutilisation des connexions (5 + 10 overflow)
 - **Pool recycle** : Refresh automatique toutes les heures
 - **Timeout** : 30s pour éviter les blocages
 
 ### Fiabilité
+
 - **Error handling** : Gestion des erreurs avec logging
 - **Context manager** : Nettoyage automatique des connexions
 - **Health checks** : Fonction `test_connection()`
 
 ### Maintenabilité
+
 - **Centralisé** : Toutes les requêtes dans un seul module
 - **Réutilisable** : Fonctions génériques paramétrables
 - **Testable** : Script de test complet fourni
 
 ### Évolutivité
+
 - **Vues PostgreSQL** : Requêtes complexes pré-optimisées
 - **Requêtes custom** : Fonction `execute_query()` pour cas spéciaux
 - **Pool ajustable** : Configuration via variables d'environnement
@@ -308,6 +324,7 @@ pandas>=2.1.0
 ## Prochaines Étapes
 
 ### Intégration Dashboard (À venir)
+
 1. Remplacer `pd.read_csv()` par requêtes PostgreSQL dans les pages
 2. Migrer `pages/home.py` vers `db.get_kpi_summary()`
 3. Migrer `pages/ab_results.py` vers `db.get_ab_test_summary()`
@@ -315,6 +332,7 @@ pandas>=2.1.0
 5. Migrer `pages/funnel.py` vers `db.get_funnel_analysis()`
 
 ### Optimisations possibles
+
 - Ajout de cache Redis pour requêtes fréquentes
 - Pagination pour grandes listes de produits
 - Indexes supplémentaires basés sur usage réel
@@ -332,10 +350,10 @@ pandas>=2.1.0
 ## Conclusion
 
 La datasource PostgreSQL est entièrement configurée et testée. Le dashboard peut maintenant :
+
 - Accéder aux données en temps réel depuis PostgreSQL
 - Utiliser le connection pooling pour performances optimales
 - Exploiter les vues pour requêtes complexes
 - Créer des visualisations Grafana connectées à la base
 
 **Issue #45 : COMPLÉTÉ** ✅
-
