@@ -1,0 +1,114 @@
+# Custom Falco Rules for E-Commerce Dashboard
+# These rules are tailored for monitoring the e-commerce application security
+
+- rule: Unauthorized Process Execution in Container
+  desc: Detect unexpected process execution in containers
+  condition: >
+    spawned_process and
+    container and
+    not proc.pname in (python, python3, node, postgres, prometheus, grafana-server, dash)
+  output: "Unauthorized process started (user=%user.name command=%proc.cmdline container=%container.name)"
+  priority: WARNING
+  tags: [container, process]
+
+- rule: Sensitive File Access
+  desc: Detect access to sensitive configuration files
+  condition: >
+    open_read and
+    container and
+    fd.name in (/etc/shadow, /etc/passwd, /etc/sudoers, .env, .env.example) and
+    not proc.name in (postgres, grafana-server)
+  output: "Sensitive file accessed (user=%user.name file=%fd.name command=%proc.cmdline container=%container.name)"
+  priority: WARNING
+  tags: [filesystem, secrets]
+
+- rule: Database Connection from Unexpected Container
+  desc: Detect PostgreSQL connection from unauthorized containers
+  condition: >
+    outbound and
+    fd.sip="172.20.0.0/16" and
+    fd.sport=5432 and
+    not container.name in (ecommerce-dashboard, ecommerce-exporter, ecommerce-postgres-exporter, ecommerce-grafana)
+  output: "Unauthorized database connection attempt (user=%user.name source_container=%container.name dest_ip=%fd.rip dest_port=%fd.rport)"
+  priority: ERROR
+  tags: [network, database]
+
+- rule: Suspicious Network Activity
+  desc: Detect outbound connections to suspicious ports
+  condition: >
+    outbound and
+    container and
+    fd.sport in (4444, 1337, 31337, 6667) and
+    not proc.name in (prometheus, grafana-server)
+  output: "Suspicious outbound connection detected (user=%user.name command=%proc.cmdline port=%fd.sport container=%container.name)"
+  priority: CRITICAL
+  tags: [network, malware]
+
+- rule: Container Drift Detection
+  desc: Detect modifications to container filesystem (immutability violation)
+  condition: >
+    container and
+    modify and
+    not fd.name startswith /var/lib/postgresql and
+    not fd.name startswith /var/lib/grafana and
+    not fd.name startswith /app/logs and
+    not fd.name startswith /tmp and
+    not fd.name startswith /prometheus
+  output: "Container filesystem modified - drift detected (user=%user.name file=%fd.name command=%proc.cmdline container=%container.name)"
+  priority: WARNING
+  tags: [filesystem, container]
+
+- rule: Privilege Escalation Attempt
+  desc: Detect attempts to escalate privileges
+  condition: >
+    spawned_process and
+    container and
+    proc.name in (sudo, su, pkexec, doas) and
+    not container.privileged=true
+  output: "Privilege escalation attempt detected (user=%user.name command=%proc.cmdline container=%container.name)"
+  priority: CRITICAL
+  tags: [privilege_escalation, container]
+
+- rule: Package Manager Execution in Container
+  desc: Detect package manager execution (potential supply chain attack)
+  condition: >
+    spawned_process and
+    container and
+    proc.name in (apt, apt-get, yum, dnf, pip, npm, yarn) and
+    not container.name in (ecommerce-dashboard-build)
+  output: "Package manager executed in running container (user=%user.name command=%proc.cmdline container=%container.name)"
+  priority: WARNING
+  tags: [container, supply_chain]
+
+- rule: Shell Spawned in Container
+  desc: Detect interactive shell in container (potential intrusion)
+  condition: >
+    spawned_process and
+    container and
+    proc.name in (bash, sh, zsh, fish) and
+    proc.pname in (sshd, nc, netcat, socat) and
+    not container.name in (ecommerce-dashboard-dev)
+  output: "Shell spawned in container - possible intrusion (user=%user.name shell=%proc.name parent=%proc.pname container=%container.name)"
+  priority: ERROR
+  tags: [container, intrusion]
+
+- rule: Grafana Admin Password Change
+  desc: Detect changes to Grafana admin credentials
+  condition: >
+    spawned_process and
+    container.name=ecommerce-grafana and
+    proc.cmdline contains "admin" and
+    proc.cmdline contains "password"
+  output: "Grafana admin password change detected (user=%user.name command=%proc.cmdline)"
+  priority: WARNING
+  tags: [grafana, credentials]
+
+- rule: Prometheus Config Modification
+  desc: Detect unauthorized Prometheus configuration changes
+  condition: >
+    open_write and
+    container.name=ecommerce-prometheus and
+    fd.name=/etc/prometheus/prometheus.yml
+  output: "Prometheus configuration file modified (user=%user.name file=%fd.name command=%proc.cmdline)"
+  priority: WARNING
+  tags: [prometheus, configuration]

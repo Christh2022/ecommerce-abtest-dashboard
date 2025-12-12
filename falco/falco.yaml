@@ -1,0 +1,69 @@
+# Falco Configuration for E-Commerce Dashboard
+# Runtime Security Monitoring
+
+# Output settings
+json_output: true
+json_include_output_property: true
+json_include_tags_property: true
+
+# Logging
+log_stderr: true
+log_syslog: false
+log_level: info
+
+# Rules - using default rules only for now
+rules_files:
+  - /etc/falco/falco_rules.yaml
+
+# Engine settings
+priority: debug
+buffered_outputs: true
+
+# Syscall event drops
+syscall_event_drops:
+  threshold: 0.1
+  actions:
+    - log
+  rate: 0.03333
+  max_burst: 1
+
+# Output channels
+file_output:
+  enabled: false
+  keep_alive: false
+  filename: /var/log/falco.log
+
+stdout_output:
+  enabled: true
+
+syslog_output:
+  enabled: false
+
+program_output:
+  enabled: false
+  keep_alive: false
+  program: "jq '{text: .output}' | curl -d @- -X POST https://hooks.slack.com/services/XXX"
+
+http_output:
+  enabled: false
+  url: "http://localhost:8080/"
+
+# gRPC settings
+grpc:
+  enabled: false
+  bind_address: "0.0.0.0:5060"
+  threadiness: 8
+
+# Webserver
+webserver:
+  enabled: true
+  listen_port: 8765
+  k8s_healthz_endpoint: /healthz
+  ssl_enabled: false
+
+# Performance tuning
+base_syscalls:
+  custom_set: []
+  repair: false
+
+# Engine settings (deprecated options removed for v0.42+)

@@ -183,6 +183,26 @@ services:
       retries: 3
       start_period: 30s
 
+  # Falco Runtime Security
+  falco:
+    image: falcosecurity/falco-no-driver:latest
+    container_name: ecommerce-falco
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+    networks:
+      - dashboard-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
 volumes:
   # PostgreSQL persistent data
   postgres-data:
