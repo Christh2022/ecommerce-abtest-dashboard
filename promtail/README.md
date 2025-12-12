@@ -7,6 +7,7 @@ Ce dossier contient la configuration pour **Promtail**, l'agent de collecte de l
 ## 📋 Vue d'ensemble
 
 Promtail est un agent qui :
+
 - **Découvre** automatiquement les conteneurs Docker
 - **Collecte** leurs logs (stdout/stderr)
 - **Tag** avec des labels (container, stream, etc.)
@@ -21,9 +22,11 @@ Promtail est un agent qui :
 Configuration de Promtail pour collecter les logs de 5 services du projet e-commerce dashboard.
 
 **Port:**
+
 - `9080` : API HTTP (metrics, health)
 
 **Cible:**
+
 - Loki : `http://loki:3100/loki/api/v1/push`
 
 ---
@@ -32,13 +35,13 @@ Configuration de Promtail pour collecter les logs de 5 services du projet e-comm
 
 Promtail collecte les logs des conteneurs suivants :
 
-| Job Name    | Container Name         | Description                    |
-|-------------|------------------------|--------------------------------|
-| `dash`      | ecommerce-dashboard    | Application Dash principale    |
-| `postgres`  | ecommerce-postgres     | Base de données PostgreSQL     |
-| `grafana`   | ecommerce-grafana      | Interface de visualisation     |
-| `prometheus`| ecommerce-prometheus   | Collecte des métriques         |
-| `falco`     | ecommerce-falco        | Monitoring de sécurité         |
+| Job Name     | Container Name       | Description                 |
+| ------------ | -------------------- | --------------------------- |
+| `dash`       | ecommerce-dashboard  | Application Dash principale |
+| `postgres`   | ecommerce-postgres   | Base de données PostgreSQL  |
+| `grafana`    | ecommerce-grafana    | Interface de visualisation  |
+| `prometheus` | ecommerce-prometheus | Collecte des métriques      |
+| `falco`      | ecommerce-falco      | Monitoring de sécurité      |
 
 ---
 
@@ -52,6 +55,7 @@ clients:
 ```
 
 **Paramètres implicites:**
+
 - Timeout : 10s
 - Batch size : 1 MB
 - Batch wait : 1s
@@ -72,6 +76,7 @@ scrape_configs:
 ```
 
 **Fonctionnement:**
+
 1. Promtail se connecte au Docker socket
 2. Découvre les conteneurs matchant le filtre
 3. Lit leurs logs depuis `/var/lib/docker/containers/`
@@ -81,19 +86,21 @@ scrape_configs:
 
 ```yaml
 relabel_configs:
-  - source_labels: ['__meta_docker_container_name']
-    regex: '/(.*)'
-    target_label: 'container'
-  - source_labels: ['__meta_docker_container_log_stream']
-    target_label: 'stream'
+  - source_labels: ["__meta_docker_container_name"]
+    regex: "/(.*)"
+    target_label: "container"
+  - source_labels: ["__meta_docker_container_log_stream"]
+    target_label: "stream"
 ```
 
 **Labels ajoutés:**
+
 - `container` : Nom du conteneur (ex: `ecommerce-dashboard`)
 - `stream` : `stdout` ou `stderr`
 - `job` : Nom du job Promtail (ex: `dash`)
 
 **Labels Loki résultants:**
+
 ```
 {container="ecommerce-dashboard", stream="stdout", job="dash"}
 ```
@@ -106,6 +113,7 @@ pipeline_stages:
 ```
 
 **Rôle du stage `docker`:**
+
 - Parse les logs formatés par Docker
 - Extrait timestamp, stream (stdout/stderr)
 - Supprime le wrapper JSON Docker
@@ -135,6 +143,7 @@ docker exec ecommerce-promtail cat /tmp/positions.yaml
 ```
 
 **Contenu exemple:**
+
 ```yaml
 positions:
   /var/lib/docker/containers/abc123.../abc123...-json.log: 12345
@@ -142,6 +151,7 @@ positions:
 ```
 
 **Signification:**
+
 - Promtail track la position de lecture dans chaque fichier
 - En cas de restart, reprend où il s'était arrêté
 - Pas de perte ni duplication de logs
@@ -176,16 +186,19 @@ promtail_request_duration_seconds
 ### Monitoring dans Grafana
 
 **Panel 1: Lignes Collectées par Service**
+
 ```promql
 sum(rate(promtail_read_lines_total[5m])) by (path)
 ```
 
 **Panel 2: Erreurs de Collecte**
+
 ```promql
 sum(rate(promtail_dropped_entries_total[5m])) by (reason)
 ```
 
 **Panel 3: Latence vers Loki**
+
 ```promql
 histogram_quantile(0.99, rate(promtail_request_duration_seconds_bucket[5m]))
 ```
@@ -201,7 +214,7 @@ histogram_quantile(0.99, rate(promtail_request_duration_seconds_bucket[5m]))
 ```yaml
 scrape_configs:
   # ... jobs existants ...
-  
+
   - job_name: redis
     docker_sd_configs:
       - host: unix:///var/run/docker.sock
@@ -210,16 +223,17 @@ scrape_configs:
           - name: name
             values: ["ecommerce-redis"]
     relabel_configs:
-      - source_labels: ['__meta_docker_container_name']
-        regex: '/(.*)'
-        target_label: 'container'
-      - source_labels: ['__meta_docker_container_log_stream']
-        target_label: 'stream'
+      - source_labels: ["__meta_docker_container_name"]
+        regex: "/(.*)"
+        target_label: "container"
+      - source_labels: ["__meta_docker_container_log_stream"]
+        target_label: "stream"
     pipeline_stages:
       - docker: {}
 ```
 
 **Puis redémarrer:**
+
 ```bash
 docker-compose restart promtail
 ```
@@ -255,6 +269,7 @@ pipeline_stages:
 ```
 
 **Résultat:**
+
 - Label `level` ajouté (info, warning, error)
 - Filtrage possible : `{container="...", level="error"}`
 
@@ -264,13 +279,13 @@ pipeline_stages:
 
 ```yaml
 relabel_configs:
-  - source_labels: ['__meta_docker_container_name']
-    regex: '/(.*)'
-    target_label: 'container'
-  - target_label: 'environment'
-    replacement: 'production'
-  - target_label: 'project'
-    replacement: 'ecommerce-dashboard'
+  - source_labels: ["__meta_docker_container_name"]
+    regex: "/(.*)"
+    target_label: "container"
+  - target_label: "environment"
+    replacement: "production"
+  - target_label: "project"
+    replacement: "ecommerce-dashboard"
 ```
 
 ---
@@ -292,20 +307,23 @@ docker logs ecommerce-promtail | grep -i error
 **1. "Permission denied" sur Docker socket**
 
 **Solution:**
+
 ```yaml
 # Dans docker-compose.yml
 volumes:
-  - /var/run/docker.sock:/var/run/docker.sock:ro  # Ajouter :ro
+  - /var/run/docker.sock:/var/run/docker.sock:ro # Ajouter :ro
 ```
 
 **2. "Failed to push to Loki"**
 
 **Causes:**
+
 - Loki pas démarré : `docker ps | grep loki`
 - URL incorrecte : Vérifier `clients[0].url`
 - Network : Vérifier que Promtail et Loki sur même network
 
 **Solution:**
+
 ```bash
 # Vérifier connectivité
 docker exec ecommerce-promtail wget -O- http://loki:3100/ready
@@ -314,11 +332,13 @@ docker exec ecommerce-promtail wget -O- http://loki:3100/ready
 **3. "No targets discovered"**
 
 **Causes:**
+
 - Filtre container name incorrect
 - Conteneur pas démarré
 - Docker socket non monté
 
 **Solution:**
+
 ```bash
 # Lister conteneurs visibles
 docker exec ecommerce-promtail ls -la /var/run/docker.sock
@@ -332,6 +352,7 @@ docker ps --filter "name=ecommerce-"
 **Cause:** Fichier positions corrompu
 
 **Solution:**
+
 ```bash
 # Supprimer positions et restart
 docker exec ecommerce-promtail rm /tmp/positions.yaml
@@ -344,10 +365,11 @@ docker-compose restart promtail
 
 ```yaml
 server:
-  log_level: debug  # au lieu de info
+  log_level: debug # au lieu de info
 ```
 
 **Puis:**
+
 ```bash
 docker-compose restart promtail
 docker logs -f ecommerce-promtail
@@ -364,11 +386,12 @@ docker logs -f ecommerce-promtail
 ```yaml
 clients:
   - url: http://loki:3100/loki/api/v1/push
-    batchwait: 5s      # Attendre 5s avant envoi (défaut: 1s)
+    batchwait: 5s # Attendre 5s avant envoi (défaut: 1s)
     batchsize: 2097152 # 2 MB par batch (défaut: 1 MB)
 ```
 
 **Impact:**
+
 - Moins de requêtes HTTP
 - Latence plus élevée (logs arrivent avec 5s de retard)
 - Meilleure compression
@@ -382,10 +405,11 @@ promtail:
   deploy:
     resources:
       limits:
-        memory: 256M  # Limite stricte
+        memory: 256M # Limite stricte
 ```
 
 **Si OOM (Out Of Memory):**
+
 - Réduire `batchsize`
 - Réduire nombre de positions trackées
 - Augmenter mémoire allouée
@@ -401,7 +425,7 @@ pipeline_stages:
       selector: '{job="postgres"}'
       stages:
         - drop:
-            expression: ".*STATEMENT:.*"  # Drop statements SQL
+            expression: ".*STATEMENT:.*" # Drop statements SQL
 ```
 
 ---
@@ -411,6 +435,7 @@ pipeline_stages:
 ### Test Local (Sans Docker)
 
 **Installer Promtail:**
+
 ```bash
 # Linux
 wget https://github.com/grafana/loki/releases/download/v2.9.0/promtail-linux-amd64.zip
@@ -424,6 +449,7 @@ chmod +x promtail-linux-amd64
 ### Test Envoi Manuel
 
 **Simuler envoi vers Loki:**
+
 ```bash
 curl -X POST http://localhost:3100/loki/api/v1/push \
   -H "Content-Type: application/json" \

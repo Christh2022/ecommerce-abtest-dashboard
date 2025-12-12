@@ -24,7 +24,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "P8E80F9AEF21F6940"
       },
       "description": "Security events from Falco intrusion detection",
       "fieldConfig": {
@@ -98,10 +98,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum by (priority) (count_over_time({compose_service=\"falco\"} |~ \"(?i)(error|warning|critical|alert)\" [$__interval]))",
+          "expr": "sum by (stream) (count_over_time({container=\"ecommerce-falco\"} |~ \"(?i)(error|warning|critical|alert|notice)\" [$__interval]))",
           "queryType": "range",
           "refId": "A"
         }
@@ -112,7 +112,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "P8E80F9AEF21F6940"
       },
       "description": "Recent security alerts from Falco",
       "gridPos": {
@@ -136,10 +136,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{compose_service=\"falco\"} |~ \"(?i)(error|warning|critical)\"",
+          "expr": "{container=\"ecommerce-falco\"} |~ \"(?i)(error|warning|critical|notice)\"",
           "queryType": "range",
           "refId": "A"
         }
@@ -150,7 +150,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "P8E80F9AEF21F6940"
       },
       "description": "Container logs from Dash application",
       "gridPos": {
@@ -174,10 +174,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{compose_service=\"dash-app\"}",
+          "expr": "{container=\"ecommerce-dashboard\"}",
           "queryType": "range",
           "refId": "A"
         }
@@ -188,7 +188,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "P8E80F9AEF21F6940"
       },
       "description": "PostgreSQL database logs",
       "gridPos": {
@@ -212,10 +212,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{compose_service=\"postgres\"} |~ \"(?i)(error|warning|fatal)\"",
+          "expr": "{container=\"ecommerce-postgres\"} |~ \"(?i)(error|warning|fatal)\"",
           "queryType": "range",
           "refId": "A"
         }
@@ -226,7 +226,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "P8E80F9AEF21F6940"
       },
       "description": "Grafana service logs",
       "gridPos": {
@@ -250,10 +250,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{compose_service=\"grafana\"}",
+          "expr": "{container=\"ecommerce-grafana\"}",
           "queryType": "range",
           "refId": "A"
         }
@@ -264,7 +264,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "P8E80F9AEF21F6940"
       },
       "description": "All container logs volume by service",
       "fieldConfig": {
@@ -312,10 +312,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum by (compose_service) (count_over_time({compose_project=\"ecommerce-abtest-dashboard\"} [$__range]))",
+          "expr": "sum by (container) (count_over_time({container=~\"ecommerce-.*\"} [$__range]))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -326,7 +326,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "P8E80F9AEF21F6940"
       },
       "description": "Error rate across all services",
       "fieldConfig": {
@@ -404,10 +404,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum by (compose_service) (rate({compose_project=\"ecommerce-abtest-dashboard\"} |~ \"(?i)error\" [$__interval]))",
+          "expr": "sum by (container) (rate({container=~\"ecommerce-.*\"} |~ \"(?i)error\" [$__interval]))",
           "queryType": "range",
           "refId": "A"
         }

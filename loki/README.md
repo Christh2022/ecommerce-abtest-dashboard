@@ -7,6 +7,7 @@ Ce dossier contient la configuration pour **Loki**, le système d'agrégation de
 ## 📋 Vue d'ensemble
 
 Loki est un système de stockage et d'interrogation de logs hautement scalable, conçu pour être :
+
 - **Léger** : Index uniquement les métadonnées, pas le contenu des logs
 - **Performant** : Compression efficace et recherche rapide
 - **Compatible** : Intégration native avec Grafana
@@ -20,16 +21,19 @@ Loki est un système de stockage et d'interrogation de logs hautement scalable, 
 Configuration principale de Loki pour le projet e-commerce dashboard.
 
 **Ports:**
+
 - `3100` : API HTTP (queries, ingestion)
 - `9096` : API gRPC
 
 **Stockage:**
+
 - Type : Filesystem (local)
 - Chunks : `/loki/chunks`
 - Index : `/loki/tsdb-index`
 - Cache : `/loki/tsdb-cache`
 
 **Rétention:**
+
 - Activée : Oui
 - Compaction : Toutes les 10 minutes
 - Delete delay : 2h après marquage
@@ -44,14 +48,15 @@ Configuration principale de Loki pour le projet e-commerce dashboard.
 schema_config:
   configs:
     - from: 2024-01-01
-      store: tsdb          # Time-series database
+      store: tsdb # Time-series database
       object_store: filesystem
-      schema: v13          # Version optimisée
+      schema: v13 # Version optimisée
       index:
-        period: 24h        # Rotation quotidienne
+        period: 24h # Rotation quotidienne
 ```
 
 **Pourquoi TSDB?**
+
 - Meilleure compression
 - Queries plus rapides
 - Index plus petits
@@ -69,6 +74,7 @@ storage_config:
 ```
 
 **Organisation:**
+
 ```
 /loki/
 ├── chunks/          # Logs compressés
@@ -89,6 +95,7 @@ compactor:
 ```
 
 **Rôle:**
+
 - Fusionne les petits chunks en gros chunks
 - Supprime les logs expirés (selon rétention)
 - Optimise l'espace disque
@@ -113,6 +120,7 @@ curl http://localhost:3100/ready
 ### API Endpoints
 
 **Health & Status:**
+
 ```bash
 # Ready check
 curl http://localhost:3100/ready
@@ -125,6 +133,7 @@ curl http://localhost:3100/loki/api/v1/status/buildinfo
 ```
 
 **Labels:**
+
 ```bash
 # Lister tous les labels
 curl http://localhost:3100/loki/api/v1/labels
@@ -134,6 +143,7 @@ curl http://localhost:3100/loki/api/v1/label/container/values
 ```
 
 **Query Logs:**
+
 ```bash
 # Query range (dernières 1h)
 curl -G -s "http://localhost:3100/loki/api/v1/query_range" \
@@ -147,6 +157,7 @@ curl -G -s "http://localhost:3100/loki/api/v1/query" \
 ```
 
 **Tail (streaming):**
+
 ```bash
 # Tail logs en temps réel
 curl -G -s "http://localhost:3100/loki/api/v1/tail" \
@@ -210,6 +221,7 @@ limits_config:
 ```
 
 **Redémarrer:**
+
 ```bash
 docker-compose restart loki
 ```
@@ -220,18 +232,19 @@ docker-compose restart loki
 
 ```yaml
 limits_config:
-  ingestion_rate_mb: 10           # 10 MB/sec max par tenant
-  ingestion_burst_size_mb: 20     # Burst de 20 MB
-  max_streams_per_user: 10000     # Max 10K streams
+  ingestion_rate_mb: 10 # 10 MB/sec max par tenant
+  ingestion_burst_size_mb: 20 # Burst de 20 MB
+  max_streams_per_user: 10000 # Max 10K streams
 ```
 
 ### Activer Compression Avancée
 
 ```yaml
-chunk_encoding: snappy  # ou gzip, lz4, zstd
+chunk_encoding: snappy # ou gzip, lz4, zstd
 ```
 
 **Comparaison:**
+
 - `gzip` : Meilleure compression, plus lent
 - `snappy` : Équilibré (recommandé)
 - `lz4` : Rapide, compression moyenne
@@ -254,18 +267,22 @@ docker logs ecommerce-loki | grep -i error
 ### Problèmes Courants
 
 **1. "No data sources found"**
+
 - Vérifier que Promtail est démarré
 - Vérifier connexion Promtail → Loki sur port 3100
 
 **2. "Too many outstanding requests"**
+
 - Augmenter `max_outstanding_requests_per_tenant`
 - Augmenter ressources CPU/RAM
 
 **3. "Context deadline exceeded"**
+
 - Query trop lourde, réduire time range
 - Augmenter timeout dans config
 
 **4. Espace disque plein**
+
 - Vérifier rétention activée
 - Réduire `retention_period`
 - Nettoyer manuellement `/loki/chunks`
@@ -276,7 +293,7 @@ docker logs ecommerce-loki | grep -i error
 
 ```yaml
 server:
-  log_level: debug  # au lieu de info
+  log_level: debug # au lieu de info
 ```
 
 ---

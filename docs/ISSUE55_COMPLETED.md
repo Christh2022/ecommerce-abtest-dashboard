@@ -19,6 +19,7 @@ Configurer Grafana pour visualiser et monitorer les logs de sécurité collecté
 **Fichier:** `grafana/provisioning/datasources/loki.yml`
 
 Configuration automatique de la datasource Loki :
+
 - **URL:** http://loki:3100
 - **Type:** Loki
 - **Access:** Proxy
@@ -32,36 +33,43 @@ Configuration automatique de la datasource Loki :
 Dashboard comprenant **7 panels** :
 
 #### Panel 1: Falco Security Events by Priority
+
 - **Type:** Time series (bars)
 - **Query:** `sum by (priority) (count_over_time({compose_service="falco"} |~ "(?i)(error|warning|critical|alert)" [$__interval]))`
 - **Description:** Visualisation des événements de sécurité par niveau de priorité
 
 #### Panel 2: Falco Security Alerts
+
 - **Type:** Logs
 - **Query:** `{compose_service="falco"} |~ "(?i)(error|warning|critical)"`
 - **Description:** Liste des alertes de sécurité en temps réel
 
 #### Panel 3: Dash Application Logs
+
 - **Type:** Logs
 - **Query:** `{compose_service="dash-app"}`
 - **Description:** Logs de l'application Dash
 
 #### Panel 4: PostgreSQL Errors & Warnings
+
 - **Type:** Logs
 - **Query:** `{compose_service="postgres"} |~ "(?i)(error|warning|fatal)"`
 - **Description:** Erreurs et avertissements de la base de données
 
 #### Panel 5: Grafana Logs
+
 - **Type:** Logs
 - **Query:** `{compose_service="grafana"}`
 - **Description:** Logs de Grafana lui-même
 
 #### Panel 6: Log Volume by Service
+
 - **Type:** Pie chart (donut)
 - **Query:** `sum by (compose_service) (count_over_time({compose_project="ecommerce-abtest-dashboard"} [$__range]))`
 - **Description:** Distribution du volume de logs par service
 
 #### Panel 7: Error Rate by Service
+
 - **Type:** Time series (line)
 - **Query:** `sum by (compose_service) (rate({compose_project="ecommerce-abtest-dashboard"} |~ "(?i)error" [$__interval]))`
 - **Description:** Taux d'erreur par service en temps réel
@@ -71,15 +79,18 @@ Dashboard comprenant **7 panels** :
 ## 🔧 Configuration
 
 ### Auto-refresh
+
 - **Intervalle:** 30 secondes
 - **Période par défaut:** 1 heure
 
 ### Tags
+
 - `security`
 - `logs`
 - `monitoring`
 
 ### Accès au Dashboard
+
 - **URL:** http://localhost:3000/d/security-logs
 - **Titre:** Security & Application Logs
 
@@ -120,6 +131,7 @@ docker logs ecommerce-promtail --tail 20
 ## 📊 Métriques de Monitoring
 
 ### Services Monitorés
+
 1. **Falco** - Intrusion detection logs
 2. **Dash App** - Application logs
 3. **PostgreSQL** - Database logs
@@ -129,6 +141,7 @@ docker logs ecommerce-promtail --tail 20
 7. **Promtail** - Log collector logs
 
 ### Types d'Événements Trackés
+
 - ✅ Erreurs (ERROR)
 - ✅ Avertissements (WARNING)
 - ✅ Événements critiques (CRITICAL)
@@ -183,10 +196,12 @@ docker logs ecommerce-promtail --tail 20
 ### Nouveaux Fichiers
 
 1. **grafana/provisioning/datasources/loki.yml** (13 lignes)
+
    - Configuration datasource Loki
    - Auto-provisioning activé
 
 2. **grafana/dashboards/security-logs.json** (480 lignes)
+
    - Dashboard complet avec 7 panels
    - Queries LogQL optimisées
    - Auto-refresh 30s
@@ -201,16 +216,19 @@ docker logs ecommerce-promtail --tail 20
 ## 🔗 Intégrations
 
 ### Avec Issue #53 (Loki/Promtail)
+
 - ✅ Utilise la datasource Loki configurée
 - ✅ Affiche les logs collectés par Promtail
 - ✅ Visualisation centralisée des logs
 
 ### Avec Issue #52 (Falco)
+
 - ✅ Monitoring des alertes de sécurité Falco
 - ✅ Dashboard dédié aux événements de sécurité
 - ✅ Filtrage par priorité
 
 ### Avec Issue #46 (Grafana)
+
 - ✅ S'ajoute aux dashboards existants
 - ✅ Réutilise le provisioning automatique
 - ✅ Compatible avec les autres datasources
@@ -220,21 +238,25 @@ docker logs ecommerce-promtail --tail 20
 ## 🎯 Cas d'Usage
 
 ### 1. Monitoring Sécurité Temps Réel
+
 - Panel Falco Security Events by Priority
 - Auto-refresh 30s
 - Alertes visuelles si pics d'événements
 
 ### 2. Investigation d'Incidents
+
 - Panel Logs détaillés par service
 - Recherche par pattern (regex)
 - Timeline des événements
 
 ### 3. Analyse de Performance
+
 - Error Rate by Service
 - Log Volume by Service
 - Identification des services problématiques
 
 ### 4. Audit & Compliance
+
 - Logs PostgreSQL (accès données)
 - Logs Grafana (accès monitoring)
 - Logs Dash (accès application)
@@ -262,10 +284,12 @@ sum by (priority) (count_over_time({compose_service="falco"}[5m]))
 ### Gestion des Alertes
 
 1. **Définir des seuils** :
+
    - ERROR rate > 10/min → Warning
    - CRITICAL event → Alert immédiate
 
 2. **Configurer les notifications** :
+
    - Slack, Email, PagerDuty
    - Via Grafana Alerting
 
@@ -278,16 +302,19 @@ sum by (priority) (count_over_time({compose_service="falco"}[5m]))
 ## 🔮 Améliorations Futures
 
 ### Court Terme
+
 1. Ajouter des alertes Grafana sur les événements critiques
 2. Créer des dashboards spécifiques par service
 3. Configurer la rotation automatique des logs
 
 ### Moyen Terme
+
 1. Intégrer avec un système de notification (Slack, Email)
 2. Ajouter des métriques de corrélation (logs + metrics)
 3. Créer des rapports automatiques hebdomadaires
 
 ### Long Terme
+
 1. Machine Learning pour détection d'anomalies dans les logs
 2. Intégration avec SIEM (Security Information and Event Management)
 3. Archivage long terme (S3, etc.)
@@ -297,11 +324,13 @@ sum by (priority) (count_over_time({compose_service="falco"}[5m]))
 ## 📚 Ressources
 
 ### Documentation
+
 - [Loki LogQL](https://grafana.com/docs/loki/latest/logql/)
 - [Grafana Logs Panel](https://grafana.com/docs/grafana/latest/panels/visualizations/logs/)
 - [Promtail Configuration](https://grafana.com/docs/loki/latest/clients/promtail/)
 
 ### Exemples de Requêtes
+
 - [LogQL Examples](https://grafana.com/docs/loki/latest/logql/log_queries/)
 - [Grafana Dashboard Examples](https://grafana.com/grafana/dashboards/)
 
@@ -310,6 +339,7 @@ sum by (priority) (count_over_time({compose_service="falco"}[5m]))
 ## ✅ Validation Finale
 
 ### Checklist
+
 - ✅ Datasource Loki configurée et accessible
 - ✅ Dashboard créé avec 7 panels fonctionnels
 - ✅ Logs de tous les services visibles
@@ -318,6 +348,7 @@ sum by (priority) (count_over_time({compose_service="falco"}[5m]))
 - ✅ Documentation complète
 
 ### Tests Effectués
+
 - ✅ Connexion Grafana → Loki
 - ✅ Affichage logs en temps réel
 - ✅ Requêtes LogQL fonctionnelles

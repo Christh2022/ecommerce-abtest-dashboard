@@ -104,6 +104,7 @@ loki:
 ```
 
 **Caractéristiques:**
+
 - ✅ Port 3100 exposé pour API HTTP
 - ✅ Configuration custom via `loki-config.yml`
 - ✅ Volume persistant `loki-data`
@@ -141,6 +142,7 @@ promtail:
 ```
 
 **Caractéristiques:**
+
 - ✅ Accès Docker Socket pour auto-découverte
 - ✅ Lecture logs conteneurs Docker
 - ✅ Montage volume `dash-logs`
@@ -210,6 +212,7 @@ compactor:
 ```
 
 **Paramètres Clés:**
+
 - 📦 **Storage:** Filesystem (simple, pas de S3/GCS requis)
 - 🗄️ **Schema:** TSDB v13 (optimisé performances)
 - ♻️ **Retention:** Activé avec nettoyage automatique
@@ -241,9 +244,9 @@ scrape_configs:
           - name: name
             values: ["ecommerce-dashboard"]
     relabel_configs:
-      - source_labels: ['__meta_docker_container_name']
-        regex: '/(.*)'
-        target_label: 'container'
+      - source_labels: ["__meta_docker_container_name"]
+        regex: "/(.*)"
+        target_label: "container"
     pipeline_stages:
       - docker: {}
 
@@ -281,6 +284,7 @@ scrape_configs:
 ```
 
 **Paramètres Clés:**
+
 - 🔍 **Auto-Discovery:** Détection automatique des conteneurs via Docker Socket
 - 🏷️ **Labels:** Chaque conteneur tagué automatiquement
 - 📤 **Push:** Envoi vers Loki sur `http://loki:3100`
@@ -303,10 +307,11 @@ docker ps --filter "name=promtail"
 ```
 
 **Résultat attendu:**
+
 ```
 CONTAINER ID   IMAGE                    STATUS         PORTS
 abc123def456   grafana/loki:latest      Up 10 seconds  0.0.0.0:3100->3100/tcp
-xyz789ghi012   grafana/promtail:latest  Up 5 seconds   
+xyz789ghi012   grafana/promtail:latest  Up 5 seconds
 ```
 
 ### 2. Vérifier Loki Ready
@@ -316,6 +321,7 @@ curl http://localhost:3100/ready
 ```
 
 **Résultat attendu:**
+
 ```
 ready
 ```
@@ -327,9 +333,11 @@ curl http://localhost:3100/metrics | grep loki_ingester_streams
 ```
 
 **Résultat attendu:**
+
 ```
 loki_ingester_streams{...} 5
 ```
+
 (5 streams = 5 jobs configurés dans Promtail)
 
 ### 4. Query Logs via API
@@ -371,6 +379,7 @@ datasources:
 ### 6. Explorer les Logs
 
 Dans Grafana:
+
 1. Aller sur **Explore** (icône boussole)
 2. Sélectionner datasource **Loki**
 3. Query:
@@ -398,11 +407,13 @@ sum(count_over_time({job=~".+"}[5m])) by (container)
 **Panels:**
 
 1. **Log Rate par Service** (Graph)
+
    ```logql
    sum(rate({job=~".+"}[5m])) by (container)
    ```
 
 2. **Erreurs Récentes** (Logs)
+
    ```logql
    {job=~".+"} |~ "(?i)error|exception|failed"
    ```
@@ -417,11 +428,13 @@ sum(count_over_time({job=~".+"}[5m])) by (container)
 **Panels:**
 
 1. **Requêtes HTTP** (Logs)
+
    ```logql
    {container="ecommerce-dashboard"} |~ "GET|POST"
    ```
 
 2. **Exceptions Python** (Logs)
+
    ```logql
    {container="ecommerce-dashboard"} |~ "Traceback"
    ```
@@ -436,11 +449,13 @@ sum(count_over_time({job=~".+"}[5m])) by (container)
 **Panels:**
 
 1. **Slow Queries**
+
    ```logql
    {container="ecommerce-postgres"} |~ "duration: [0-9]{3,}"
    ```
 
 2. **Connexions**
+
    ```logql
    {container="ecommerce-postgres"} |~ "connection"
    ```
@@ -487,8 +502,8 @@ sum(count_over_time({job=~".+"} [5m])) by (level)
 
 ```logql
 # Extraire des champs JSON
-{container="ecommerce-dashboard"} 
-  | json 
+{container="ecommerce-dashboard"}
+  | json
   | level="error"
   | line_format "{{.timestamp}} - {{.message}}"
 ```
@@ -497,9 +512,9 @@ sum(count_over_time({job=~".+"} [5m])) by (level)
 
 ```logql
 # Taux d'erreurs (%)
-sum(rate({container="ecommerce-dashboard"} |= "ERROR" [5m])) 
-/ 
-sum(rate({container="ecommerce-dashboard"} [5m])) 
+sum(rate({container="ecommerce-dashboard"} |= "ERROR" [5m]))
+/
+sum(rate({container="ecommerce-dashboard"} [5m]))
 * 100
 ```
 
@@ -555,13 +570,14 @@ groups:
 ### Ressources Allouées
 
 | Service  | CPU Limit | Memory Limit | Réservation |
-|----------|-----------|--------------|-------------|
+| -------- | --------- | ------------ | ----------- |
 | Loki     | 0.5 core  | 512 MB       | 256 MB      |
 | Promtail | 0.25 core | 256 MB       | 128 MB      |
 
 ### Rétention des Logs
 
 **Configuration actuelle:**
+
 - **Retention:** Activé
 - **Delete Delay:** 2h après marquage pour suppression
 - **Compaction:** Toutes les 10 minutes
@@ -570,8 +586,8 @@ groups:
 
 ```yaml
 limits_config:
-  retention_period: 168h  # 7 jours
-  
+  retention_period: 168h # 7 jours
+
 compactor:
   retention_enabled: true
   retention_delete_delay: 2h
@@ -583,12 +599,14 @@ compactor:
 **Pour gros volumes de logs:**
 
 1. **Augmenter mémoire Loki:**
+
    ```yaml
    limits:
      memory: 1G
    ```
 
 2. **Activer compression:**
+
    ```yaml
    chunk_encoding: snappy
    ```
@@ -610,9 +628,9 @@ compactor:
 
 ```yaml
 scrape_configs:
-  - job_name: 'loki'
+  - job_name: "loki"
     static_configs:
-      - targets: ['loki:3100']
+      - targets: ["loki:3100"]
     metrics_path: /metrics
 ```
 
@@ -661,6 +679,7 @@ Les logs JSON seront automatiquement capturés par Promtail.
 ### Existants (Utilisés)
 
 2. **`loki/loki-config.yml`** (76 lignes)
+
    - Configuration complète Loki
    - Schema TSDB v13
    - Retention activée
@@ -724,23 +743,24 @@ curl -G "http://localhost:3100/loki/api/v1/labels"
 ### Services Configurés
 
 | Service  | Port | Status | Healthcheck | Resource |
-|----------|------|--------|-------------|----------|
+| -------- | ---- | ------ | ----------- | -------- |
 | Loki     | 3100 | ✅     | /ready      | 512 MB   |
 | Promtail | -    | ✅     | N/A         | 256 MB   |
 
 ### Logs Collectés
 
-| Source            | Container Name         | Job Name    | Labels           |
-|-------------------|------------------------|-------------|------------------|
-| Dash Application  | ecommerce-dashboard    | dash        | container=...    |
-| PostgreSQL        | ecommerce-postgres     | postgres    | container=...    |
-| Grafana           | ecommerce-grafana      | grafana     | container=...    |
-| Prometheus        | ecommerce-prometheus   | prometheus  | container=...    |
-| Falco             | ecommerce-falco        | falco       | container=...    |
+| Source           | Container Name       | Job Name   | Labels        |
+| ---------------- | -------------------- | ---------- | ------------- |
+| Dash Application | ecommerce-dashboard  | dash       | container=... |
+| PostgreSQL       | ecommerce-postgres   | postgres   | container=... |
+| Grafana          | ecommerce-grafana    | grafana    | container=... |
+| Prometheus       | ecommerce-prometheus | prometheus | container=... |
+| Falco            | ecommerce-falco      | falco      | container=... |
 
 ### Volumétrie Estimée
 
 **Scénario développement (1 journée):**
+
 - Dash: ~50 MB/jour
 - Postgres: ~20 MB/jour
 - Grafana: ~10 MB/jour
@@ -781,11 +801,13 @@ curl -G "http://localhost:3100/loki/api/v1/labels"
 ### Moyen Terme
 
 5. **Optimisation Loki**
+
    - Tuning retention basé sur volumétrie réelle
    - Compression logs (snappy/gzip)
    - Sharding si volumes très élevés
 
 6. **Logs Structurés**
+
    - Passer tous les logs en JSON
    - Ajouter trace_id pour corrélation
    - Enrichir avec labels business (user_id, session_id)
