@@ -11,9 +11,10 @@ log_stderr: true
 log_syslog: false
 log_level: info
 
-# Rules - using default rules only for now
+# Rules - default rules + custom monitoring rules
 rules_files:
   - /etc/falco/falco_rules.yaml
+  - /etc/falco/falco_rules.local.yaml
 
 # Engine settings
 priority: debug

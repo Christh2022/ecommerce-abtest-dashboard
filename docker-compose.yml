@@ -191,6 +191,8 @@ services:
     volumes:
       - /var/run/docker.sock:/host/var/run/docker.sock:ro
       - /proc:/host/proc:ro
+      - ./falco/falco.yaml:/etc/falco/falco.yaml:ro
+      - ./falco/falco_rules.local.yaml:/etc/falco/falco_rules.local.yaml:ro
     networks:
       - dashboard-network
     restart: unless-stopped
