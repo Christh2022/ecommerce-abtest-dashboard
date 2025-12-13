@@ -1,0 +1,157 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: Security Alerts
+    folder: Alerting
+    interval: 1m
+    rules:
+      # Alert 1: Suspicious connections detected
+      - uid: suspicious_connections
+        title: Suspicious Network Connections Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: P8E80F9AEF21F6940
+            model:
+              expr: 'sum(count_over_time({container="ecommerce-falco"} |~ "(?i)(connection|connect|network).*(?i)(suspicious|unauthorized|blocked)" [5m])) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          description: 'Suspicious network connections detected in Falco logs. Review security logs immediately.'
+          summary: 'Security Alert: Suspicious Connections'
+        labels:
+          severity: critical
+          category: security
+          source: falco
+
+      # Alert 2: Shell spawned in container
+      - uid: shell_in_container
+        title: Shell Spawned in Container
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: P8E80F9AEF21F6940
+            model:
+              expr: 'sum(count_over_time({container="ecommerce-falco"} |~ "(?i)(shell|bash|sh|terminal).*(spawned|started|exec)" [5m])) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          description: 'A shell was spawned inside a container. This could indicate unauthorized access or container breakout attempt.'
+          summary: 'Security Alert: Shell in Container'
+        labels:
+          severity: high
+          category: security
+          source: falco
+
+      # Alert 3: File modifications detected
+      - uid: file_modifications
+        title: Critical File Modifications Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: P8E80F9AEF21F6940
+            model:
+              expr: 'sum(count_over_time({container="ecommerce-falco"} |~ "(?i)(write|modify|delete).*(sensitive|config|passwd|shadow)" [5m])) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          description: 'Critical files were modified in a container. Check for unauthorized changes to configuration or system files.'
+          summary: 'Security Alert: Critical File Modification'
+        labels:
+          severity: high
+          category: security
+          source: falco
+
+      # Alert 4: High error rate in application
+      - uid: high_error_rate
+        title: High Error Rate in Dash Application
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: P8E80F9AEF21F6940
+            model:
+              expr: 'sum(rate({container="ecommerce-dashboard"} |~ "(?i)error" [5m])) > 10'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 3m
+        annotations:
+          description: 'Dash application error rate is abnormally high. Check application logs for issues.'
+          summary: 'Application Alert: High Error Rate'
+        labels:
+          severity: warning
+          category: application
+          source: dash
+
+      # Alert 5: Database connection failures
+      - uid: database_failures
+        title: Database Connection Failures
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: P8E80F9AEF21F6940
+            model:
+              expr: 'sum(count_over_time({container="ecommerce-postgres"} |~ "(?i)(fatal|error).*(connection|authentication|role)" [5m])) > 5'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          description: 'Multiple database connection failures detected. Check database connectivity and credentials.'
+          summary: 'Database Alert: Connection Failures'
+        labels:
+          severity: warning
+          category: database
+          source: postgres
+
+      # Alert 6: Container restart loop
+      - uid: container_restart_loop
+        title: Container Restart Loop Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: P8E80F9AEF21F6940
+            model:
+              expr: 'sum(count_over_time({container=~"ecommerce-.*"} |~ "(?i)(restarting|restart|starting)" [10m])) > 10'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          description: 'A container is restarting repeatedly. Check container logs and health checks.'
+          summary: 'Infrastructure Alert: Container Restart Loop'
+        labels:
+          severity: high
+          category: infrastructure
+          source: docker

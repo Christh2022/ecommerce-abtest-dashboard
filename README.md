@@ -410,12 +410,13 @@ python scripts/generate_products_summary.py
 - [ ] **#47** - Panels : sessions, conversion, revenues, erreurs
 - [x] **#48** - Test accès http://localhost:3000 ✅
 
-#### Sécurité & Monitoring (Issues #50, #52-53, #55)
+#### Sécurité & Monitoring (Issues #50, #52-53, #55-56)
 
 - [x] **#50** - Optimiser volumes et réseaux ✅
 - [x] **#52** - Configurer Falco pour monitoring sécurité ✅
 - [x] **#53** - Ajouter Loki et Promtail pour collecte logs ✅
 - [x] **#55** - Configurer Grafana pour afficher les logs de sécurité ✅
+- [x] **#56** - Ajouter alertes (connexions suspectes, shell, modifications fichiers) ✅
 
 #### Tests Complets (Issue #49)
 
