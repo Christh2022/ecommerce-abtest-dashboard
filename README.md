@@ -82,9 +82,32 @@ docker compose -f docker-compose.secure.yml up -d
 docker compose -f docker-compose.secure.yml up -d --build
 ```
 
+### Charger les Données dans PostgreSQL
+
+Les données CSV doivent être importées dans PostgreSQL après le démarrage :
+
+```bash
+# Option 1 : Importer depuis l'hôte (nécessite psycopg2)
+python scripts/import_data_to_postgres.py
+
+# Option 2 : Importer via Docker (recommandé sur Windows)
+docker exec -i ecommerce-postgres psql -U dashuser -d ecommerce_db << EOF
+\copy daily_metrics FROM '/docker-entrypoint-initdb.d/daily_metrics.csv' WITH CSV HEADER;
+EOF
+
+# Option 3 : Utiliser le script de migration complet
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -f /docker-entrypoint-initdb.d/01_init.sql
+```
+
+**Vérifier l'import** :
+```bash
+# Vérifier le nombre de lignes dans les tables
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT 'daily_metrics' as table, COUNT(*) FROM daily_metrics UNION ALL SELECT 'products_summary', COUNT(*) FROM products_summary;"
+```
+
 ### Créer les Dashboards Grafana (Optionnel)
 
-Les dashboards Grafana doivent être créés manuellement après le démarrage des services :
+Les dashboards Grafana doivent être créés manuellement après le chargement des données :
 
 ```bash
 # Attendre que tous les services soient démarrés (~2 minutes)
