@@ -82,6 +82,35 @@ docker compose -f docker-compose.secure.yml up -d
 docker compose -f docker-compose.secure.yml up -d --build
 ```
 
+### Créer les Dashboards Grafana (Optionnel)
+
+Les dashboards Grafana doivent être créés manuellement après le démarrage des services :
+
+```bash
+# Attendre que tous les services soient démarrés (~2 minutes)
+# Puis exécuter les scripts de création des dashboards :
+
+# 1. Dashboards de base (Funnel, Segmentation, Produits)
+python create_dashboards_1_3.py
+
+# 2. Dashboards avancés (Cohortes, Real-Time, Prédictif)
+python create_dashboards_4_6.py
+
+# 3. Dashboard Business Intelligence
+python create_bi_dashboard.py
+
+# 4. Dashboard E-Commerce complet
+python create_full_dashboard.py
+
+# 5. Dashboard Monitoring
+python create_monitoring_dashboard.py
+
+# 6. Dashboard Prometheus
+python create_prometheus_dashboard.py
+```
+
+**Note** : Les dashboards sont créés via l'API Grafana. Assurez-vous que Grafana est démarré et accessible sur http://localhost:3000 avant d'exécuter ces scripts.
+
 ---
 
 ## ✨ Démo en Ligne
@@ -103,8 +132,9 @@ docker compose -f docker-compose.secure.yml up -d --build
 - 📚 Méthodologie - Guide complet
 - ℹ️ À Propos - Documentation projet
 
-**Grafana Dashboards** : http://localhost:3000
+**Grafana Dashboards** : http://localhost:3000 (admin/admin123)
 
+Après avoir exécuté les scripts ci-dessus, vous aurez accès à 10 dashboards :
 - Business Intelligence & Decision Support
 - Cohort Analysis & Retention
 - Customer Journey & Funnel Analysis
@@ -115,7 +145,6 @@ docker compose -f docker-compose.secure.yml up -d --build
 - Predictive Analytics & Forecasting
 - Product Performance Analysis
 - Real-Time Performance Monitoring
-- Security & Application Logs
 
 ---
 

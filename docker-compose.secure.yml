@@ -218,34 +218,6 @@ services:
       - no-new-privileges:true
     user: "472:472" # Grafana user
 
-  # Dashboard Initialization Service
-  # Ce service s'exécute automatiquement après le démarrage de Grafana
-  # pour créer tous les dashboards via l'API
-  dashboard-init:
-    build:
-      context: .
-      dockerfile: Dockerfile.dashboard-init
-    container_name: ecommerce-dashboard-init
-    environment:
-      - GRAFANA_URL=http://grafana:3000
-      - GRAFANA_USER=admin
-      - GRAFANA_PASSWORD=admin123
-    depends_on:
-      grafana:
-        condition: service_healthy
-      prometheus:
-        condition: service_healthy
-      ecommerce-exporter:
-        condition: service_started
-    networks:
-      - monitoring-network
-    restart: "no" # S'exécute une seule fois
-    deploy:
-      resources:
-        limits:
-          cpus: "0.25"
-          memory: 256M
-
   # Falco Runtime Security
   # DISABLED: Falco requires kernel module not available in WSL2
   # To enable on native Linux, uncomment this service
