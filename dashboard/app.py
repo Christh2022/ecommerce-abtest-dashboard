@@ -7,6 +7,17 @@ Issue #19 - Dashboard Structure
 import dash
 from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
+import logging
+from flask import request, redirect, session
+from flask_login import current_user
+from auth import AuthManager
+
+# Configure logging for application monitoring
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # Initialize the Dash app with Bootstrap theme and multi-page support
 app = Dash(
@@ -23,6 +34,12 @@ app = Dash(
 
 # Server object for deployment
 server = app.server
+
+# Initialize authentication
+auth_manager = AuthManager(server)
+
+# Store auth_manager in Flask's app context for global access
+server.auth_manager = auth_manager
 
 # Main layout with sidebar navigation
 app.layout = html.Div([
@@ -147,6 +164,20 @@ app.layout = html.Div([
                     "À Propos"
                 ], href="/about", active="exact", className="mb-2"),
                 
+                html.Hr(className="my-3"),
+                
+                # User info and logout
+                html.Div([
+                    html.Div([
+                        html.I(className="fas fa-user-circle fa-lg me-2 text-info"),
+                        html.Span(id="current-username", className="text-white fw-bold"),
+                    ], className="px-3 mb-2"),
+                    dbc.NavLink([
+                        html.I(className="fas fa-sign-out-alt me-2"),
+                        "Déconnexion"
+                    ], href="/logout", className="text-danger"),
+                ], id="user-info-section"),
+                
             ], vertical=True, pills=True, className="bg-dark p-3"),
             
             # Footer info in sidebar
@@ -198,7 +229,63 @@ app.layout = html.Div([
         }),
     ]),
     
+    # Hidden components for callbacks
+    dcc.Location(id='url', refresh=False),
+    
 ], style={"backgroundColor": "#0d1117"})
+
+
+# Authentication middleware
+@server.before_request
+def check_authentication():
+    """Check if user is authenticated before allowing access"""
+    # Allow access to login page and static assets
+    if request.path.startswith('/login') or \
+       request.path.startswith('/assets') or \
+       request.path.startswith('/_dash') or \
+       request.path.startswith('/logout'):
+        return None
+    
+    # Check if user is authenticated
+    if not current_user.is_authenticated:
+        logger.warning(f"Unauthorized access attempt to {request.path} from {request.remote_addr}")
+        return redirect('/login')
+    
+    # Check if user needs to change password (but not if already on change-password page)
+    if current_user.is_authenticated and \
+       hasattr(current_user, 'force_password_change') and \
+       current_user.force_password_change and \
+       not request.path.startswith('/change-password'):
+        logger.info(f"Redirecting {current_user.username} to change password")
+        return redirect('/change-password')
+    
+    return None
+
+
+# Add request logging middleware
+@server.before_request
+def log_request():
+    """Log each incoming HTTP request"""
+    logger.info(f"Request: {request.method} {request.path} from {request.remote_addr} - User: {current_user.username if current_user.is_authenticated else 'Anonymous'}")
+
+
+@server.after_request
+def log_response(response):
+    """Log each HTTP response"""
+    logger.info(f"Response: {request.method} {request.path} - Status {response.status_code}")
+    return response
+
+
+# Callback to display current username
+@app.callback(
+    dash.dependencies.Output('current-username', 'children'),
+    dash.dependencies.Input('url', 'pathname')
+)
+def display_username(pathname):
+    """Display current username in sidebar"""
+    if current_user.is_authenticated:
+        return current_user.username
+    return "Invité"
 
 
 if __name__ == '__main__':
@@ -222,6 +309,8 @@ if __name__ == '__main__':
     print("="*60)
     print("\n🔄 Le dashboard se recharge automatiquement à chaque modification")
     print("🛑 Appuyez sur Ctrl+C pour arrêter\n")
+    
+    logger.info("🚀 Starting E-Commerce A/B Test Dashboard...")
     
     app.run_server(
         debug=True,

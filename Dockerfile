@@ -22,11 +22,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file from root
+# Copy requirements files
 COPY requirements.txt .
+COPY dashboard/requirements.txt ./dashboard-requirements.txt
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies from both files
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -r dashboard-requirements.txt
+
+# Security audit stage (optional - can be run during CI/CD)
+FROM dependencies as security-audit
+
+# Run pip-audit to check for vulnerabilities
+RUN pip-audit --requirement requirements.txt || echo "⚠️  Vulnerabilities detected - review before deployment"
 
 # Stage 3: Application
 FROM base as application

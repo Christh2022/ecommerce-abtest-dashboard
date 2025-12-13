@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
+import os
+
+# Configuration from environment variables
+GRAFANA_URL = os.getenv('GRAFANA_URL', 'http://localhost:3000')
+GRAFANA_USER = os.getenv('GRAFANA_USER', 'admin')
+GRAFANA_PASSWORD = os.getenv('GRAFANA_PASSWORD', 'admin123')
 
 dashboard = {
     "dashboard": {

@@ -14,9 +14,79 @@ Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1
 - 🎯 **Méthodologie** : Guide complet des bonnes pratiques en A/B testing
 - 🐳 **Déploiement** : Application containerisée avec Docker, PostgreSQL et Grafana
 
+---
+
+## 🚀 Démarrage Rapide
+
+### Prérequis
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) installé et en cours d'exécution
+- [Git](https://git-scm.com/downloads) installé
+- Au moins 4 GB de RAM disponible
+- 5 GB d'espace disque libre
+
+### Installation
+
+1. **Cloner le projet**
+   ```bash
+   git clone https://github.com/votre-username/ecommerce-abtest-dashboard.git
+   cd ecommerce-abtest-dashboard
+   ```
+
+2. **Lancer tous les services**
+   ```bash
+   docker compose -f docker-compose.secure.yml up -d
+   ```
+   
+   Cette commande va :
+   - ✅ Construire les images Docker
+   - ✅ Démarrer PostgreSQL avec les données pré-chargées
+   - ✅ Lancer l'application Dash (Dashboard)
+   - ✅ Démarrer Grafana, Prometheus, Loki (Monitoring)
+   - ✅ Créer automatiquement les 11 dashboards Grafana
+
+3. **Attendre le démarrage complet** (~2-3 minutes)
+   ```bash
+   # Vérifier l'état des services
+   docker compose -f docker-compose.secure.yml ps
+   ```
+
+### Accès aux Services
+
+Une fois les conteneurs démarrés, accédez aux différentes interfaces :
+
+| Service | URL | Identifiants | Description |
+|---------|-----|--------------|-------------|
+| 🎨 **Dashboard Dash** | http://localhost:8050 | - | Application principale d'analyse |
+| 📊 **Grafana** | http://localhost:3000 | admin / admin123 | 11 dashboards de monitoring |
+| 🔍 **Prometheus** | http://localhost:9090 | - | Métriques temps réel |
+| 🗄️ **PostgreSQL** | localhost:5432 | dashuser / dashpass | Base de données (ecommerce_db) |
+
+### Arrêter le Projet
+
+```bash
+# Arrêter tous les services
+docker compose -f docker-compose.secure.yml down
+
+# Arrêter et supprimer les volumes (⚠️ efface les données)
+docker compose -f docker-compose.secure.yml down -v
+```
+
+### Relancer le Projet
+
+```bash
+# Redémarrer les services existants
+docker compose -f docker-compose.secure.yml up -d
+
+# Reconstruire les images (après modification du code)
+docker compose -f docker-compose.secure.yml up -d --build
+```
+
+---
+
 ## ✨ Démo en Ligne
 
-**Dashboard accessible à** : http://127.0.0.1:8050
+**Dashboard accessible à** : http://localhost:8050
 
 **Pages disponibles** :
 
@@ -32,6 +102,20 @@ Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1
 - 📈 Visualisations - Graphiques avancés
 - 📚 Méthodologie - Guide complet
 - ℹ️ À Propos - Documentation projet
+
+**Grafana Dashboards** : http://localhost:3000
+
+- Business Intelligence & Decision Support
+- Cohort Analysis & Retention
+- Customer Journey & Funnel Analysis
+- Customer Segmentation Analysis
+- E-Commerce A/B Test Analytics
+- E-Commerce Dashboard (Prometheus)
+- E-Commerce Monitoring Dashboard
+- Predictive Analytics & Forecasting
+- Product Performance Analysis
+- Real-Time Performance Monitoring
+- Security & Application Logs
 
 ---
 

@@ -23,7 +23,6 @@
   condition: >
     evt.type=connect and
     container.name="ecommerce-dashboard" and
-    fd.sip="172.20.0.0/16" and
     fd.sport=5432
   output: "Dash connecting to database (user=%user.name source=%fd.cip:%fd.cport dest=%fd.sip:%fd.sport)"
   priority: INFO
@@ -182,7 +181,6 @@
     evt.type=connect and
     container and
     container.name in (ecommerce-dashboard, ecommerce-grafana) and
-    fd.sip="172.20.0.0/16" and
     not fd.sport in (5432, 9090, 9200) and
     not proc.name in (python, python3, grafana-server, prometheus)
   output: "Suspicious inter-service connection (source=%container.name dest=%fd.sip:%fd.sport process=%proc.name)"

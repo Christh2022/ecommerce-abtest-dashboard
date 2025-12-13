@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
+import os
+
+# Configuration from environment variables
+GRAFANA_URL = os.getenv('GRAFANA_URL', 'http://localhost:3000')
+GRAFANA_USER = os.getenv('GRAFANA_USER', 'admin')
+GRAFANA_PASSWORD = os.getenv('GRAFANA_PASSWORD', 'admin123')
 
 dashboards = []
 
@@ -119,6 +125,10 @@ dashboards.append({
         "tags": ["realtime", "monitoring", "live"],
         "schemaVersion": 38,
         "refresh": "10s",
+        "time": {
+            "from": "now-15m",
+            "to": "now"
+        },
         "panels": [
             {
                 "id": 1,
@@ -475,9 +485,9 @@ dashboards.append({
 # Create all dashboards
 for dashboard_config in dashboards:
     response = requests.post(
-        'http://localhost:3000/api/dashboards/db',
+        f'{GRAFANA_URL}/api/dashboards/db',
         json={"dashboard": dashboard_config["dashboard"], "overwrite": True},
-        auth=('admin', 'admin123')
+        auth=(GRAFANA_USER, GRAFANA_PASSWORD)
     )
     
     title = dashboard_config["dashboard"]["title"]
