@@ -101,7 +101,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum by (stream) (count_over_time({container=\"ecommerce-falco\"} |~ \"(?i)(error|warning|critical|alert|notice)\" [$__interval]))",
+          "expr": "sum by (stream) (count_over_time({container=\"ecommerce-falco\"} |~ \"(?i)(notice|error|warning|critical|alert)\" [$__interval]))",
           "queryType": "range",
           "refId": "A"
         }
@@ -139,7 +139,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{container=\"ecommerce-falco\"} |~ \"(?i)(error|warning|critical|notice)\"",
+          "expr": "{container=\"ecommerce-falco\"} |~ \"(?i)(notice|error|warning|critical)\",
           "queryType": "range",
           "refId": "A"
         }
