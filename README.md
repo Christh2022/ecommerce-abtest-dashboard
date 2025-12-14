@@ -105,64 +105,66 @@ Les tables PostgreSQL sont créées automatiquement mais **vides**. Vous devez c
 **⚠️ ATTENTION** : Sur Windows, l'option `-w /` peut causer une erreur. Utilisez la méthode ci-dessous qui fonctionne sur **tous les systèmes** :
 
 ```bash
-# Étape 1 : Vérifier que les tables sont vides (optionnel)
-docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) FROM daily_metrics;"
-
-# Étape 2 : Copier les fichiers dans le conteneur
+# Étape 1 : Copier les scripts et données nécessaires
 docker cp scripts/import_data_to_postgres.py ecommerce-dashboard:/tmp/
 docker cp scripts/fix_numeric_overflow.py ecommerce-dashboard:/tmp/
 docker cp data/clean ecommerce-dashboard:/tmp/data
-docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && python fix_numeric_overflow.py"
-docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && sed 's|Path(__file__).parent.parent / '\''data'\'' / '\''clean'\''|Path('\''/tmp/data'\'')|g' import_data_to_postgres.py > import_fixed.py && python import_fixed.py"
 
+# Étape 2 : Corriger le schéma de la base de données (OBLIGATOIRE)
+# Cette étape corrige les colonnes NUMERIC(5,4) qui ne peuvent pas stocker les pourcentages (0-100)
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && python fix_numeric_overflow.py"
+
+# Vous devriez voir :
+# ✅ user_behavior.bounce_rate → NUMERIC(6,2)
+# ✅ products_summary.conversion_rate → NUMERIC(6,2)
+# ✅ ab_test_results.conversion_rate → NUMERIC(6,2)
+# ✅ ab_test_results.statistical_significance → NUMERIC(6,2)
+# ✅ funnel_stages.conversion_rate → NUMERIC(6,2)
+
+# Étape 3 : Exécuter l'import des données
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "
+cd /tmp &&
+sed 's|Path(__file__).parent.parent / '\''data'\'' / '\''clean'\''|Path('\''/tmp/data'\'')|g' import_data_to_postgres.py > import_fixed.py &&
+python import_fixed.py
+"
 
 # Étape 4 : ✅ Vérifier que l'import a réussi
-docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "
-SELECT 
-  'daily_metrics' as table_name, COUNT(*) as rows FROM daily_metrics
-UNION ALL SELECT 'products_summary', COUNT(*) FROM products_summary
-UNION ALL SELECT 'funnel_stages', COUNT(*) FROM funnel_stages
-UNION ALL SELECT 'ab_test_results', COUNT(*) FROM ab_test_results
-ORDER BY table_name;
-"
+docker exec -e DB_HOST=postgres ecommerce-dashboard python -c "import psycopg2; conn = psycopg2.connect(host='postgres', database='ecommerce_db', user='dashuser', password='dashpass'); cur = conn.cursor(); cur.execute('SELECT COUNT(*) FROM daily_metrics'); dm = cur.fetchone()[0]; cur.execute('SELECT COUNT(*) FROM products_summary'); ps = cur.fetchone()[0]; cur.execute('SELECT COUNT(*) FROM funnel_stages'); fs = cur.fetchone()[0]; cur.execute('SELECT COUNT(*) FROM ab_test_results'); ab = cur.fetchone()[0]; cur.execute('SELECT COUNT(*) FROM traffic_sources'); ts = cur.fetchone()[0]; print(f'✅ daily_metrics: {dm} rows'); print(f'✅ products_summary: {ps:,} rows'); print(f'✅ funnel_stages: {fs} rows'); print(f'✅ ab_test_results: {ab} rows'); print(f'✅ traffic_sources: {ts} rows')"
 ```
 
 **✅ Résultat attendu** :
+
 ```
-    table_name    |  rows  
-------------------+--------
- ab_test_results  |    480
- daily_metrics    |    139
- funnel_stages    |    417
- products_summary | 235061
+✅ daily_metrics: 139 rows
+✅ products_summary: 235,061 rows
+✅ funnel_stages: 417 rows
+✅ ab_test_results: 480 rows
+✅ traffic_sources: 139 rows
 ```
 
-**⏱️ Durée de l'import** : ~5-6 minutes (235K produits + métriques)
+**⏱️ Durée de l'import** : ~2 minutes (correction schéma) + ~2 minutes (import des données)
+
+**💡 Note importante** : La correction du schéma (Étape 2) est **obligatoire** et doit être exécutée **avant** l'import des données. Elle modifie les colonnes de pourcentage de NUMERIC(5,4) à NUMERIC(6,2) pour permettre le stockage de valeurs de 0 à 100.
 
 **🔧 Résolution des problèmes courants** :
 
 <details>
-<summary>❌ Erreur "numeric field overflow" lors de l'import</summary>
+<summary>❌ Erreur "numeric field overflow" (si Étape 2 non exécutée)</summary>
 
-Cette erreur se produit si les colonnes de taux de conversion sont trop petites. Exécutez ceci **avant** l'import :
+Si vous avez oublié l'Étape 2, vous verrez cette erreur :
+
+```
+psycopg2.errors.NumericValueOutOfRange: numeric field overflow
+DETAIL: A field with precision 5, scale 4 must round to an absolute value less than 10^1.
+```
+
+**Solution** : Retournez à l'Étape 2 et exécutez le script de correction du schéma :
 
 ```bash
-# Supprimer les vues qui bloquent les modifications
-docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "
-DROP VIEW IF EXISTS v_daily_kpis CASCADE;
-DROP VIEW IF EXISTS v_ab_test_summary CASCADE;
-"
-
-# Modifier les colonnes pour supporter des valeurs jusqu'à 100%
-docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "
-ALTER TABLE daily_metrics ALTER COLUMN conversion_rate TYPE numeric(8,4);
-ALTER TABLE funnel_stages ALTER COLUMN conversion_rate TYPE numeric(8,4);
-ALTER TABLE ab_test_results ALTER COLUMN conversion_rate TYPE numeric(8,4);
-ALTER TABLE ab_test_results ALTER COLUMN statistical_significance TYPE numeric(8,4);
-"
-
-# Puis relancer l'import (Étape 3 ci-dessus)
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && python fix_numeric_overflow.py"
 ```
+
+Puis relancez l'import (Étape 3).
 
 </details>
 
@@ -178,18 +180,21 @@ docker exec ecommerce-dashboard sh -c "ls -la /tmp/data/*.csv | head -10"
 # Vous devriez voir : daily_metrics.csv, products_summary.csv, etc.
 ```
 
-Si les fichiers ne sont pas là, recommencez l'Étape 2 (docker cp).
+Si les fichiers ne sont pas là, recommencez l'Étape 1 (docker cp).
 
 </details>
 
-**💡 Pourquoi cette méthode ?** : L'import se fait depuis l'intérieur du réseau Docker, ce qui évite les problèmes de connexion localhost sur Windows et les problèmes de chemins relatifs.
+**💡 Pourquoi cette méthode ?** : L'import se fait depuis l'intérieur du réseau Docker, ce qui évite les problèmes de connexion localhost sur Windows et les problèmes de chemins relatifs. La correction du schéma est nécessaire car les données de pourcentage sont stockées au format 0-100 et non 0.00-1.00.
 
 #### 7️⃣ Créer les Dashboards Grafana
 
-Les dashboards Grafana doivent être créés manuellement (prend ~2 minutes) :
+Les dashboards Grafana doivent être créés après l'import des données (prend ~2 minutes) :
 
 ```bash
-# Exécuter les 6 scripts dans l'ordre
+# Installer les dépendances si nécessaire
+pip install requests python-dotenv
+
+# Exécuter tous les scripts de création de dashboards
 python create_dashboards_1_3.py
 python create_dashboards_4_6.py
 python create_bi_dashboard.py
@@ -198,12 +203,80 @@ python create_monitoring_dashboard.py
 python create_prometheus_dashboard.py
 ```
 
-Vous devriez voir des messages de confirmation comme :
+**✅ Messages de confirmation attendus** :
 
 ```
-✓ Product Performance Analysis
-✓ Customer Segmentation Analysis
-✓ Customer Journey & Funnel Analysis
+✓ Product Performance Analysis created successfully
+✓ Customer Segmentation Analysis created successfully
+✓ Customer Journey & Funnel Analysis created successfully
+✓ E-Commerce A/B Test Analytics created successfully
+✓ Cohort Analysis & Retention created successfully
+✓ Predictive Analytics & Forecasting created successfully
+✓ Business Intelligence & Decision Support created successfully
+✓ E-Commerce Full Overview Dashboard created successfully
+✓ E-Commerce Monitoring Dashboard created successfully
+✓ E-Commerce Dashboard (Prometheus) created successfully
+```
+
+**📊 Dashboards créés (10 au total)** :
+
+1. Product Performance Analysis
+2. Customer Segmentation Analysis
+3. Customer Journey & Funnel Analysis
+4. E-Commerce A/B Test Analytics
+5. Cohort Analysis & Retention
+6. Predictive Analytics & Forecasting
+7. Business Intelligence & Decision Support
+8. E-Commerce Full Overview Dashboard
+9. E-Commerce Monitoring Dashboard
+10. E-Commerce Dashboard (Prometheus)
+
+**🔧 En cas d'erreur** :
+
+```bash
+# Vérifier que Grafana est accessible
+curl http://localhost:3000/api/health
+
+# Vérifier les identifiants Grafana
+# Par défaut : admin / admin123
+```
+
+**✅ Messages de confirmation attendus** :
+
+```
+✓ Product Performance Analysis created successfully
+✓ Customer Segmentation Analysis created successfully
+✓ Customer Journey & Funnel Analysis created successfully
+✓ E-Commerce A/B Test Analytics created successfully
+✓ Cohort Analysis & Retention created successfully
+✓ Predictive Analytics & Forecasting created successfully
+✓ Business Intelligence & Decision Support created successfully
+✓ E-Commerce Full Overview Dashboard created successfully
+✓ E-Commerce Monitoring Dashboard created successfully
+✓ E-Commerce Dashboard (Prometheus) created successfully
+```
+
+**📊 Dashboards créés (10 au total)** :
+
+1. Product Performance Analysis
+2. Customer Segmentation Analysis
+3. Customer Journey & Funnel Analysis
+4. E-Commerce A/B Test Analytics
+5. Cohort Analysis & Retention
+6. Predictive Analytics & Forecasting
+7. Business Intelligence & Decision Support
+8. E-Commerce Full Overview Dashboard
+9. E-Commerce Monitoring Dashboard
+10. E-Commerce Dashboard (Prometheus)
+
+**🔧 En cas d'erreur** :
+
+```bash
+# Vérifier que Grafana est accessible
+curl http://localhost:3000/api/health
+
+# Vérifier les identifiants Grafana
+# Par défaut : admin / admin123
 ```
 
 #### 8️⃣ Accéder aux Applications
@@ -321,24 +394,33 @@ docker compose -f docker-compose.secure.yml restart postgres
 
 ```bash
 # 1. Vérifier que PostgreSQL contient des données
-docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) FROM daily_metrics;"
+docker exec -e DB_HOST=postgres ecommerce-dashboard python -c "import psycopg2; conn = psycopg2.connect(host='postgres', database='ecommerce_db', user='dashuser', password='dashpass'); cur = conn.cursor(); cur.execute('SELECT COUNT(*) FROM daily_metrics'); print(f'daily_metrics: {cur.fetchone()[0]} rows'); cur.execute('SELECT COUNT(*) FROM products_summary'); print(f'products_summary: {cur.fetchone()[0]} rows')"
+
+# Si le résultat est 0, refaites l'import des données (Étape 6)
 
 # 2. Vérifier que l'exporter Prometheus fonctionne
 curl http://localhost:9200/metrics 2>/dev/null | grep ecommerce
 
 # 3. Vérifier que Prometheus scrape l'exporter
 # Ouvrir http://localhost:9090/targets et vérifier que "ecommerce-exporter" est UP
+
+# 4. Recréer les dashboards Grafana si nécessaire (Étape 7)
+python create_dashboards_1_3.py
+python create_dashboards_4_6.py
+# ... (tous les autres scripts)
 ```
 
-#### ❌ Problème : "Cannot import psycopg2" lors de l'import des données
+#### ❌ Problème : "Cannot import psycopg2" lors de la création des dashboards
 
 ```bash
-# Installer psycopg2
-pip install psycopg2-binary
+# Installer les dépendances Python localement
+pip install psycopg2-binary requests python-dotenv
 
-# Réessayer l'import
-python scripts/import_data_to_postgres.py
+# Réessayer la création des dashboards
+python create_dashboards_1_3.py
 ```
+
+**Note** : Cette erreur apparaît uniquement lors de l'exécution des scripts de création de dashboards Grafana depuis votre machine locale, pas lors de l'import des données qui s'exécute dans le conteneur Docker.
 
 ---
 
@@ -910,7 +992,14 @@ Ce projet utilise le dataset RetailRocket sous licence publique Kaggle.
 
 ---
 
-**Dernière mise à jour** : 11 décembre 2025  
-**Version** : 1.0.0  
+**Dernière mise à jour** : 14 décembre 2025  
+**Version** : 1.0.1  
 **Milestones complétés** : 4/5 ✅  
 **Issues résolues** : 43/57
+
+**Changelog v1.0.1** :
+
+- ✅ Correction du problème de numeric overflow lors de l'import des données
+- ✅ Ajout du script `fix_numeric_overflow.py` pour corriger automatiquement le schéma
+- ✅ Mise à jour de la documentation avec les étapes correctes d'import
+- ✅ Amélioration des instructions pour les collaborateurs
