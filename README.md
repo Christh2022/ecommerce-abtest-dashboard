@@ -111,7 +111,7 @@ docker cp scripts/import_data_to_postgres.py ecommerce-dashboard:/tmp/
 docker cp data/clean ecommerce-dashboard:/tmp/data
 
 # 3. Exécuter le script d'import depuis le conteneur
-docker exec -w / -e DB_HOST=postgres ecommerce-dashboard python /tmp/import_data_to_postgres.py
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && python import_data_to_postgres.py"
 
 # 4. ✅ Vérifier que l'import a réussi
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "
