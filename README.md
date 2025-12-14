@@ -110,14 +110,11 @@ docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT
 
 # Étape 2 : Copier les fichiers dans le conteneur
 docker cp scripts/import_data_to_postgres.py ecommerce-dashboard:/tmp/
+docker cp scripts/fix_numeric_overflow.py ecommerce-dashboard:/tmp/
 docker cp data/clean ecommerce-dashboard:/tmp/data
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && python fix_numeric_overflow.py"
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && sed 's|Path(__file__).parent.parent / '\''data'\'' / '\''clean'\''|Path('\''/tmp/data'\'')|g' import_data_to_postgres.py > import_fixed.py && python import_fixed.py"
 
-# Étape 3 : Modifier le chemin DATA_DIR et exécuter l'import
-docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "
-cd /tmp && 
-sed 's|Path(__file__).parent.parent / '\''data'\'' / '\''clean'\''|Path('\''/tmp/data'\'')|g' import_data_to_postgres.py > import_fixed.py && 
-python import_fixed.py
-"
 
 # Étape 4 : ✅ Vérifier que l'import a réussi
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "
