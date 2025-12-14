@@ -22,13 +22,14 @@ Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1
 
 #### 1️⃣ Prérequis (à installer avant de commencer)
 
-| Logiciel | Version minimum | Lien de téléchargement | Vérification |
-|----------|----------------|------------------------|--------------|
-| Docker Desktop | 24.0+ | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop) | `docker --version` |
-| Git | 2.40+ | [git-scm.com/downloads](https://git-scm.com/downloads) | `git --version` |
-| Python | 3.10+ | [python.org](https://www.python.org/downloads/) | `python --version` |
+| Logiciel       | Version minimum | Lien de téléchargement                                                               | Vérification       |
+| -------------- | --------------- | ------------------------------------------------------------------------------------ | ------------------ |
+| Docker Desktop | 24.0+           | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop) | `docker --version` |
+| Git            | 2.40+           | [git-scm.com/downloads](https://git-scm.com/downloads)                               | `git --version`    |
+| Python         | 3.10+           | [python.org](https://www.python.org/downloads/)                                      | `python --version` |
 
 **Configuration système requise** :
+
 - 💾 RAM : Minimum 4 GB disponible (8 GB recommandé)
 - 💿 Espace disque : 5 GB libre
 - 🌐 Connexion Internet (pour le premier démarrage)
@@ -72,6 +73,7 @@ docker compose -f docker-compose.secure.yml up -d --build
 ```
 
 **Ce qui se passe en arrière-plan** :
+
 - 🐳 Construction des images Docker personnalisées
 - 🗄️ Création de la base de données PostgreSQL
 - 📊 Démarrage de Grafana pour la visualisation
@@ -101,19 +103,38 @@ docker compose -f docker-compose.secure.yml ps
 Les tables PostgreSQL sont créées automatiquement mais **vides**. Vous devez charger les données :
 
 ```bash
-# Vérifier que les tables sont vides
+# 1. Vérifier que les tables sont vides
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) as nb_lignes FROM daily_metrics;"
 
-# Si le résultat est 0, importer les données avec le script Python
-python scripts/import_data_to_postgres.py
+# 2. Copier le script et les données dans le conteneur
+docker cp scripts/import_data_to_postgres.py ecommerce-dashboard:/tmp/
+docker cp data/clean ecommerce-dashboard:/tmp/data
 
-# ✅ Vérifier que l'import a réussi (devrait afficher ~139 lignes)
-docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) FROM daily_metrics;"
+# 3. Exécuter le script d'import depuis le conteneur
+docker exec -w / -e DB_HOST=postgres ecommerce-dashboard python /tmp/import_data_to_postgres.py
+
+# 4. ✅ Vérifier que l'import a réussi
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "
+SELECT 
+  'daily_metrics' as table_name, COUNT(*) as rows FROM daily_metrics
+UNION ALL SELECT 'products_summary', COUNT(*) FROM products_summary
+UNION ALL SELECT 'funnel_stages', COUNT(*) FROM funnel_stages
+UNION ALL SELECT 'ab_test_results', COUNT(*) FROM ab_test_results
+ORDER BY table_name;
+"
 ```
 
-**⚠️ Si le script Python échoue sur Windows** (erreur de connexion) :
+**Résultat attendu** :
+```
+    table_name    | rows   
+------------------+--------
+ ab_test_results  | 480
+ daily_metrics    | 139
+ funnel_stages    | 417
+ products_summary | 235061
+```
 
-Le script essaie de se connecter à PostgreSQL qui tourne dans Docker. Sur certains systèmes Windows, la connexion directe peut échouer. Dans ce cas, **les données sont déjà chargées automatiquement au démarrage de PostgreSQL** via le fichier `init_db.sql`. Vérifiez simplement que les tables contiennent des données avec la commande de vérification ci-dessus.
+**💡 Note** : Cette méthode fonctionne sur tous les systèmes (Windows/Linux/Mac) car l'import se fait depuis l'intérieur du réseau Docker.
 
 #### 7️⃣ Créer les Dashboards Grafana
 
@@ -130,6 +151,7 @@ python create_prometheus_dashboard.py
 ```
 
 Vous devriez voir des messages de confirmation comme :
+
 ```
 ✓ Product Performance Analysis
 ✓ Customer Segmentation Analysis
@@ -138,27 +160,30 @@ Vous devriez voir des messages de confirmation comme :
 
 #### 8️⃣ Accéder aux Applications
 
-| Application | URL | Identifiants | Description |
-|-------------|-----|--------------|-------------|
-| 🎨 **Dashboard Dash** | [http://localhost:8050](http://localhost:8050) | Aucun | Application principale avec 12 pages d'analyse |
-| 📊 **Grafana** | [http://localhost:3000](http://localhost:3000) | admin / admin123 | 10 dashboards de monitoring |
-| 🔍 **Prometheus** | [http://localhost:9090](http://localhost:9090) | Aucun | Métriques en temps réel |
-| 🗄️ **PostgreSQL** | localhost:5432 | dashuser / dashpass | Base de données (connexion via client SQL) |
+| Application           | URL                                            | Identifiants        | Description                                    |
+| --------------------- | ---------------------------------------------- | ------------------- | ---------------------------------------------- |
+| 🎨 **Dashboard Dash** | [http://localhost:8050](http://localhost:8050) | Aucun               | Application principale avec 12 pages d'analyse |
+| 📊 **Grafana**        | [http://localhost:3000](http://localhost:3000) | admin / admin123    | 10 dashboards de monitoring                    |
+| 🔍 **Prometheus**     | [http://localhost:9090](http://localhost:9090) | Aucun               | Métriques en temps réel                        |
+| 🗄️ **PostgreSQL**     | localhost:5432                                 | dashuser / dashpass | Base de données (connexion via client SQL)     |
 
 ---
 
 ### 🎯 Tester que Tout Fonctionne
 
 **Test 1 : Dashboard Dash**
+
 1. Ouvrir http://localhost:8050
 2. Vous devriez voir la page d'accueil avec des KPIs
 
 **Test 2 : Grafana**
+
 1. Ouvrir http://localhost:3000
 2. Se connecter avec admin / admin123
 3. Aller dans Dashboards → Vous devriez voir 10 dashboards
 
 **Test 3 : Données PostgreSQL**
+
 ```bash
 # Vérifier le nombre de produits
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) as nb_produits FROM products_summary;"
@@ -170,6 +195,7 @@ docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT
 ### 🛠️ Commandes Utiles au Quotidien
 
 #### Redémarrer les Services
+
 ```bash
 # Redémarrer tous les services
 docker compose -f docker-compose.secure.yml restart
@@ -179,6 +205,7 @@ docker compose -f docker-compose.secure.yml restart grafana
 ```
 
 #### Voir les Logs
+
 ```bash
 # Logs de tous les services
 docker compose -f docker-compose.secure.yml logs -f
@@ -190,6 +217,7 @@ docker logs ecommerce-grafana -f
 ```
 
 #### Arrêter les Services
+
 ```bash
 # Arrêter sans supprimer les données
 docker compose -f docker-compose.secure.yml down
@@ -199,6 +227,7 @@ docker compose -f docker-compose.secure.yml down -v
 ```
 
 #### Reconstruire après Modifications du Code
+
 ```bash
 # Reconstruire et redémarrer
 docker compose -f docker-compose.secure.yml up -d --build
@@ -213,6 +242,7 @@ docker compose -f docker-compose.secure.yml up -d
 ### 🆘 Résolution des Problèmes Courants
 
 #### ❌ Problème : "Port already in use"
+
 ```bash
 # Trouver quel processus utilise le port
 # Windows :
@@ -227,6 +257,7 @@ lsof -i :3000
 ```
 
 #### ❌ Problème : "Container is unhealthy"
+
 ```bash
 # Voir les détails de santé du conteneur
 docker inspect ecommerce-postgres --format='{{.State.Health}}'
@@ -239,6 +270,7 @@ docker compose -f docker-compose.secure.yml restart postgres
 ```
 
 #### ❌ Problème : "No data in Grafana dashboards"
+
 ```bash
 # 1. Vérifier que PostgreSQL contient des données
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) FROM daily_metrics;"
@@ -251,6 +283,7 @@ curl http://localhost:9200/metrics 2>/dev/null | grep ecommerce
 ```
 
 #### ❌ Problème : "Cannot import psycopg2" lors de l'import des données
+
 ```bash
 # Installer psycopg2
 pip install psycopg2-binary
@@ -329,6 +362,7 @@ Pour contribuer au projet :
 **Grafana Dashboards** : http://localhost:3000 (admin/admin123)
 
 Après avoir exécuté les scripts ci-dessus, vous aurez accès à 10 dashboards :
+
 - Business Intelligence & Decision Support
 - Cohort Analysis & Retention
 - Customer Journey & Funnel Analysis
