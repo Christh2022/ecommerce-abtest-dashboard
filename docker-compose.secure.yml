@@ -122,6 +122,30 @@ services:
     security_opt:
       - no-new-privileges:true
 
+  # Prometheus Pushgateway for Attack Metrics
+  pushgateway:
+    image: prom/pushgateway:latest
+    container_name: ecommerce-pushgateway
+    ports:
+      - "127.0.0.1:9091:9091" # Accessible depuis localhost
+    networks:
+      - monitoring-network
+      - frontend-network # Ajout pour l'accessibilité depuis l'hôte
+    restart: unless-stopped
+    command:
+      - "--web.listen-address=:9091"
+      - "--persistence.interval=5m"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+    security_opt:
+      - no-new-privileges:true
+
   # Postgres Exporter for Prometheus
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter:latest
@@ -218,29 +242,47 @@ services:
       - no-new-privileges:true
     user: "472:472" # Grafana user
 
-  # Falco Runtime Security
-  # DISABLED: Falco requires kernel module not available in WSL2
-  # To enable on native Linux, uncomment this service
-  # falco:
-  #   image: falcosecurity/falco-no-driver:latest
-  #   container_name: ecommerce-falco
-  #   privileged: true
-  #   volumes:
-  #     - /var/run/docker.sock:/host/var/run/docker.sock:ro
-  #     - /proc:/host/proc:ro
-  #     - ./falco/falco.yaml:/etc/falco/falco.yaml:ro
-  #     - ./falco/falco_rules.local.yaml:/etc/falco/falco_rules.local.yaml:ro
-  #   networks:
-  #     - monitoring-network
-  #   restart: unless-stopped
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: "0.5"
-  #         memory: 256M
-  #       reservations:
-  #         cpus: "0.1"
-  #         memory: 128M
+  # Falco Runtime Security - ENABLED
+  # Détection en temps réel des attaques de sécurité
+  falco:
+    image: falcosecurity/falco-no-driver:latest
+    container_name: ecommerce-falco
+    privileged: true
+    command:
+      - /usr/bin/falco
+      - -o
+      - engine.kind=modern_bpf
+      - -o
+      - json_output=true
+      - -o
+      - json_include_output_property=true
+      - -o
+      - log_stderr=true
+      - -o
+      - log_level=info
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - /sys/kernel/debug:/sys/kernel/debug:ro
+      - ./falco/falco.yaml:/etc/falco/falco.yaml:ro
+      - ./falco/security_attack_rules_v2.yaml:/etc/falco/security_attack_rules_v2.yaml:ro
+    networks:
+      - monitoring-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+        labels: "falco"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.2"
+          memory: 256M
 
   # Loki for Log Aggregation
   loki:
@@ -267,19 +309,22 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  # Promtail for Log Collection
+  # Promtail for Log Collection (including Falco logs)
   promtail:
     image: grafana/promtail:latest
     container_name: ecommerce-promtail
     volumes:
       - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      - ./promtail/promtail-falco.yml:/etc/promtail/promtail-falco.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - dash-logs:/var/log/dash:ro
-    command: -config.file=/etc/promtail/config.yml
+      - falco-logs:/var/log/falco:ro
+    command: -config.file=/etc/promtail/config.yml -config.expand-env=true
     # PAS de port exposé
     depends_on:
       - loki
+      - falco
     networks:
       - monitoring-network
     restart: unless-stopped
@@ -329,6 +374,13 @@ volumes:
     labels:
       com.ecommerce.description: "Loki log aggregation data"
       com.ecommerce.service: "loki"
+
+  falco-logs:
+    driver: local
+    name: ecommerce-falco-logs
+    labels:
+      com.ecommerce.description: "Falco security event logs"
+      com.ecommerce.service: "falco"
 
 networks:
   # Réseau Frontend - Accès utilisateur

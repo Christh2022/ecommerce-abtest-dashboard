@@ -12,7 +12,15 @@ scrape_configs:
   - job_name: 'postgres'
     static_configs:
       - targets: ['postgres-exporter:9187']
+      
   - job_name: 'ecommerce-exporter'
     static_configs:
       - targets: ['ecommerce-exporter:9200']
     scrape_interval: 30s
+  
+  # Pushgateway for attack metrics
+  - job_name: 'pushgateway'
+    honor_labels: true
+    static_configs:
+      - targets: ['pushgateway:9091']
+    scrape_interval: 5s  # Frequent scraping for real-time alerts

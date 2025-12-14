@@ -1,3 +1,27 @@
+# ============================================================================
+# CUSTOM FALCO RULES FOR E-COMMERCE SECURITY MONITORING
+# ============================================================================
+# 
+# Ce fichier contient les règles Falco personnalisées pour :
+# 1. Détection des attaques de sécurité (security_attack_rules.yaml)
+# 2. Monitoring des services (Dash, Grafana, PostgreSQL)
+#
+# Les règles d'attaque sont dans security_attack_rules.yaml
+# ============================================================================
+
+# Macros utilitaires
+- macro: open_write
+  condition: (evt.type in (open,openat,openat2) and evt.is_open_write=true and fd.typechar='f' and fd.num>=0)
+
+- macro: open_read
+  condition: (evt.type in (open,openat,openat2) and evt.is_open_read=true and fd.typechar='f' and fd.num>=0)
+
+- macro: spawned_process
+  condition: (evt.type = execve and evt.dir=<)
+
+- macro: container
+  condition: (container.id != host)
+
 # Custom Falco Rules for E-Commerce Services Monitoring
 # Specific monitoring for Dash, Grafana, and PostgreSQL
 

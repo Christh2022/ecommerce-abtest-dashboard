@@ -11,10 +11,9 @@ log_stderr: true
 log_syslog: false
 log_level: info
 
-# Rules - default rules + custom monitoring rules
+# Rules - custom monitoring rules + security attack detection (version simplifiée)
 rules_files:
-  - /etc/falco/falco_rules.yaml
-  - /etc/falco/falco_rules.local.yaml
+  - /etc/falco/security_attack_rules_v2.yaml
 
 # Engine settings
 priority: debug

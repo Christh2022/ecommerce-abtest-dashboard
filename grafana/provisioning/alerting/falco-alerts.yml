@@ -1,0 +1,610 @@
+apiVersion: 1
+
+groups:
+  # ============================================================================
+  # FALCO SECURITY ALERTS - Injection Attacks
+  # ============================================================================
+  - orgId: 1
+    name: falco_injection_attacks
+    folder: Security Attacks
+    interval: 10s
+    rules:
+      - uid: falco_sql_injection
+        title: Falco - SQL Injection Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "SQL INJECTION DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🚨 Falco a détecté une injection SQL - {{ $labels.container }} - {{ $labels.rule }}'
+          summary: 'Injection SQL détectée par Falco'
+        labels:
+          severity: critical
+          attack_type: sql_injection
+          source: falco
+
+      - uid: falco_nosql_injection
+        title: Falco - NoSQL Injection Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "NOSQL INJECTION DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🚨 Falco a détecté une injection NoSQL - {{ $labels.container }}'
+          summary: 'Injection NoSQL détectée par Falco'
+        labels:
+          severity: critical
+          attack_type: nosql_injection
+          source: falco
+
+      - uid: falco_command_injection
+        title: Falco - Command Injection Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "COMMAND INJECTION DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🚨 Falco a détecté une injection de commande - {{ $labels.container }}'
+          summary: 'Command Injection détectée par Falco'
+        labels:
+          severity: critical
+          attack_type: command_injection
+          source: falco
+
+      - uid: falco_ldap_injection
+        title: Falco - LDAP Injection Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "LDAP INJECTION DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '⚠️ Falco a détecté une injection LDAP - {{ $labels.container }}'
+          summary: 'Injection LDAP détectée par Falco'
+        labels:
+          severity: high
+          attack_type: ldap_injection
+          source: falco
+
+  # ============================================================================
+  # FALCO SECURITY ALERTS - File Attacks
+  # ============================================================================
+  - orgId: 1
+    name: falco_file_attacks
+    folder: Security Attacks
+    interval: 10s
+    rules:
+      - uid: falco_path_traversal
+        title: Falco - Path Traversal Attack
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "PATH TRAVERSAL DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🚨 Falco a détecté une attaque path traversal - File: {{ $labels.file }}'
+          summary: 'Path Traversal détecté par Falco'
+        labels:
+          severity: critical
+          attack_type: path_traversal
+          source: falco
+
+      - uid: falco_webshell_upload
+        title: Falco - Webshell Upload Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "WEBSHELL UPLOAD DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🚨 Falco a détecté un upload de webshell - File: {{ $labels.file }}'
+          summary: 'Webshell Upload détecté par Falco'
+        labels:
+          severity: critical
+          attack_type: webshell
+          source: falco
+
+      - uid: falco_sensitive_file_access
+        title: Falco - Sensitive File Access
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "SENSITIVE FILE ACCESS" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🔓 Falco a détecté un accès à un fichier sensible - File: {{ $labels.file }}'
+          summary: 'Accès fichier sensible détecté'
+        labels:
+          severity: high
+          attack_type: data_exposure
+          source: falco
+
+  # ============================================================================
+  # FALCO SECURITY ALERTS - Shell & Process Attacks
+  # ============================================================================
+  - orgId: 1
+    name: falco_shell_attacks
+    folder: Security Attacks
+    interval: 10s
+    rules:
+      - uid: falco_reverse_shell
+        title: Falco - Reverse Shell Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "REVERSE SHELL DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 10s
+        annotations:
+          description: '🚨 Falco a détecté un reverse shell - Command: {{ $labels.command }}'
+          summary: 'Reverse Shell détecté par Falco'
+        labels:
+          severity: critical
+          attack_type: reverse_shell
+          source: falco
+
+      - uid: falco_shell_spawned
+        title: Falco - Shell Spawned in Container
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "SHELL SPAWNED IN CONTAINER" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🐚 Falco a détecté un shell interactif - Container: {{ $labels.container }}'
+          summary: 'Shell interactif détecté'
+        labels:
+          severity: high
+          attack_type: shell_access
+          source: falco
+
+      - uid: falco_suspicious_network_tool
+        title: Falco - Suspicious Network Tool
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "SUSPICIOUS NETWORK TOOL" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '⚠️ Falco a détecté un outil réseau suspect - Tool: {{ $labels.process }}'
+          summary: 'Outil réseau suspect détecté'
+        labels:
+          severity: high
+          attack_type: reconnaissance
+          source: falco
+
+  # ============================================================================
+  # FALCO SECURITY ALERTS - Data Exfiltration
+  # ============================================================================
+  - orgId: 1
+    name: falco_exfiltration
+    folder: Security Attacks
+    interval: 10s
+    rules:
+      - uid: falco_dns_exfiltration
+        title: Falco - DNS Exfiltration Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "DNS EXFILTRATION DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🚨 Falco a détecté une exfiltration DNS - Command: {{ $labels.command }}'
+          summary: 'Exfiltration DNS détectée'
+        labels:
+          severity: high
+          attack_type: dns_exfiltration
+          source: falco
+
+      - uid: falco_suspicious_connection
+        title: Falco - Suspicious Network Connection
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "SUSPICIOUS OUTBOUND CONNECTION" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '📡 Falco a détecté une connexion suspecte - Dest: {{ $labels.dest }}'
+          summary: 'Connexion réseau suspecte'
+        labels:
+          severity: medium
+          attack_type: suspicious_connection
+          source: falco
+
+      - uid: falco_large_data_transfer
+        title: Falco - Large Data Transfer
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "LARGE DATA TRANSFER" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '📤 Falco a détecté un transfert de données volumineux - Size: {{ $labels.size }}'
+          summary: 'Transfert de données important'
+        labels:
+          severity: medium
+          attack_type: data_exfiltration
+          source: falco
+
+  # ============================================================================
+  # FALCO SECURITY ALERTS - Persistence & Privilege Escalation
+  # ============================================================================
+  - orgId: 1
+    name: falco_persistence_privesc
+    folder: Security Attacks
+    interval: 10s
+    rules:
+      - uid: falco_privilege_escalation
+        title: Falco - Privilege Escalation Attempt
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "PRIVILEGE ESCALATION ATTEMPT" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 10s
+        annotations:
+          description: '⬆️ Falco a détecté une tentative d''élévation de privilèges - {{ $labels.command }}'
+          summary: 'Tentative d''élévation de privilèges'
+        labels:
+          severity: critical
+          attack_type: privilege_escalation
+          source: falco
+
+      - uid: falco_docker_socket_access
+        title: Falco - Docker Socket Access (Container Escape)
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "DOCKER SOCKET ACCESS" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 10s
+        annotations:
+          description: '🐳 Falco a détecté un accès au socket Docker - Container: {{ $labels.container }}'
+          summary: 'Tentative d''évasion de conteneur'
+        labels:
+          severity: critical
+          attack_type: container_escape
+          source: falco
+
+      - uid: falco_cron_modification
+        title: Falco - Cron Job Modification
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "CRON JOB MODIFICATION" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '⏰ Falco a détecté une modification de tâche cron - File: {{ $labels.file }}'
+          summary: 'Modification de cron détectée'
+        labels:
+          severity: high
+          attack_type: persistence
+          source: falco
+
+      - uid: falco_startup_modification
+        title: Falco - Startup Script Modification
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "STARTUP SCRIPT MODIFIED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🚀 Falco a détecté une modification de script de démarrage - File: {{ $labels.file }}'
+          summary: 'Modification de startup script'
+        labels:
+          severity: high
+          attack_type: persistence
+          source: falco
+
+  # ============================================================================
+  # FALCO SECURITY ALERTS - Advanced Attacks
+  # ============================================================================
+  - orgId: 1
+    name: falco_advanced_attacks
+    folder: Security Attacks
+    interval: 10s
+    rules:
+      - uid: falco_container_escape
+        title: Falco - Container Escape Attempt
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "CONTAINER ESCAPE ATTEMPT" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 10s
+        annotations:
+          description: '🚨 Falco a détecté une tentative d''évasion de conteneur - {{ $labels.command }}'
+          summary: 'Tentative de container escape'
+        labels:
+          severity: critical
+          attack_type: container_escape
+          source: falco
+
+      - uid: falco_attack_chain
+        title: Falco - Attack Chain Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "ATTACK CHAIN DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🔗 Falco a détecté un chaînage d''attaques - {{ $labels.command }}'
+          summary: 'Chaînage d''attaques détecté'
+        labels:
+          severity: critical
+          attack_type: attack_chain
+          source: falco
+
+      - uid: falco_crypto_mining
+        title: Falco - Crypto Mining Activity
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "CRYPTO MINING DETECTED" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '💎 Falco a détecté du cryptomining - Process: {{ $labels.process }}'
+          summary: 'Activité de cryptomining'
+        labels:
+          severity: high
+          attack_type: resource_abuse
+          source: falco
+
+      - uid: falco_insecure_deserialization
+        title: Falco - Insecure Deserialization
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "INSECURE DESERIALIZATION" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🔓 Falco a détecté une désérialisation dangereuse - {{ $labels.command }}'
+          summary: 'Désérialisation non sécurisée'
+        labels:
+          severity: critical
+          attack_type: deserialization
+          source: falco
+
+  # ============================================================================
+  # FALCO SECURITY ALERTS - Credential Access
+  # ============================================================================
+  - orgId: 1
+    name: falco_credential_access
+    folder: Security Attacks
+    interval: 10s
+    rules:
+      - uid: falco_password_file_access
+        title: Falco - Password File Access
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "PASSWORD FILE ACCESS" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          description: '🔑 Falco a détecté un accès aux fichiers de mots de passe - File: {{ $labels.file }}'
+          summary: 'Accès fichier de mots de passe'
+        labels:
+          severity: high
+          attack_type: credential_access
+          source: falco
+
+      - uid: falco_ssh_key_access
+        title: Falco - SSH Key Access
+        condition: A
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container="ecommerce-falco"} |= "SSH KEY ACCESS" [1m])'
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 10s
+        annotations:
+          description: '🔐 Falco a détecté un accès aux clés SSH - File: {{ $labels.file }}'
+          summary: 'Accès aux clés SSH'
+        labels:
+          severity: critical
+          attack_type: credential_access
+          source: falco
