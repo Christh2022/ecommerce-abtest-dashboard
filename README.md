@@ -100,20 +100,26 @@ docker compose -f docker-compose.secure.yml ps
 
 #### 6️⃣ Importer les Données (IMPORTANT !)
 
-Les tables PostgreSQL sont créées automatiquement mais **vides**. Vous devez charger les données :
+Les tables PostgreSQL sont créées automatiquement mais **vides**. Vous devez charger les données.
+
+**⚠️ ATTENTION** : Sur Windows, l'option `-w /` peut causer une erreur. Utilisez la méthode ci-dessous qui fonctionne sur **tous les systèmes** :
 
 ```bash
-# 1. Vérifier que les tables sont vides
-docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) as nb_lignes FROM daily_metrics;"
+# Étape 1 : Vérifier que les tables sont vides (optionnel)
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) FROM daily_metrics;"
 
-# 2. Copier le script et les données dans le conteneur
+# Étape 2 : Copier les fichiers dans le conteneur
 docker cp scripts/import_data_to_postgres.py ecommerce-dashboard:/tmp/
 docker cp data/clean ecommerce-dashboard:/tmp/data
 
-# 3. Exécuter le script d'import depuis le conteneur
-docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && python import_data_to_postgres.py"
+# Étape 3 : Modifier le chemin DATA_DIR et exécuter l'import
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "
+cd /tmp && 
+sed 's|Path(__file__).parent.parent / '\''data'\'' / '\''clean'\''|Path('\''/tmp/data'\'')|g' import_data_to_postgres.py > import_fixed.py && 
+python import_fixed.py
+"
 
-# 4. ✅ Vérifier que l'import a réussi
+# Étape 4 : ✅ Vérifier que l'import a réussi
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "
 SELECT 
   'daily_metrics' as table_name, COUNT(*) as rows FROM daily_metrics
@@ -124,17 +130,62 @@ ORDER BY table_name;
 "
 ```
 
-**Résultat attendu** :
+**✅ Résultat attendu** :
 ```
-    table_name    | rows   
+    table_name    |  rows  
 ------------------+--------
- ab_test_results  | 480
- daily_metrics    | 139
- funnel_stages    | 417
+ ab_test_results  |    480
+ daily_metrics    |    139
+ funnel_stages    |    417
  products_summary | 235061
 ```
 
-**💡 Note** : Cette méthode fonctionne sur tous les systèmes (Windows/Linux/Mac) car l'import se fait depuis l'intérieur du réseau Docker.
+**⏱️ Durée de l'import** : ~5-6 minutes (235K produits + métriques)
+
+**🔧 Résolution des problèmes courants** :
+
+<details>
+<summary>❌ Erreur "numeric field overflow" lors de l'import</summary>
+
+Cette erreur se produit si les colonnes de taux de conversion sont trop petites. Exécutez ceci **avant** l'import :
+
+```bash
+# Supprimer les vues qui bloquent les modifications
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "
+DROP VIEW IF EXISTS v_daily_kpis CASCADE;
+DROP VIEW IF EXISTS v_ab_test_summary CASCADE;
+"
+
+# Modifier les colonnes pour supporter des valeurs jusqu'à 100%
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "
+ALTER TABLE daily_metrics ALTER COLUMN conversion_rate TYPE numeric(8,4);
+ALTER TABLE funnel_stages ALTER COLUMN conversion_rate TYPE numeric(8,4);
+ALTER TABLE ab_test_results ALTER COLUMN conversion_rate TYPE numeric(8,4);
+ALTER TABLE ab_test_results ALTER COLUMN statistical_significance TYPE numeric(8,4);
+"
+
+# Puis relancer l'import (Étape 3 ci-dessus)
+```
+
+</details>
+
+<details>
+<summary>❌ Erreur "CSV not found" lors de l'import</summary>
+
+Vérifiez que les fichiers CSV sont bien copiés :
+
+```bash
+# Vérifier que les fichiers sont présents
+docker exec ecommerce-dashboard sh -c "ls -la /tmp/data/*.csv | head -10"
+
+# Vous devriez voir : daily_metrics.csv, products_summary.csv, etc.
+```
+
+Si les fichiers ne sont pas là, recommencez l'Étape 2 (docker cp).
+
+</details>
+
+**💡 Pourquoi cette méthode ?** : L'import se fait depuis l'intérieur du réseau Docker, ce qui évite les problèmes de connexion localhost sur Windows et les problèmes de chemins relatifs.
 
 #### 7️⃣ Créer les Dashboards Grafana
 
