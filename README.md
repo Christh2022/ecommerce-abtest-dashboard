@@ -16,123 +16,294 @@ Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1
 
 ---
 
-## 🚀 Démarrage Rapide
+## 🚀 Démarrage Rapide - Guide Collaborateur
 
-### Prérequis
+### ⚡ Installation en 5 Minutes
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) installé et en cours d'exécution
-- [Git](https://git-scm.com/downloads) installé
-- Au moins 4 GB de RAM disponible
-- 5 GB d'espace disque libre
+#### 1️⃣ Prérequis (à installer avant de commencer)
 
-### Installation
+| Logiciel | Version minimum | Lien de téléchargement | Vérification |
+|----------|----------------|------------------------|--------------|
+| Docker Desktop | 24.0+ | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop) | `docker --version` |
+| Git | 2.40+ | [git-scm.com/downloads](https://git-scm.com/downloads) | `git --version` |
+| Python | 3.10+ | [python.org](https://www.python.org/downloads/) | `python --version` |
 
-1. **Cloner le projet**
-   ```bash
-   git clone https://github.com/votre-username/ecommerce-abtest-dashboard.git
-   cd ecommerce-abtest-dashboard
-   ```
+**Configuration système requise** :
+- 💾 RAM : Minimum 4 GB disponible (8 GB recommandé)
+- 💿 Espace disque : 5 GB libre
+- 🌐 Connexion Internet (pour le premier démarrage)
 
-2. **Lancer tous les services**
-   ```bash
-   docker compose -f docker-compose.secure.yml up -d
-   ```
-   
-   Cette commande va :
-   - ✅ Construire les images Docker
-   - ✅ Démarrer PostgreSQL avec les données pré-chargées
-   - ✅ Lancer l'application Dash (Dashboard)
-   - ✅ Démarrer Grafana, Prometheus, Loki (Monitoring)
-   - ✅ Créer automatiquement les 11 dashboards Grafana
-
-3. **Attendre le démarrage complet** (~2-3 minutes)
-   ```bash
-   # Vérifier l'état des services
-   docker compose -f docker-compose.secure.yml ps
-   ```
-
-### Accès aux Services
-
-Une fois les conteneurs démarrés, accédez aux différentes interfaces :
-
-| Service | URL | Identifiants | Description |
-|---------|-----|--------------|-------------|
-| 🎨 **Dashboard Dash** | http://localhost:8050 | - | Application principale d'analyse |
-| 📊 **Grafana** | http://localhost:3000 | admin / admin123 | 11 dashboards de monitoring |
-| 🔍 **Prometheus** | http://localhost:9090 | - | Métriques temps réel |
-| 🗄️ **PostgreSQL** | localhost:5432 | dashuser / dashpass | Base de données (ecommerce_db) |
-
-### Arrêter le Projet
+#### 2️⃣ Cloner le Projet
 
 ```bash
-# Arrêter tous les services
-docker compose -f docker-compose.secure.yml down
+# Cloner le dépôt
+git clone https://github.com/Christh2022/ecommerce-abtest-dashboard.git
 
-# Arrêter et supprimer les volumes (⚠️ efface les données)
-docker compose -f docker-compose.secure.yml down -v
+# Aller dans le répertoire
+cd ecommerce-abtest-dashboard
+
+# Vérifier que vous êtes sur la bonne branche
+git branch
 ```
 
-### Relancer le Projet
+#### 3️⃣ Installer les Dépendances Python
 
 ```bash
-# Redémarrer les services existants
-docker compose -f docker-compose.secure.yml up -d
+# Créer un environnement virtuel (optionnel mais recommandé)
+python -m venv venv
 
-# Reconstruire les images (après modification du code)
+# Activer l'environnement virtuel
+# Windows :
+venv\Scripts\activate
+# Linux/Mac :
+source venv/bin/activate
+
+# Installer les dépendances
+pip install -r requirements.txt
+```
+
+#### 4️⃣ Lancer les Services Docker
+
+```bash
+# Démarrer tous les conteneurs
 docker compose -f docker-compose.secure.yml up -d --build
+
+# ⏱️ Attendre 2-3 minutes que tous les services démarrent
 ```
 
-### Charger les Données dans PostgreSQL
+**Ce qui se passe en arrière-plan** :
+- 🐳 Construction des images Docker personnalisées
+- 🗄️ Création de la base de données PostgreSQL
+- 📊 Démarrage de Grafana pour la visualisation
+- 🔍 Lancement de Prometheus pour les métriques
+- 📝 Initialisation de Loki pour les logs
+- 🎨 Démarrage de l'application Dash
 
-Les données CSV doivent être importées dans PostgreSQL après le démarrage :
+#### 5️⃣ Vérifier que Tout Fonctionne
 
 ```bash
-# Option 1 : Importer depuis l'hôte (nécessite psycopg2)
+# Vérifier l'état des services (tous doivent être "Up" et "healthy")
+docker compose -f docker-compose.secure.yml ps
+
+# Vous devriez voir 7-8 conteneurs en cours d'exécution :
+# ✅ ecommerce-dashboard (healthy)
+# ✅ ecommerce-postgres (healthy)
+# ✅ ecommerce-grafana (healthy)
+# ✅ ecommerce-prometheus (healthy)
+# ✅ ecommerce-loki
+# ✅ ecommerce-promtail
+# ✅ ecommerce-exporter
+# ✅ ecommerce-postgres-exporter
+```
+
+#### 6️⃣ Importer les Données (IMPORTANT !)
+
+Les tables PostgreSQL sont créées automatiquement mais **vides**. Vous devez charger les données :
+
+```bash
+# Vérifier que les tables sont vides
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) as nb_lignes FROM daily_metrics;"
+
+# Si le résultat est 0, importer les données avec le script Python
 python scripts/import_data_to_postgres.py
 
-# Option 2 : Importer via Docker (recommandé sur Windows)
-docker exec -i ecommerce-postgres psql -U dashuser -d ecommerce_db << EOF
-\copy daily_metrics FROM '/docker-entrypoint-initdb.d/daily_metrics.csv' WITH CSV HEADER;
-EOF
-
-# Option 3 : Utiliser le script de migration complet
-docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -f /docker-entrypoint-initdb.d/01_init.sql
+# ✅ Vérifier que l'import a réussi (devrait afficher ~139 lignes)
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) FROM daily_metrics;"
 ```
 
-**Vérifier l'import** :
-```bash
-# Vérifier le nombre de lignes dans les tables
-docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT 'daily_metrics' as table, COUNT(*) FROM daily_metrics UNION ALL SELECT 'products_summary', COUNT(*) FROM products_summary;"
-```
+**⚠️ Si le script Python échoue sur Windows** (erreur de connexion) :
 
-### Créer les Dashboards Grafana (Optionnel)
+Le script essaie de se connecter à PostgreSQL qui tourne dans Docker. Sur certains systèmes Windows, la connexion directe peut échouer. Dans ce cas, **les données sont déjà chargées automatiquement au démarrage de PostgreSQL** via le fichier `init_db.sql`. Vérifiez simplement que les tables contiennent des données avec la commande de vérification ci-dessus.
 
-Les dashboards Grafana doivent être créés manuellement après le chargement des données :
+#### 7️⃣ Créer les Dashboards Grafana
+
+Les dashboards Grafana doivent être créés manuellement (prend ~2 minutes) :
 
 ```bash
-# Attendre que tous les services soient démarrés (~2 minutes)
-# Puis exécuter les scripts de création des dashboards :
-
-# 1. Dashboards de base (Funnel, Segmentation, Produits)
+# Exécuter les 6 scripts dans l'ordre
 python create_dashboards_1_3.py
-
-# 2. Dashboards avancés (Cohortes, Real-Time, Prédictif)
 python create_dashboards_4_6.py
-
-# 3. Dashboard Business Intelligence
 python create_bi_dashboard.py
-
-# 4. Dashboard E-Commerce complet
 python create_full_dashboard.py
-
-# 5. Dashboard Monitoring
 python create_monitoring_dashboard.py
-
-# 6. Dashboard Prometheus
 python create_prometheus_dashboard.py
 ```
 
-**Note** : Les dashboards sont créés via l'API Grafana. Assurez-vous que Grafana est démarré et accessible sur http://localhost:3000 avant d'exécuter ces scripts.
+Vous devriez voir des messages de confirmation comme :
+```
+✓ Product Performance Analysis
+✓ Customer Segmentation Analysis
+✓ Customer Journey & Funnel Analysis
+```
+
+#### 8️⃣ Accéder aux Applications
+
+| Application | URL | Identifiants | Description |
+|-------------|-----|--------------|-------------|
+| 🎨 **Dashboard Dash** | [http://localhost:8050](http://localhost:8050) | Aucun | Application principale avec 12 pages d'analyse |
+| 📊 **Grafana** | [http://localhost:3000](http://localhost:3000) | admin / admin123 | 10 dashboards de monitoring |
+| 🔍 **Prometheus** | [http://localhost:9090](http://localhost:9090) | Aucun | Métriques en temps réel |
+| 🗄️ **PostgreSQL** | localhost:5432 | dashuser / dashpass | Base de données (connexion via client SQL) |
+
+---
+
+### 🎯 Tester que Tout Fonctionne
+
+**Test 1 : Dashboard Dash**
+1. Ouvrir http://localhost:8050
+2. Vous devriez voir la page d'accueil avec des KPIs
+
+**Test 2 : Grafana**
+1. Ouvrir http://localhost:3000
+2. Se connecter avec admin / admin123
+3. Aller dans Dashboards → Vous devriez voir 10 dashboards
+
+**Test 3 : Données PostgreSQL**
+```bash
+# Vérifier le nombre de produits
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) as nb_produits FROM products_summary;"
+# Devrait afficher un nombre > 0
+```
+
+---
+
+### 🛠️ Commandes Utiles au Quotidien
+
+#### Redémarrer les Services
+```bash
+# Redémarrer tous les services
+docker compose -f docker-compose.secure.yml restart
+
+# Redémarrer un service spécifique
+docker compose -f docker-compose.secure.yml restart grafana
+```
+
+#### Voir les Logs
+```bash
+# Logs de tous les services
+docker compose -f docker-compose.secure.yml logs -f
+
+# Logs d'un service spécifique
+docker logs ecommerce-dashboard -f
+docker logs ecommerce-postgres -f
+docker logs ecommerce-grafana -f
+```
+
+#### Arrêter les Services
+```bash
+# Arrêter sans supprimer les données
+docker compose -f docker-compose.secure.yml down
+
+# Arrêter ET supprimer toutes les données (⚠️ ATTENTION)
+docker compose -f docker-compose.secure.yml down -v
+```
+
+#### Reconstruire après Modifications du Code
+```bash
+# Reconstruire et redémarrer
+docker compose -f docker-compose.secure.yml up -d --build
+
+# Forcer la reconstruction complète
+docker compose -f docker-compose.secure.yml build --no-cache
+docker compose -f docker-compose.secure.yml up -d
+```
+
+---
+
+### 🆘 Résolution des Problèmes Courants
+
+#### ❌ Problème : "Port already in use"
+```bash
+# Trouver quel processus utilise le port
+# Windows :
+netstat -ano | findstr :8050
+netstat -ano | findstr :3000
+
+# Linux/Mac :
+lsof -i :8050
+lsof -i :3000
+
+# Solution : Arrêter le processus ou changer le port dans docker-compose.secure.yml
+```
+
+#### ❌ Problème : "Container is unhealthy"
+```bash
+# Voir les détails de santé du conteneur
+docker inspect ecommerce-postgres --format='{{.State.Health}}'
+
+# Voir les logs pour comprendre le problème
+docker logs ecommerce-postgres --tail 50
+
+# Solution : Redémarrer le conteneur problématique
+docker compose -f docker-compose.secure.yml restart postgres
+```
+
+#### ❌ Problème : "No data in Grafana dashboards"
+```bash
+# 1. Vérifier que PostgreSQL contient des données
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) FROM daily_metrics;"
+
+# 2. Vérifier que l'exporter Prometheus fonctionne
+curl http://localhost:9200/metrics 2>/dev/null | grep ecommerce
+
+# 3. Vérifier que Prometheus scrape l'exporter
+# Ouvrir http://localhost:9090/targets et vérifier que "ecommerce-exporter" est UP
+```
+
+#### ❌ Problème : "Cannot import psycopg2" lors de l'import des données
+```bash
+# Installer psycopg2
+pip install psycopg2-binary
+
+# Réessayer l'import
+python scripts/import_data_to_postgres.py
+```
+
+---
+
+### 📚 Structure du Projet
+
+```
+ecommerce-abtest-dashboard/
+├── dashboard/              # Application Dash (Frontend)
+│   ├── app.py             # Point d'entrée principal
+│   ├── pages/             # Pages du dashboard
+│   └── components/        # Composants réutilisables
+├── data/
+│   └── clean/             # Données CSV nettoyées
+├── grafana/
+│   ├── dashboards/        # Fichiers JSON des dashboards
+│   └── provisioning/      # Configuration Grafana
+├── scripts/               # Scripts d'import et d'analyse
+│   ├── import_data_to_postgres.py  # Import des données
+│   └── init_db.sql        # Initialisation de la DB
+├── create_*.py            # Scripts de création des dashboards Grafana
+├── docker-compose.secure.yml  # Configuration Docker
+└── README.md              # Ce fichier
+```
+
+---
+
+### 🤝 Contribution
+
+Pour contribuer au projet :
+
+1. Créer une branche : `git checkout -b feature/ma-fonctionnalite`
+2. Faire vos modifications
+3. Tester localement : `docker compose -f docker-compose.secure.yml up -d --build`
+4. Commit : `git commit -m "feat: description"`
+5. Push : `git push origin feature/ma-fonctionnalite`
+6. Créer une Pull Request sur GitHub
+
+---
+
+### 📞 Support
+
+- 📧 Email : [votre-email@example.com]
+- 💬 Slack : #ecommerce-dashboard
+- 📖 Documentation complète : [docs/README.md](docs/)
+
+---
 
 ---
 
