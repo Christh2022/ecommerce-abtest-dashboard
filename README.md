@@ -13,6 +13,40 @@ Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1
 - 📉 **Analyse de tendances** : Métriques quotidiennes, entonnoirs de conversion, performance produits
 - 🎯 **Méthodologie** : Guide complet des bonnes pratiques en A/B testing
 - 🐳 **Déploiement** : Application containerisée avec Docker, PostgreSQL et Grafana
+- 🛡️ **Sécurité** : Protection multicouche, tests automatisés, monitoring temps réel
+
+---
+
+## 🛡️ Sécurité - Important pour les Collaborateurs
+
+**📖 [GUIDE COMPLET DE SÉCURITÉ →](SECURITY_GUIDE_COLLABORATORS.md)** (Lecture obligatoire)
+
+### Protections Actives
+
+✅ **Authentification** : Flask-Login + bcrypt  
+✅ **Anti-DDoS** : Rate limiting 200 req/min (94.4% d'efficacité testée)  
+✅ **En-têtes HTTP** : CSP, X-Frame-Options, X-Content-Type-Options, etc.  
+✅ **Tests automatisés** : 41 types d'attaques (SQL injection, XSS, CSRF...)  
+✅ **Monitoring** : Grafana + 32 alertes en temps réel
+
+### Tests de Sécurité (Avant Chaque PR)
+
+```bash
+# Windows
+lancer_tests_securite.bat
+
+# Linux/Mac  
+./lancer_tests_securite.sh
+
+# Test DDoS (optionnel)
+python test_rate_limit.py
+```
+
+**📚 Plus d'informations** : Consultez le [Guide Sécurité Collaborateurs](SECURITY_GUIDE_COLLABORATORS.md) pour :
+- Procédures de test complètes
+- Bonnes pratiques de développement sécurisé
+- Que faire en cas d'incident de sécurité
+- Ressources de formation cybersécurité
 
 ---
 
