@@ -41,6 +41,43 @@ auth_manager = AuthManager(server)
 # Store auth_manager in Flask's app context for global access
 server.auth_manager = auth_manager
 
+# SECURITY: Add security headers to all responses
+@server.after_request
+def add_security_headers(response):
+    """Add security headers to protect against common web vulnerabilities"""
+    # Prevent clickjacking attacks
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    
+    # Prevent MIME type sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    
+    # Enable XSS protection in older browsers
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    
+    # Content Security Policy - restrict resource loading
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.plot.ly; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
+        "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; "
+        "img-src 'self' data: https:; "
+        "connect-src 'self'"
+    )
+    
+    # Control referrer information
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    
+    # Permissions policy (formerly Feature-Policy)
+    response.headers['Permissions-Policy'] = (
+        'geolocation=(), microphone=(), camera=(), '
+        'payment=(), usb=(), magnetometer=(), gyroscope=()'
+    )
+    
+    # HSTS for HTTPS enforcement (commented out for dev, enable in production with HTTPS)
+    # response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    
+    return response
+
 # Main layout with sidebar navigation
 app.layout = html.Div([
     # Fixed Header
