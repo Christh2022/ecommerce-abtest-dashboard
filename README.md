@@ -313,7 +313,105 @@ docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT
 
 ---
 
-### 🛠️ Commandes Utiles au Quotidien
+### � Tests de Sécurité Automatisés
+
+Le projet inclut un système complet de **détection d'attaques en temps réel** avec 41 types d'attaques simulées et monitoring via Grafana.
+
+#### 🚀 Lancement Rapide des Tests de Sécurité
+
+**Windows** :
+```bash
+# Double-cliquer sur le fichier ou exécuter dans cmd :
+lancer_tests_securite.bat
+```
+
+**Linux/Mac** :
+```bash
+# Rendre le script exécutable et lancer :
+chmod +x lancer_tests_securite.sh
+./lancer_tests_securite.sh
+```
+
+Le script effectue automatiquement :
+1. ✅ Vérification des services (Dashboard, Prometheus, Pushgateway)
+2. 🎯 Lancement de 41 tests d'attaque sur l'application
+3. 📊 Envoi des métriques vers Prometheus
+4. 📈 Affichage du résumé des résultats
+
+#### 📊 Visualisation des Alertes dans Grafana
+
+**Accéder au Dashboard de Sécurité** :
+1. Ouvrir [http://localhost:3000](http://localhost:3000)
+2. Se connecter avec `admin` / `admin123`
+3. Aller dans **Dashboards** → **Security Attacks - Real-time Monitoring**
+
+**Dashboard inclut 8 panneaux** :
+- 🎯 Compteur total des attaques détectées
+- 🔴 Attaques critiques (SQL injection, Command injection, etc.)
+- 🟠 Attaques haute sévérité (XSS, CSRF, etc.)
+- 🟡 Attaques moyenne sévérité (Information disclosure, etc.)
+- 📈 Taux d'attaques par minute
+- 📊 Distribution par catégorie et sévérité
+- 📋 Tableau des 20 dernières attaques
+
+#### 🚨 Règles d'Alerte Configurées
+
+**32+ règles d'alerte actives** incluant :
+- 🔴 **Critical** : SQL Injection, Command Injection, Path Traversal
+- 🟠 **High** : XSS, CSRF, File Upload, Authentication Bypass
+- 🟡 **Medium** : Information Disclosure, Weak Cryptography
+
+Les alertes se déclenchent **30-60 secondes** après détection d'une attaque.
+
+#### 🔍 Types d'Attaques Testées (41 au total)
+
+| Catégorie                  | Nombre | Exemples                                      |
+| -------------------------- | ------ | --------------------------------------------- |
+| 🗄️ Injection SQL           | 5      | UNION attacks, Blind SQL, Time-based SQLi     |
+| 💻 Injection de Commandes   | 3      | OS command injection, Shell injection         |
+| 🌐 Cross-Site Scripting     | 4      | Stored XSS, Reflected XSS, DOM XSS            |
+| 🔐 Authentification         | 6      | Brute force, Session hijacking, Token bypass  |
+| 📁 Manipulation de Fichiers | 5      | Path traversal, File upload, LFI/RFI          |
+| 🔒 Sécurité Session         | 4      | Session fixation, Cookie hijacking            |
+| 🛡️ CSRF                     | 3      | Token bypass, Same-site bypass                |
+| 📊 Information Disclosure   | 4      | Error exposure, Directory listing             |
+| 🔓 Access Control           | 3      | IDOR, Privilege escalation                    |
+| ⚡ DoS/Resource Abuse       | 4      | Rate limit bypass, Resource exhaustion        |
+
+#### 🛠️ Test Manuel (avancé)
+
+```bash
+# Activer l'environnement virtuel
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Linux/Mac
+
+# Lancer les tests
+python test_security_simple.py
+
+# Résultats attendus :
+# ✅ 41 attaques testées
+# ✅ Métriques envoyées à Prometheus
+# ✅ Rapports générés dans security-reports/attack-results/
+```
+
+#### 📁 Fichiers et Documentation
+
+- `test_security_simple.py` - Script de test principal (41 attaques)
+- `GUIDE_COLLABORATEURS.md` - Guide complet pour collaborateurs
+- `grafana/dashboards/security-attacks-realtime.json` - Dashboard Grafana
+- `grafana/provisioning/alerting/attack-alerts.yml` - Règles d'alerte (32+)
+- `security-reports/attack-results/` - Rapports JSON des tests
+
+#### ⚠️ Notes Importantes
+
+- Les tests sont **non destructifs** et utilisent l'endpoint `/health` de l'application
+- Toutes les attaques sont **simulées** et **loggées** uniquement
+- Les métriques sont conservées dans Prometheus pendant 15 jours
+- Falco n'est pas disponible sur WSL2 (incompatibilité kernel)
+
+---
+
+### �🛠️ Commandes Utiles au Quotidien
 
 #### Redémarrer les Services
 
