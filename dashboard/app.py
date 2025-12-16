@@ -41,6 +41,10 @@ auth_manager = AuthManager(server)
 # Store auth_manager in Flask's app context for global access
 server.auth_manager = auth_manager
 
+# SECURITY: Setup DDoS protection with rate limiting
+from ddos_protection import setup_ddos_protection
+setup_ddos_protection(server)
+
 # SECURITY: Add security headers to all responses
 @server.after_request
 def add_security_headers(response):
