@@ -84,7 +84,7 @@ def add_security_headers(response):
 
 # Main layout with sidebar navigation
 app.layout = html.Div([
-    # Fixed Header
+    # Fixed Header (hidden when not authenticated)
     html.Div([
         dbc.Container([
             dbc.Row([
@@ -113,7 +113,7 @@ app.layout = html.Div([
                 ], width=3),
             ], className="align-items-center")
         ], fluid=True)
-    ], className="shadow-lg", style={
+    ], id="main-header", className="shadow-lg", style={
         "position": "fixed",
         "top": "0",
         "left": "0",
@@ -125,7 +125,7 @@ app.layout = html.Div([
     
     # Main content area with fixed sidebar
     html.Div([
-        # Fixed Sidebar navigation
+        # Fixed Sidebar navigation (hidden when not authenticated)
         html.Div([
             dbc.Nav([
                 dbc.NavLink([
@@ -243,7 +243,7 @@ app.layout = html.Div([
                 ], className="p-3 bg-dark rounded-3 border border-secondary")
             ], className="px-3 py-2 mt-3"),
             
-        ], style={
+        ], id="main-sidebar", style={
             "position": "fixed",
             "top": "100px",
             "left": "0",
@@ -257,12 +257,12 @@ app.layout = html.Div([
             "zIndex": "999"
         }),
         
-        # Page content with left margin for fixed sidebar
+        # Page content with left margin for fixed sidebar (adjusted dynamically)
         html.Div([
             dbc.Container([
                 dash.page_container
             ], fluid=True, className="p-4")
-        ], style={
+        ], id="page-content", style={
             "marginLeft": "280px",
             "marginTop": "100px",
             "backgroundColor": "#0d1117",
@@ -327,6 +327,63 @@ def display_username(pathname):
     if current_user.is_authenticated:
         return current_user.username
     return "Invité"
+
+
+# Callback to show/hide header and sidebar based on authentication
+@app.callback(
+    [
+        dash.dependencies.Output('main-header', 'style'),
+        dash.dependencies.Output('main-sidebar', 'style'),
+        dash.dependencies.Output('page-content', 'style')
+    ],
+    dash.dependencies.Input('url', 'pathname')
+)
+def toggle_header_sidebar(pathname):
+    """Hide header and sidebar when user is not authenticated"""
+    if current_user.is_authenticated:
+        # User is authenticated - show header and sidebar
+        header_style = {
+            "position": "fixed",
+            "top": "0",
+            "left": "0",
+            "right": "0",
+            "zIndex": "1000",
+            "backgroundColor": "#161b22",
+            "borderBottom": "1px solid #30363d",
+            "display": "block"
+        }
+        sidebar_style = {
+            "position": "fixed",
+            "top": "100px",
+            "left": "0",
+            "width": "280px",
+            "height": "calc(100vh - 100px)",
+            "overflowY": "auto",
+            "overflowX": "hidden",
+            "backgroundColor": "#161b22",
+            "padding": "1rem",
+            "borderRight": "1px solid #30363d",
+            "zIndex": "999",
+            "display": "block"
+        }
+        content_style = {
+            "marginLeft": "280px",
+            "marginTop": "100px",
+            "backgroundColor": "#0d1117",
+            "minHeight": "calc(100vh - 100px)"
+        }
+    else:
+        # User is not authenticated - hide header and sidebar
+        header_style = {"display": "none"}
+        sidebar_style = {"display": "none"}
+        content_style = {
+            "marginLeft": "0",
+            "marginTop": "0",
+            "backgroundColor": "#0d1117",
+            "minHeight": "100vh"
+        }
+    
+    return header_style, sidebar_style, content_style
 
 
 if __name__ == '__main__':
