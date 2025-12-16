@@ -14,6 +14,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - DATABASE_URL=postgresql://dashuser:dashpass@postgres:5432/ecommerce_db
+      - FLASK_DEBUG=False  # SECURITY: Disable debug mode in production
+      - FLASK_ENV=production
     volumes:
       - ./dashboard:/app/dashboard
       - ./data/clean:/app/data/clean

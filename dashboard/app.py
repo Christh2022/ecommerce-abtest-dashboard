@@ -307,15 +307,25 @@ if __name__ == '__main__':
     print("   - Methodology: /methodology")
     print("   - About: /about")
     print("="*60)
-    print("\n🔄 Le dashboard se recharge automatiquement à chaque modification")
-    print("🛑 Appuyez sur Ctrl+C pour arrêter\n")
+    import os
+    
+    # SECURITY: Use environment variable to control debug mode
+    # NEVER set debug=True in production!
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() in ('true', '1', 'yes')
+    
+    if debug_mode:
+        print("\n⚠️  WARNING: Debug mode is ENABLED - for development only!")
+        print("🔄 Le dashboard se recharge automatiquement à chaque modification")
+        print("🛑 Appuyez sur Ctrl+C pour arrêter\n")
+    else:
+        print("\n✅ Running in PRODUCTION mode (debug disabled)")
     
     logger.info("🚀 Starting E-Commerce A/B Test Dashboard...")
     
     app.run_server(
-        debug=True,
+        debug=debug_mode,
         host='0.0.0.0',
         port=8050,
-        dev_tools_hot_reload=True,
-        dev_tools_ui=True,
+        dev_tools_hot_reload=debug_mode,
+        dev_tools_ui=debug_mode,
     )
