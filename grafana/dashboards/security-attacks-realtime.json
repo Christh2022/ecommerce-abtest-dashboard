@@ -25,7 +25,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "fieldConfig": {
         "defaults": {
@@ -81,7 +81,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "prometheus-ecommerce"
           },
           "editorMode": "code",
           "expr": "sum(increase(security_attacks_total[5m]))",
@@ -96,7 +96,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "fieldConfig": {
         "defaults": {
@@ -144,7 +144,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "prometheus-ecommerce"
           },
           "editorMode": "code",
           "expr": "sum(increase(security_attacks_total{severity=\"critical\"}[5m]))",
@@ -159,7 +159,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "fieldConfig": {
         "defaults": {
@@ -207,7 +207,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "prometheus-ecommerce"
           },
           "editorMode": "code",
           "expr": "sum(increase(security_attacks_total{severity=\"high\"}[5m]))",
@@ -222,7 +222,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "fieldConfig": {
         "defaults": {
@@ -270,7 +270,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "prometheus-ecommerce"
           },
           "editorMode": "code",
           "expr": "sum(increase(security_attacks_total{severity=\"medium\"}[5m]))",
@@ -285,7 +285,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "fieldConfig": {
         "defaults": {
@@ -361,7 +361,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "prometheus-ecommerce"
           },
           "editorMode": "code",
           "expr": "sum by(attack_type) (rate(security_attacks_total[1m]))",
@@ -376,7 +376,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "fieldConfig": {
         "defaults": {
@@ -420,7 +420,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "prometheus-ecommerce"
           },
           "editorMode": "code",
           "expr": "sum by(category) (increase(security_attacks_total[15m]))",
@@ -435,7 +435,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "fieldConfig": {
         "defaults": {
@@ -525,7 +525,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "prometheus-ecommerce"
           },
           "editorMode": "code",
           "expr": "sum by(severity) (increase(security_attacks_total[15m]))",
@@ -540,7 +540,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "fieldConfig": {
         "defaults": {
@@ -626,7 +626,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "prometheus-ecommerce"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -661,7 +661,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "fieldConfig": {
         "defaults": {
@@ -737,7 +737,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "prometheus-ecommerce"
           },
           "editorMode": "code",
           "expr": "sum by(attack_type) (increase(security_attacks_total[1m]))",
@@ -752,7 +752,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "prometheus-ecommerce"
       },
       "gridPos": {
         "h": 2,
