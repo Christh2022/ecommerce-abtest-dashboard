@@ -1,11 +1,13 @@
 name: Create Grafana Dashboards
 
 on:
-    push:
-        branches: [main, develop]
-        paths:
-            - "grafana_dashboards_scripts/**"
-            - "grafana/dashboards/**"
+    # Désactivé pour push automatique - Nécessite instance Grafana accessible
+    # Décommenter après configuration de GRAFANA_URL, GRAFANA_USER, GRAFANA_PASSWORD dans secrets
+    # push:
+    #     branches: [main, develop]
+    #     paths:
+    #         - "grafana_dashboards_scripts/**"
+    #         - "grafana/dashboards/**"
     workflow_dispatch:
         inputs:
             grafana_url:
@@ -42,10 +44,15 @@ jobs:
 
             - name: Create dashboards
               env:
-                  GRAFANA_URL: ${{ github.event.inputs.grafana_url || secrets.GRAFANA_URL }}
-                  GRAFANA_USER: ${{ secrets.GRAFANA_USER }}
-                  GRAFANA_PASSWORD: ${{ secrets.GRAFANA_PASSWORD }}
+                  GRAFANA_URL: ${{ github.event.inputs.grafana_url || secrets.GRAFANA_URL || 'http://localhost:3000' }}
+                  GRAFANA_USER: ${{ secrets.GRAFANA_USER || 'admin' }}
+                  GRAFANA_PASSWORD: ${{ secrets.GRAFANA_PASSWORD || 'admin' }}
               run: |
+                  if [ -z "$GRAFANA_URL" ]; then
+                    echo "❌ GRAFANA_URL not configured"
+                    echo "Configure secrets in: Settings → Secrets and variables → Actions"
+                    exit 1
+                  fi
                   python run_all_dashboards.py
 
             - name: Verify dashboards

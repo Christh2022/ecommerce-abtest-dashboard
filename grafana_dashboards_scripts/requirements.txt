@@ -1,0 +1,8 @@
+# Minimal requirements for Grafana dashboard creation
+# Used by docker/Dockerfile.dashboard-init
+
+# HTTP requests for Grafana API
+requests==2.31.0
+
+# JSON handling (built-in in Python, but explicit for clarity)
+# No additional packages needed - using standard library
