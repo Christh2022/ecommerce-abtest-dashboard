@@ -10,12 +10,12 @@ GitGuardian a détecté des secrets hardcodés dans le code. Cette documentation
 
 Les fichiers suivants contenaient des secrets hardcodés dans l'historique Git:
 
-| Fichier | Type de Secret | Status | Commit |
-|---------|---------------|--------|---------|
-| `test_auth.py` | Username/Password | ✅ Supprimé | cfc1b8d |
-| `import_security_dashboard.py` | Authentication Tuple | ✅ Supprimé | cfc1b8d |
-| `scripts/init_grafana_dashboards.sh` | Generic Password | ✅ Corrigé | 3656fb6 |
-| `security_attack_suite.py` | Generic Password | ✅ Supprimé | 3656fb6 |
+| Fichier                              | Type de Secret       | Status      | Commit  |
+| ------------------------------------ | -------------------- | ----------- | ------- |
+| `test_auth.py`                       | Username/Password    | ✅ Supprimé | cfc1b8d |
+| `import_security_dashboard.py`       | Authentication Tuple | ✅ Supprimé | cfc1b8d |
+| `scripts/init_grafana_dashboards.sh` | Generic Password     | ✅ Corrigé  | 3656fb6 |
+| `security_attack_suite.py`           | Generic Password     | ✅ Supprimé | 3656fb6 |
 
 ---
 
@@ -24,11 +24,13 @@ Les fichiers suivants contenaient des secrets hardcodés dans l'historique Git:
 ### 1. Nettoyage des Secrets Hardcodés
 
 **Avant** (scripts/init_grafana_dashboards.sh):
+
 ```bash
 GRAFANA_PASSWORD="${GRAFANA_PASSWORD:-admin123}"  # ❌ Hardcodé
 ```
 
 **Après**:
+
 ```bash
 GRAFANA_PASSWORD="${GRAFANA_PASSWORD:-changeme}"  # ✅ Placeholder générique
 ```
@@ -47,6 +49,7 @@ GF_SECURITY_ADMIN_PASSWORD=AdminGrafanaSecurisé789!
 ### 3. Fichiers Supprimés
 
 Les fichiers de test contenant des credentials ont été supprimés:
+
 - ✅ `test_auth.py` - Contenait username/password de test
 - ✅ `import_security_dashboard.py` - Contenait tuple d'authentification
 - ✅ `security_attack_suite.py` - Contenait passwords de test
@@ -58,6 +61,7 @@ Les fichiers de test contenant des credentials ont été supprimés:
 ### 1. Utiliser des Variables d'Environnement
 
 #### ✅ BON
+
 ```python
 import os
 
@@ -70,6 +74,7 @@ if not grafana_password:
 ```
 
 #### ❌ MAUVAIS
+
 ```python
 # NE JAMAIS faire ça!
 grafana_password = "admin123"  # ❌ Hardcodé
@@ -90,6 +95,7 @@ git add .env  # ❌ NE JAMAIS FAIRE
 ```
 
 **Vérifier .gitignore**:
+
 ```gitignore
 # Secrets
 .env
@@ -103,6 +109,7 @@ secrets/
 ### 3. Docker Compose avec Secrets
 
 #### Option 1: Fichier .env (développement)
+
 ```yaml
 # docker-compose.yml
 services:
@@ -112,6 +119,7 @@ services:
 ```
 
 #### Option 2: Docker Secrets (production)
+
 ```yaml
 # docker-compose.yml
 services:
@@ -159,6 +167,7 @@ Pour les workflows CI/CD:
    - etc.
 
 Usage dans workflow:
+
 ```yaml
 - name: Deploy
   env:
@@ -173,6 +182,7 @@ Usage dans workflow:
 ### 1. Pre-commit Hook
 
 Installation:
+
 ```bash
 # Installer pre-commit
 pip install pre-commit
@@ -185,6 +195,7 @@ pre-commit run --all-files
 ```
 
 Le hook vérifie automatiquement:
+
 - ✅ Secrets avec detect-secrets
 - ✅ Clés privées
 - ✅ Patterns de credentials
@@ -193,6 +204,7 @@ Le hook vérifie automatiquement:
 ### 2. GitGuardian (Déjà Configuré)
 
 GitGuardian scanne automatiquement les commits et PRs pour détecter:
+
 - Passwords
 - API keys
 - Tokens

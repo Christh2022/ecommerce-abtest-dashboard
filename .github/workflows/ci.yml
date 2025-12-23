@@ -53,7 +53,8 @@ jobs:
                 env:
                     POSTGRES_DB: ecommerce_test
                     POSTGRES_USER: postgres
-                    POSTGRES_PASSWORD: postgres
+                    # CI test database - not a production secret
+                    POSTGRES_PASSWORD: test_ci_password_not_production
                 ports:
                     - 5432:5432
                 options: >-
@@ -79,7 +80,8 @@ jobs:
 
             - name: Run tests
               env:
-                  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ecommerce_test
+                  # CI test database URL - not a production secret
+                  DATABASE_URL: postgresql://postgres:test_ci_password_not_production@localhost:5432/ecommerce_test
               run: |
                   mkdir -p test-results
                   python run_tests.py > test-results/test-output.txt 2>&1 || true

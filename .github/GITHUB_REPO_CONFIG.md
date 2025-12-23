@@ -15,13 +15,13 @@ Ce guide explique comment configurer correctement le repository GitHub pour que 
 
 #### À Activer:
 
-| Fonctionnalité | Status | Impact | Workflow Concerné |
-|----------------|--------|--------|-------------------|
-| **Dependency graph** | ❌ À activer | Requis pour dependency-review | dependency-review.yml |
-| **Dependabot alerts** | ✅ Recommandé | Alertes sur vulnérabilités | - |
-| **Dependabot security updates** | ✅ Recommandé | PRs automatiques de sécurité | - |
-| **Secret scanning** | ✅ Activé | Détection de secrets | - |
-| **Push protection** | ✅ Recommandé | Bloque les commits avec secrets | - |
+| Fonctionnalité                  | Status        | Impact                          | Workflow Concerné     |
+| ------------------------------- | ------------- | ------------------------------- | --------------------- |
+| **Dependency graph**            | ❌ À activer  | Requis pour dependency-review   | dependency-review.yml |
+| **Dependabot alerts**           | ✅ Recommandé | Alertes sur vulnérabilités      | -                     |
+| **Dependabot security updates** | ✅ Recommandé | PRs automatiques de sécurité    | -                     |
+| **Secret scanning**             | ✅ Activé     | Détection de secrets            | -                     |
+| **Push protection**             | ✅ Recommandé | Bloque les commits avec secrets | -                     |
 
 #### Instructions:
 
@@ -41,17 +41,16 @@ Ce guide explique comment configurer correctement le repository GitHub pour que 
 
 #### Permissions Requises:
 
-| Permission | Configuration Requise | Utilisation |
-|------------|----------------------|-------------|
-| **Workflow permissions** | Read and write permissions | Push d'images Docker, artifacts |
-| **Fork pull request workflows** | Run workflows from fork pull requests | CI sur PRs externes |
-| **Artifacts and logs** | 90 days retention | Logs de builds |
+| Permission                      | Configuration Requise                 | Utilisation                     |
+| ------------------------------- | ------------------------------------- | ------------------------------- |
+| **Workflow permissions**        | Read and write permissions            | Push d'images Docker, artifacts |
+| **Fork pull request workflows** | Run workflows from fork pull requests | CI sur PRs externes             |
+| **Artifacts and logs**          | 90 days retention                     | Logs de builds                  |
 
 #### Configuration Recommandée:
 
 ```yaml
-Workflow permissions:
-  ☑ Read and write permissions
+Workflow permissions: ☑ Read and write permissions
   ☐ Read repository contents and packages permissions
 
 Fork pull request workflows from outside collaborators:
@@ -68,16 +67,16 @@ Fork pull request workflows from outside collaborators:
 
 #### Secrets à Configurer (Production):
 
-| Secret Name | Description | Utilisé Dans | Requis |
-|-------------|-------------|--------------|--------|
-| `GRAFANA_URL` | URL Grafana production | dashboards.yml | ✅ |
-| `GRAFANA_USER` | Username Grafana admin | dashboards.yml | ✅ |
-| `GRAFANA_PASSWORD` | Password Grafana admin | dashboards.yml | ✅ |
-| `DOCKER_USERNAME` | Docker Hub username | cd.yml | ⚠️ Optionnel |
-| `DOCKER_PASSWORD` | Docker Hub password | cd.yml | ⚠️ Optionnel |
-| `SSH_PRIVATE_KEY` | Clé SSH pour déploiement | cd.yml | ⚠️ Optionnel |
-| `DEPLOY_HOST` | Serveur de production | cd.yml | ⚠️ Optionnel |
-| `DEPLOY_USER` | User SSH pour déploiement | cd.yml | ⚠️ Optionnel |
+| Secret Name        | Description               | Utilisé Dans   | Requis       |
+| ------------------ | ------------------------- | -------------- | ------------ |
+| `GRAFANA_URL`      | URL Grafana production    | dashboards.yml | ✅           |
+| `GRAFANA_USER`     | Username Grafana admin    | dashboards.yml | ✅           |
+| `GRAFANA_PASSWORD` | Password Grafana admin    | dashboards.yml | ✅           |
+| `DOCKER_USERNAME`  | Docker Hub username       | cd.yml         | ⚠️ Optionnel |
+| `DOCKER_PASSWORD`  | Docker Hub password       | cd.yml         | ⚠️ Optionnel |
+| `SSH_PRIVATE_KEY`  | Clé SSH pour déploiement  | cd.yml         | ⚠️ Optionnel |
+| `DEPLOY_HOST`      | Serveur de production     | cd.yml         | ⚠️ Optionnel |
+| `DEPLOY_USER`      | User SSH pour déploiement | cd.yml         | ⚠️ Optionnel |
 
 #### Comment Ajouter un Secret:
 
@@ -138,6 +137,7 @@ Branch name pattern: main
 Les images Docker sont automatiquement publiées dans GitHub Container Registry (ghcr.io) lors du déploiement.
 
 **Images créées automatiquement**:
+
 - `ghcr.io/christh2022/ecommerce-dashboard:latest`
 - `ghcr.io/christh2022/ecommerce-exporter:latest`
 - `ghcr.io/christh2022/ecommerce-dashboard-init:latest`
@@ -175,15 +175,17 @@ Les images Docker sont automatiquement publiées dans GitHub Container Registry 
 **Cause**: Permissions insuffisantes pour CodeQL ou SARIF upload
 
 **Solution**:
+
 1. Vérifier que `security-events: write` est dans les permissions du workflow
 2. Vérifier que le workflow a accès aux GitHub Advanced Security features
 3. Pour les forks: les workflows peuvent avoir des restrictions
 
 **Vérification**:
+
 ```yaml
 permissions:
   contents: read
-  security-events: write  # ← Cette permission est critique
+  security-events: write # ← Cette permission est critique
   actions: read
 ```
 
@@ -194,6 +196,7 @@ permissions:
 **Cause**: Dependency Graph non activé
 
 **Solution**:
+
 1. Settings → Security → Code security and analysis
 2. Activer **Dependency graph**
 3. Le workflow dependency-review.yml fonctionnera alors
@@ -205,6 +208,7 @@ permissions:
 **Cause**: Les fichiers d'artifacts n'existent pas
 
 **Solution**: Déjà corrigé dans le workflow ci.yml:
+
 ```yaml
 - name: Run tests
   run: |
@@ -219,6 +223,7 @@ permissions:
 **Cause**: Utilisation d'une vieille version de CodeQL
 
 **Solution**: Déjà corrigé - tous les workflows utilisent maintenant v4:
+
 ```yaml
 uses: github/codeql-action/upload-sarif@v4
 ```
@@ -228,28 +233,33 @@ uses: github/codeql-action/upload-sarif@v4
 ## ✅ Checklist de Configuration Complète
 
 ### Étape 1: Sécurité de Base
+
 - [ ] Dependency graph activé
 - [ ] Dependabot alerts activé
 - [ ] Secret scanning activé
 - [ ] Push protection activé (optionnel mais recommandé)
 
 ### Étape 2: GitHub Actions
+
 - [ ] Workflow permissions: Read and write
 - [ ] Fork PR workflows configurés
 - [ ] Artifacts retention: 90 jours
 
 ### Étape 3: Secrets
+
 - [ ] GRAFANA_PASSWORD configuré
 - [ ] GRAFANA_USER configuré
 - [ ] GRAFANA_URL configuré
 - [ ] Autres secrets production (si déploiement automatique)
 
 ### Étape 4: Branch Protection
+
 - [ ] Protection sur `main` configurée
 - [ ] Status checks requis configurés
 - [ ] Review required activée
 
 ### Étape 5: Vérification
+
 - [ ] Lancer un workflow manuellement (Actions → Choose workflow → Run workflow)
 - [ ] Vérifier qu'il se termine sans erreur
 - [ ] Créer une PR de test pour vérifier les checks
@@ -258,14 +268,14 @@ uses: github/codeql-action/upload-sarif@v4
 
 ## 📊 Status Actuel des Workflows
 
-| Workflow | Status | Corrections Appliquées |
-|----------|--------|------------------------|
-| **ci.yml** | ✅ Prêt | Permissions ajoutées, CodeQL v4, test-results fix |
-| **cd.yml** | ✅ Prêt | Permissions ajoutées |
-| **dashboards.yml** | ⚠️ Nécessite secrets | Permissions OK, secrets GRAFANA_* requis |
-| **dependency-review.yml** | ⚠️ Désactivé | Attend activation Dependency Graph |
-| **security-audit.yml** | ✅ Prêt | Permissions ajoutées |
-| **cleanup.yml** | ✅ Prêt | Permissions ajoutées |
+| Workflow                  | Status               | Corrections Appliquées                            |
+| ------------------------- | -------------------- | ------------------------------------------------- |
+| **ci.yml**                | ✅ Prêt              | Permissions ajoutées, CodeQL v4, test-results fix |
+| **cd.yml**                | ✅ Prêt              | Permissions ajoutées                              |
+| **dashboards.yml**        | ⚠️ Nécessite secrets | Permissions OK, secrets GRAFANA\_\* requis        |
+| **dependency-review.yml** | ⚠️ Désactivé         | Attend activation Dependency Graph                |
+| **security-audit.yml**    | ✅ Prêt              | Permissions ajoutées                              |
+| **cleanup.yml**           | ✅ Prêt              | Permissions ajoutées                              |
 
 ---
 
@@ -283,6 +293,7 @@ uses: github/codeql-action/upload-sarif@v4
 ## 📞 Support
 
 Pour toute question:
+
 1. Consulter [docs/CICD_DOCUMENTATION.md](CICD_DOCUMENTATION.md)
 2. Vérifier les [GitHub Actions logs](https://github.com/Christh2022/ecommerce-abtest-dashboard/actions)
 3. Lire la [documentation GitHub Actions](https://docs.github.com/en/actions)
