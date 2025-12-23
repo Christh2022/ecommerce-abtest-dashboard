@@ -1,0 +1,234 @@
+# ============================================================================
+# FALCO SECURITY ATTACK DETECTION RULES - Version Simplifiée
+# Règles optimisées pour détecter les attaques de sécurité
+# ============================================================================
+
+# Macros de base
+- macro: open_write
+  condition: (evt.type in (open,openat,openat2) and evt.is_open_write=true and fd.typechar='f' and fd.num>=0)
+
+- macro: open_read
+  condition: (evt.type in (open,openat,openat2) and evt.is_open_read=true and fd.typechar='f' and fd.num>=0)
+
+- macro: spawned_process
+  condition: (evt.type in (execve, execveat) and evt.dir=<)
+
+- macro: container
+  condition: (container.id != host)
+
+- macro: never_true
+  condition: (evt.num=0)
+
+- macro: always_true
+  condition: (evt.num>=0)
+
+# ============================================================================
+# RÈGLES DE DÉTECTION D'ATTAQUES
+# ============================================================================
+
+# SQL Injection Detection
+- rule: SQL_Injection_Detected
+  desc: Détecte les tentatives d'injection SQL
+  condition: >
+    spawned_process and
+    (proc.cmdline contains "SELECT" or
+     proc.cmdline contains "UNION" or
+     proc.cmdline contains "DROP TABLE" or
+     proc.cmdline contains "INSERT INTO" or
+     proc.cmdline contains "' OR '1'='1")
+  output: "SQL INJECTION DETECTED (user=%user.name container=%container.name command=%proc.cmdline process=%proc.name)"
+  priority: CRITICAL
+  tags: [sql_injection, attack]
+
+# Command Injection Detection
+- rule: Command_Injection_Detected
+  desc: Détecte les injections de commandes système
+  condition: >
+    spawned_process and
+    (proc.cmdline contains "bash -c" or
+     proc.cmdline contains "sh -c" or
+     proc.cmdline contains ";whoami" or
+     proc.cmdline contains ";id" or
+     proc.cmdline contains "|whoami" or
+     proc.cmdline contains "&&whoami")
+  output: "COMMAND INJECTION DETECTED (user=%user.name container=%container.name command=%proc.cmdline)"
+  priority: CRITICAL
+  tags: [command_injection, attack]
+
+# Path Traversal Detection
+- rule: Path_Traversal_Detected
+  desc: Détecte les attaques path traversal
+  condition: >
+    open_read and
+    (fd.name pmatch (*/etc/passwd, */etc/shadow) or
+     fd.name contains "../" or
+     fd.name contains "..%2F")
+  output: "PATH TRAVERSAL DETECTED (user=%user.name container=%container.name file=%fd.name process=%proc.name)"
+  priority: CRITICAL
+  tags: [path_traversal, attack]
+
+# Sensitive File Access
+- rule: Sensitive_File_Access
+  desc: Accès à des fichiers sensibles
+  condition: >
+    open_read and
+    (fd.name pmatch (*/etc/passwd, */etc/shadow, */.env, */secrets*, */credentials*, */users.json))
+  output: "SENSITIVE FILE ACCESS (user=%user.name container=%container.name file=%fd.name process=%proc.name)"
+  priority: ERROR
+  tags: [sensitive_file, data_exposure]
+
+# Webshell Upload Detection
+- rule: Webshell_Upload_Detected
+  desc: Détecte l'upload de webshells
+  condition: >
+    open_write and
+    (fd.name glob "*.php" or fd.name glob "*.jsp" or fd.name glob "*.aspx") and
+    (proc.cmdline contains "eval" or proc.cmdline contains "system" or proc.cmdline contains "exec")
+  output: "WEBSHELL UPLOAD DETECTED (user=%user.name container=%container.name file=%fd.name process=%proc.name)"
+  priority: CRITICAL
+  tags: [webshell, attack]
+
+# Suspicious File Upload
+- rule: Suspicious_File_Upload
+  desc: Upload de fichiers suspects
+  condition: >
+    open_write and
+    (fd.name glob "*.php" or fd.name glob "*.jsp" or 
+     fd.name glob "*.aspx" or fd.name glob "*.exe" or fd.name glob "*.sh")
+  output: "SUSPICIOUS FILE UPLOAD (user=%user.name container=%container.name file=%fd.name process=%proc.name)"
+  priority: ERROR
+  tags: [file_upload, attack]
+
+# Shell Spawned
+- rule: Shell_Spawned
+  desc: Shell interactif détecté
+  condition: >
+    spawned_process and
+    container and
+    proc.name in (bash, sh, zsh, dash) and
+    proc.tty != 0
+  output: "SHELL SPAWNED IN CONTAINER (user=%user.name container=%container.name shell=%proc.name parent=%proc.pname)"
+  priority: ERROR
+  tags: [shell, access]
+
+# Reverse Shell Detection
+- rule: Reverse_Shell_Detected
+  desc: Détection de reverse shell
+  condition: >
+    spawned_process and
+    ((proc.name in (nc, ncat, netcat) and proc.cmdline contains "-e") or
+     proc.cmdline contains "bash -i" or
+     proc.cmdline contains "/dev/tcp/" or
+     (proc.cmdline contains "python -c" and proc.cmdline contains "socket"))
+  output: "REVERSE SHELL DETECTED (user=%user.name container=%container.name command=%proc.cmdline)"
+  priority: CRITICAL
+  tags: [reverse_shell, attack]
+
+# Suspicious Network Tools
+- rule: Suspicious_Network_Tool
+  desc: Outils réseau suspects
+  condition: >
+    spawned_process and
+    proc.name in (nmap, masscan, nc, netcat, socat, nikto, sqlmap)
+  output: "SUSPICIOUS NETWORK TOOL (user=%user.name container=%container.name tool=%proc.name command=%proc.cmdline)"
+  priority: ERROR
+  tags: [reconnaissance, attack]
+
+# Privilege Escalation
+- rule: Privilege_Escalation_Attempt
+  desc: Tentative d'élévation de privilèges
+  condition: >
+    spawned_process and
+    (proc.name in (sudo, su) or
+     proc.cmdline contains "chmod +s" or
+     proc.cmdline contains "chmod 4755")
+  output: "PRIVILEGE ESCALATION ATTEMPT (user=%user.name container=%container.name command=%proc.cmdline)"
+  priority: CRITICAL
+  tags: [privilege_escalation, attack]
+
+# Docker Socket Access
+- rule: Docker_Socket_Access
+  desc: Accès au socket Docker (container escape)
+  condition: >
+    open_read and
+    fd.name = "/var/run/docker.sock" and
+    container
+  output: "DOCKER SOCKET ACCESS (user=%user.name container=%container.name process=%proc.name)"
+  priority: CRITICAL
+  tags: [container_escape, attack]
+
+# Password File Access
+- rule: Password_File_Access
+  desc: Accès aux fichiers de mots de passe
+  condition: >
+    open_read and
+    fd.name pmatch (*/etc/passwd, */etc/shadow, */etc/security/opasswd)
+  output: "PASSWORD FILE ACCESS (user=%user.name container=%container.name file=%fd.name process=%proc.name)"
+  priority: ERROR
+  tags: [credential_access, attack]
+
+# SSH Key Access
+- rule: SSH_Key_Access
+  desc: Accès aux clés SSH
+  condition: >
+    open_read and
+    (fd.name contains ".ssh/" or fd.name contains "id_rsa" or fd.name contains "authorized_keys")
+  output: "SSH KEY ACCESS (user=%user.name container=%container.name file=%fd.name process=%proc.name)"
+  priority: CRITICAL
+  tags: [credential_access, ssh]
+
+# Cron Job Modification
+- rule: Cron_Job_Modification
+  desc: Modification de tâches cron
+  condition: >
+    open_write and
+    (fd.name startswith "/etc/cron" or fd.name contains "crontab")
+  output: "CRON JOB MODIFICATION (user=%user.name container=%container.name file=%fd.name process=%proc.name)"
+  priority: ERROR
+  tags: [persistence, attack]
+
+# Startup Script Modification
+- rule: Startup_Script_Modification
+  desc: Modification de scripts de démarrage
+  condition: >
+    open_write and
+    (fd.name startswith "/etc/init" or fd.name contains ".bashrc" or fd.name contains ".bash_profile")
+  output: "STARTUP SCRIPT MODIFIED (user=%user.name container=%container.name file=%fd.name process=%proc.name)"
+  priority: ERROR
+  tags: [persistence, attack]
+
+# Container Escape Attempt
+- rule: Container_Escape_Attempt
+  desc: Tentative d'évasion de conteneur
+  condition: >
+    spawned_process and
+    container and
+    (proc.cmdline contains "nsenter" or
+     proc.cmdline contains "unshare" or
+     proc.cmdline contains "chroot /host")
+  output: "CONTAINER ESCAPE ATTEMPT (user=%user.name container=%container.name command=%proc.cmdline)"
+  priority: CRITICAL
+  tags: [container_escape, attack]
+
+# Crypto Mining
+- rule: Crypto_Mining_Detected
+  desc: Activité de cryptomining
+  condition: >
+    spawned_process and
+    (proc.name in (xmrig, minergate, cpuminer, cgminer) or
+     proc.cmdline contains "stratum+")
+  output: "CRYPTO MINING DETECTED (user=%user.name container=%container.name process=%proc.name command=%proc.cmdline)"
+  priority: ERROR
+  tags: [cryptomining, resource_abuse]
+
+# Attack Chain
+- rule: Attack_Chain_Detected
+  desc: Chaînage d'attaques
+  condition: >
+    spawned_process and
+    ((proc.name in (bash, sh) and proc.cmdline contains "curl") or
+     (proc.cmdline contains "wget" and proc.cmdline contains "-O") or
+     (proc.cmdline contains "python -c" and proc.cmdline contains "import os"))
+  output: "ATTACK CHAIN DETECTED (user=%user.name container=%container.name command=%proc.cmdline)"
+  priority: CRITICAL
+  tags: [attack_chain, apt]

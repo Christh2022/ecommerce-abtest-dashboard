@@ -1,0 +1,71 @@
+server:
+  http_listen_port: 9081
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # Scrape Docker container logs including Falco
+  - job_name: docker-containers
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'stream'
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: 'service'
+    
+    # Pipeline pour parser les logs JSON de Falco
+    pipeline_stages:
+      - json:
+          expressions:
+            output: output
+            priority: priority
+            rule: rule
+            time: time
+            output_fields: output_fields
+            tags: tags
+      - labels:
+          priority:
+          rule:
+      - output:
+          source: output
+
+  # Scrape spécifique pour les logs Falco
+  - job_name: falco
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: falco
+          __path__: /var/log/falco/*.log
+    pipeline_stages:
+      - json:
+          expressions:
+            output: output
+            priority: priority
+            rule: rule
+            time: time
+            container: output_fields.container.name
+            process: output_fields.proc.name
+            command: output_fields.proc.cmdline
+            user: output_fields.user.name
+            file: output_fields.fd.name
+      - labels:
+          priority:
+          rule:
+          container:
+          process:
+      - timestamp:
+          source: time
+          format: RFC3339Nano
+      - output:
+          source: output

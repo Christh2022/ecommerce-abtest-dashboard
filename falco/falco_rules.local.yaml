@@ -1,0 +1,212 @@
+# ============================================================================
+# CUSTOM FALCO RULES FOR E-COMMERCE SECURITY MONITORING
+# ============================================================================
+# 
+# Ce fichier contient les règles Falco personnalisées pour :
+# 1. Détection des attaques de sécurité (security_attack_rules.yaml)
+# 2. Monitoring des services (Dash, Grafana, PostgreSQL)
+#
+# Les règles d'attaque sont dans security_attack_rules.yaml
+# ============================================================================
+
+# Macros utilitaires
+- macro: open_write
+  condition: (evt.type in (open,openat,openat2) and evt.is_open_write=true and fd.typechar='f' and fd.num>=0)
+
+- macro: open_read
+  condition: (evt.type in (open,openat,openat2) and evt.is_open_read=true and fd.typechar='f' and fd.num>=0)
+
+- macro: spawned_process
+  condition: (evt.type = execve and evt.dir=<)
+
+- macro: container
+  condition: (container.id != host)
+
+# Custom Falco Rules for E-Commerce Services Monitoring
+# Specific monitoring for Dash, Grafana, and PostgreSQL
+
+# ========================================
+# DASH APPLICATION MONITORING
+# ========================================
+
+- rule: Dash Unauthorized File Write
+  desc: Detect writes to Dash application files outside expected directories
+  condition: >
+    open_write and
+    container.name="ecommerce-dashboard" and
+    not fd.name startswith "/app/logs" and
+    not fd.name startswith "/tmp" and
+    not fd.name startswith "/var" and
+    not proc.name in (python, python3)
+  output: "Unauthorized file write in Dash container (user=%user.name file=%fd.name command=%proc.cmdline)"
+  priority: WARNING
+  tags: [dash, filesystem]
+
+- rule: Dash Database Connection Monitoring
+  desc: Monitor database connections from Dash app
+  condition: >
+    evt.type=connect and
+    container.name="ecommerce-dashboard" and
+    fd.sport=5432
+  output: "Dash connecting to database (user=%user.name source=%fd.cip:%fd.cport dest=%fd.sip:%fd.sport)"
+  priority: INFO
+  tags: [dash, network, database]
+
+- rule: Dash Suspicious Process
+  desc: Detect unexpected process execution in Dash container
+  condition: >
+    spawned_process and
+    container.name="ecommerce-dashboard" and
+    not proc.name in (python, python3, sh, bash, pip, gunicorn, uwsgi)
+  output: "Suspicious process in Dash container (user=%user.name process=%proc.name cmdline=%proc.cmdline)"
+  priority: WARNING
+  tags: [dash, process]
+
+- rule: Dash Environment Variable Access
+  desc: Monitor access to Dash environment configuration
+  condition: >
+    open_read and
+    container.name="ecommerce-dashboard" and
+    fd.name in (.env, .env.example, /app/.env) and
+    not proc.name in (python, python3)
+  output: "Environment file accessed in Dash (user=%user.name file=%fd.name process=%proc.name)"
+  priority: WARNING
+  tags: [dash, secrets]
+
+- rule: Dash Port Binding Change
+  desc: Detect attempts to bind to different ports
+  condition: >
+    evt.type=listen and
+    container.name="ecommerce-dashboard" and
+    fd.sport != 8050
+  output: "Dash attempting to bind to unexpected port (port=%fd.sport process=%proc.name)"
+  priority: ERROR
+  tags: [dash, network]
+
+# ========================================
+# GRAFANA MONITORING
+# ========================================
+
+- rule: Grafana Configuration Modification
+  desc: Detect changes to Grafana configuration files
+  condition: >
+    open_write and
+    container.name="ecommerce-grafana" and
+    fd.name startswith "/etc/grafana"
+  output: "Grafana configuration file modified (user=%user.name file=%fd.name process=%proc.name)"
+  priority: WARNING
+  tags: [grafana, configuration]
+
+- rule: Grafana Datasource Modification
+  desc: Monitor changes to Grafana datasources
+  condition: >
+    open_write and
+    container.name="ecommerce-grafana" and
+    fd.name contains "datasource"
+  output: "Grafana datasource configuration modified (user=%user.name file=%fd.name)"
+  priority: WARNING
+  tags: [grafana, datasource]
+
+- rule: Grafana Dashboard Export
+  desc: Detect dashboard export activity
+  condition: >
+    open_read and
+    container.name="ecommerce-grafana" and
+    fd.name contains "dashboard" and
+    fd.name endswith ".json"
+  output: "Grafana dashboard accessed (user=%user.name file=%fd.name process=%proc.name)"
+  priority: INFO
+  tags: [grafana, dashboard]
+
+- rule: Grafana Plugin Installation
+  desc: Detect Grafana plugin installation attempts
+  condition: >
+    spawned_process and
+    container.name="ecommerce-grafana" and
+    proc.cmdline contains "grafana-cli" and
+    proc.cmdline contains "install"
+  output: "Grafana plugin installation detected (user=%user.name command=%proc.cmdline)"
+  priority: WARNING
+  tags: [grafana, plugin]
+
+- rule: Grafana Database File Access
+  desc: Monitor access to Grafana SQLite database
+  condition: >
+    open_write and
+    container.name="ecommerce-grafana" and
+    fd.name contains "grafana.db"
+  output: "Grafana database file accessed (user=%user.name file=%fd.name process=%proc.name)"
+  priority: INFO
+  tags: [grafana, database]
+
+# ========================================
+# POSTGRESQL MONITORING
+# ========================================
+
+- rule: PostgreSQL Data Directory Write
+  desc: Monitor writes to PostgreSQL data directory
+  condition: >
+    open_write and
+    container.name="ecommerce-postgres" and
+    fd.name startswith "/var/lib/postgresql/data" and
+    not proc.name in (postgres, initdb)
+  output: "Unauthorized write to PostgreSQL data directory (user=%user.name file=%fd.name process=%proc.name)"
+  priority: ERROR
+  tags: [postgres, data]
+
+- rule: PostgreSQL Configuration Change
+  desc: Detect changes to PostgreSQL configuration
+  condition: >
+    open_write and
+    container.name="ecommerce-postgres" and
+    fd.name in (postgresql.conf, pg_hba.conf, pg_ident.conf)
+  output: "PostgreSQL configuration file modified (user=%user.name file=%fd.name)"
+  priority: WARNING
+  tags: [postgres, configuration]
+
+- rule: PostgreSQL Shell Access
+  desc: Detect shell access in PostgreSQL container
+  condition: >
+    spawned_process and
+    container.name="ecommerce-postgres" and
+    proc.name in (bash, sh, zsh) and
+    not proc.pname in (postgres, docker-entrypoint.sh)
+  output: "Shell spawned in PostgreSQL container (user=%user.name shell=%proc.name parent=%proc.pname)"
+  priority: ERROR
+  tags: [postgres, shell]
+
+- rule: PostgreSQL Backup Access
+  desc: Monitor access to backup files
+  condition: >
+    open_read and
+    container.name="ecommerce-postgres" and
+    fd.name contains "backup" or fd.name contains ".dump" or fd.name contains ".sql"
+  output: "PostgreSQL backup file accessed (user=%user.name file=%fd.name process=%proc.name)"
+  priority: INFO
+  tags: [postgres, backup]
+
+- rule: PostgreSQL Table Drop
+  desc: Detect table drops (potential data loss)
+  condition: >
+    spawned_process and
+    container.name="ecommerce-postgres" and
+    proc.cmdline contains "DROP TABLE"
+  output: "PostgreSQL DROP TABLE command detected (user=%user.name command=%proc.cmdline)"
+  priority: ERROR
+  tags: [postgres, data_loss]
+
+# ========================================
+# CROSS-SERVICE MONITORING
+# ========================================
+
+- rule: Suspicious Inter-Service Communication
+  desc: Detect unexpected communication between services
+  condition: >
+    evt.type=connect and
+    container and
+    container.name in (ecommerce-dashboard, ecommerce-grafana) and
+    not fd.sport in (5432, 9090, 9200) and
+    not proc.name in (python, python3, grafana-server, prometheus)
+  output: "Suspicious inter-service connection (source=%container.name dest=%fd.sip:%fd.sport process=%proc.name)"
+  priority: WARNING
+  tags: [network, suspicious]

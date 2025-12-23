@@ -12,8 +12,8 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 
-# Register this page with dash.page_registry
-dash.register_page(__name__, path='/', name='Accueil')
+# Register this page with dash.page_registry (changed path to /dashboard)
+dash.register_page(__name__, path='/dashboard', name='Accueil')
 
 # Load data
 DATA_DIR = Path(__file__).parent.parent.parent / "data" / "clean"

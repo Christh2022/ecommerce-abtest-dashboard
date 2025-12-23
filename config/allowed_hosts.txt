@@ -1,0 +1,20 @@
+# Hôtes autorisés pour accéder à Grafana et au Dashboard
+# Un hôte/IP/réseau par ligne
+# Les lignes commençant par # sont des commentaires
+
+# Localhost (toujours autorisé par défaut)
+127.0.0.1
+
+# Réseau local privé (à adapter selon votre configuration)
+# 192.168.1.0/24
+# 10.0.0.0/8
+# 172.16.0.0/12
+
+# IPs spécifiques d'administrateurs
+# 203.0.113.10
+# 198.51.100.20
+
+# VPN ou réseau d'entreprise
+# 10.8.0.0/24
+
+# Note: Dé-commentez et modifiez les lignes ci-dessus selon vos besoins

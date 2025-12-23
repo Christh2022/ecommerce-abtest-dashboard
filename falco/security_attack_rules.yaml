@@ -1,0 +1,518 @@
+# ============================================================================
+# FALCO SECURITY ATTACK DETECTION RULES
+# Détection complète de toutes les attaques de sécurité
+# ============================================================================
+
+# Macros de base (si falco_rules.yaml n'est pas chargé)
+- macro: open_write
+  condition: (evt.type in (open,openat,openat2) and evt.is_open_write=true and fd.typechar='f' and fd.num>=0)
+
+- macro: open_read
+  condition: (evt.type in (open,openat,openat2) and evt.is_open_read=true and fd.typechar='f' and fd.num>=0)
+
+- macro: spawned_process
+  condition: (evt.type = execve and evt.dir=<)
+
+- macro: container
+  condition: (container.id != host)
+
+# ============================================================================
+# 1. INJECTION ATTACKS - Détection des attaques par injection
+# ============================================================================
+
+- rule: SQL Injection Attack Detected
+  desc: Détecte les tentatives d'injection SQL dans les requêtes
+  condition: >
+    (evt.type in (open, openat, openat2) or evt.type = execve) and
+    (proc.cmdline contains "SELECT" or proc.cmdline contains "UNION" or
+     proc.cmdline contains "' OR '1'='1" or proc.cmdline contains "DROP TABLE" or
+     proc.cmdline contains "INSERT INTO" or proc.cmdline contains "UPDATE" or
+     proc.cmdline contains "DELETE FROM" or proc.cmdline contains "--" or
+     proc.cmdline contains "/*" or proc.cmdline contains "xp_" or
+     proc.cmdline contains "EXEC" or proc.cmdline contains "EXECUTE")
+  output: >
+    🚨 SQL INJECTION DETECTED (user=%user.name container=%container.name 
+    command=%proc.cmdline file=%fd.name process=%proc.name pid=%proc.pid)
+  priority: CRITICAL
+  tags: [injection, sql, attack, security]
+  source: syscall
+
+- rule: NoSQL Injection Attack
+  desc: Détecte les injections NoSQL (MongoDB, etc.)
+  condition: >
+    (evt.type = execve or spawned_process) and
+    (proc.cmdline contains "$ne" or proc.cmdline contains "$gt" or
+     proc.cmdline contains "$regex" or proc.cmdline contains "$where" or
+     proc.cmdline contains "\\$" or proc.cmdline contains "db.")
+  output: >
+    🚨 NOSQL INJECTION DETECTED (user=%user.name container=%container.name 
+    command=%proc.cmdline process=%proc.name)
+  priority: CRITICAL
+  tags: [injection, nosql, mongodb, attack]
+  source: syscall
+
+- rule: Command Injection Attack
+  desc: Détecte l'injection de commandes système
+  condition: >
+    spawned_process and
+    (proc.cmdline contains "; " or proc.cmdline contains "| " or
+     proc.cmdline contains "& " or proc.cmdline contains "&& " or
+     proc.cmdline contains "|| " or proc.cmdline contains "`" or
+     proc.cmdline contains "$(" or proc.cmdline contains ">" or
+     proc.cmdline contains "whoami" or proc.cmdline contains "id" or
+     proc.cmdline contains "cat /etc/passwd" or proc.cmdline contains "curl" or
+     proc.cmdline contains "wget" or proc.cmdline contains "nc -" or
+     proc.cmdline contains "bash -c" or proc.cmdline contains "sh -c")
+  output: >
+    🚨 COMMAND INJECTION DETECTED (user=%user.name container=%container.name 
+    command=%proc.cmdline parent=%proc.pname pid=%proc.pid)
+  priority: CRITICAL
+  tags: [injection, command, rce, attack]
+  source: syscall
+
+- rule: LDAP Injection Attempt
+  desc: Détecte les tentatives d'injection LDAP
+  condition: >
+    (evt.type = execve or spawned_process) and
+    (proc.cmdline contains "*)" or proc.cmdline contains "*)(" or
+     proc.cmdline contains "|(uid=" or proc.cmdline contains "|(cn=" or
+     proc.cmdline contains "(objectClass=*)")
+  output: >
+    🚨 LDAP INJECTION DETECTED (user=%user.name container=%container.name 
+    command=%proc.cmdline)
+  priority: WARNING
+  tags: [injection, ldap, attack]
+  source: syscall
+
+- rule: XPath Injection Attempt
+  desc: Détecte les injections XPath
+  condition: >
+    (evt.type = execve or spawned_process) and
+    (proc.cmdline contains "' or " or proc.cmdline contains "'] | " or
+     proc.cmdline contains "x' or 1=1")
+  output: >
+    🚨 XPATH INJECTION DETECTED (user=%user.name container=%container.name 
+    command=%proc.cmdline)
+  priority: WARNING
+  tags: [injection, xpath, attack]
+  source: syscall
+
+# ============================================================================
+# 2. FILE ATTACKS - Attaques sur les fichiers
+# ============================================================================
+
+- rule: Path Traversal Attack
+  desc: Détecte les tentatives de path traversal
+  condition: >
+    (evt.type in (open, openat, openat2) and evt.dir = "<") and
+    (fd.name contains "../" or fd.name contains "..%2F" or 
+     fd.name contains "..%5C" or fd.name contains "/etc/passwd" or 
+     fd.name contains "/etc/shadow" or fd.name startswith "C:" or
+     fd.name contains "....//")
+  output: >
+    🚨 PATH TRAVERSAL DETECTED (user=%user.name container=%container.name 
+    file=%fd.name process=%proc.name command=%proc.cmdline)
+  priority: CRITICAL
+  tags: [file_attack, path_traversal, lfi, attack]
+  source: syscall
+
+- rule: Sensitive File Access
+  desc: Détecte l'accès à des fichiers sensibles
+  condition: >
+    (evt.type in (open, openat, openat2) and evt.dir = "<") and
+    (fd.name in (/etc/passwd, /etc/shadow, /etc/sudoers, /root/.ssh/id_rsa, 
+                  /root/.ssh/authorized_keys, /home/*/.ssh/id_rsa,
+                  /var/www/html/.env, /app/.env, users.json, credentials.json,
+                  config.json, secrets.txt, passwords.txt))
+  output: >
+    🔓 SENSITIVE FILE ACCESS (user=%user.name container=%container.name 
+    file=%fd.name process=%proc.name pid=%proc.pid)
+  priority: WARNING
+  tags: [file_attack, data_exposure, sensitive_data]
+  source: syscall
+
+- rule: Webshell Upload Detected
+  desc: Détecte l'upload de webshells
+  condition: >
+    (evt.type in (open, openat, openat2) and evt.dir = ">" and
+     (fd.name glob "*.php" or fd.name glob "*.jsp" or 
+      fd.name glob "*.aspx" or fd.name glob "*.py")) and
+    (proc.cmdline contains "<?php" or proc.cmdline contains "eval" or
+     proc.cmdline contains "system" or proc.cmdline contains "exec" or
+     proc.cmdline contains "shell_exec" or proc.cmdline contains "passthru" or
+     proc.cmdline contains "@eval" or proc.cmdline contains "Runtime.getRuntime()")
+  output: >
+    🚨 WEBSHELL UPLOAD DETECTED (user=%user.name container=%container.name 
+    file=%fd.name process=%proc.name command=%proc.cmdline)
+  priority: CRITICAL
+  tags: [webshell, file_upload, persistence, attack]
+  source: syscall
+
+- rule: Suspicious File Upload
+  desc: Détecte les uploads de fichiers suspects
+  condition: >
+    (evt.type in (open, openat, openat2) and evt.dir = ">" and
+     (fd.name glob "*.php" or fd.name glob "*.jsp" or 
+      fd.name glob "*.aspx" or fd.name glob "*.exe" or
+      fd.name glob "*.sh" or fd.name glob "*.bat" or
+      fd.name glob ".htaccess"))
+  output: >
+    ⚠️ SUSPICIOUS FILE UPLOAD (user=%user.name container=%container.name 
+    file=%fd.name size=%fd.size process=%proc.name)
+  priority: WARNING
+  tags: [file_upload, malware, attack]
+  source: syscall
+
+# ============================================================================
+# 3. SHELL & PROCESS ATTACKS
+# ============================================================================
+
+- rule: Shell Spawned in Container
+  desc: Détecte un shell interactif dans un conteneur
+  condition: >
+    spawned_process and container and
+    proc.name in (bash, sh, zsh, dash, ash, ksh, csh, tcsh) and
+    proc.tty != 0
+  output: >
+    🐚 SHELL SPAWNED IN CONTAINER (user=%user.name container=%container.name 
+    shell=%proc.name command=%proc.cmdline parent=%proc.pname)
+  priority: WARNING
+  tags: [shell, container_breakout, access]
+  source: syscall
+
+- rule: Reverse Shell Detected
+  desc: Détecte les tentatives de reverse shell
+  condition: >
+    spawned_process and
+    ((proc.name in (nc, ncat, netcat) and 
+      (proc.cmdline contains "-e" or proc.cmdline contains "/bin/bash" or proc.cmdline contains "/bin/sh")) or
+     (proc.cmdline contains "bash -i" or proc.cmdline contains "sh -i") or
+     (proc.cmdline contains "/dev/tcp/" or proc.cmdline contains "/dev/udp/") or
+     (proc.cmdline contains "python -c" and proc.cmdline contains "socket") or
+     (proc.cmdline contains "perl -e" and proc.cmdline contains "socket"))
+  output: >
+    🚨 REVERSE SHELL DETECTED (user=%user.name container=%container.name 
+    command=%proc.cmdline process=%proc.name)
+  priority: CRITICAL
+  tags: [reverse_shell, backdoor, persistence, attack]
+  source: syscall
+
+- rule: Suspicious Network Tool
+  desc: Détecte l'utilisation d'outils réseau suspects
+  condition: >
+    spawned_process and
+    proc.name in (nmap, masscan, zmap, nc, netcat, socat, tcpdump, 
+                  wireshark, tshark, nikto, sqlmap, metasploit, msfconsole)
+  output: >
+    ⚠️ SUSPICIOUS NETWORK TOOL (user=%user.name container=%container.name 
+    tool=%proc.name command=%proc.cmdline)
+  priority: WARNING
+  tags: [reconnaissance, attack_tool, security]
+  source: syscall
+
+# ============================================================================
+# 4. DATA EXFILTRATION
+# ============================================================================
+
+- rule: Data Exfiltration via DNS
+  desc: Détecte l'exfiltration de données via DNS
+  condition: >
+    (evt.type = execve or spawned_process) and
+    (proc.cmdline contains "nslookup" or proc.cmdline contains "dig" or
+     proc.cmdline contains "host ") and
+    (proc.cmdline contains "base64" or fd.name contains "base64")
+  output: >
+    🚨 DNS EXFILTRATION DETECTED (user=%user.name container=%container.name 
+    command=%proc.cmdline)
+  priority: WARNING
+  tags: [exfiltration, dns, data_theft, attack]
+  source: syscall
+
+- rule: Suspicious Network Connection
+  desc: Détecte les connexions réseau suspectes
+  condition: >
+    (evt.type = connect and evt.dir = "<" and
+     (fd.sip != "127.0.0.1" and fd.sip != "::1") and
+     container and
+     not fd.sip in (prometheus, grafana, loki, postgres, pushgateway))
+  output: >
+    📡 SUSPICIOUS OUTBOUND CONNECTION (user=%user.name container=%container.name 
+    dest=%fd.sip:%fd.sport process=%proc.name)
+  priority: NOTICE
+  tags: [network, exfiltration, c2]
+  source: syscall
+
+- rule: Large Data Transfer
+  desc: Détecte les transferts de données volumineux
+  condition: >
+    (evt.type = sendto or evt.type = sendmsg) and
+    evt.buffer_length > 1000000 and container
+  output: >
+    📤 LARGE DATA TRANSFER (user=%user.name container=%container.name 
+    size=%evt.buffer_length bytes dest=%fd.sip:%fd.sport)
+  priority: NOTICE
+  tags: [exfiltration, data_transfer]
+  source: syscall
+
+# ============================================================================
+# 5. CREDENTIAL ACCESS
+# ============================================================================
+
+- rule: Password File Access
+  desc: Détecte l'accès aux fichiers de mots de passe
+  condition: >
+    (evt.type in (open, openat, openat2) and evt.dir = "<") and
+    (fd.name in (/etc/passwd, /etc/shadow, /etc/security/opasswd) or
+     fd.name contains "password" or fd.name contains "credential" or
+     fd.name contains "secret" or fd.name contains ".env")
+  output: >
+    🔑 PASSWORD FILE ACCESS (user=%user.name container=%container.name 
+    file=%fd.name process=%proc.name)
+  priority: WARNING
+  tags: [credential_access, password, sensitive]
+  source: syscall
+
+- rule: SSH Key Access
+  desc: Détecte l'accès aux clés SSH
+  condition: >
+    (evt.type in (open, openat, openat2) and evt.dir = "<") and
+    (fd.name contains ".ssh/" or fd.name contains "id_rsa" or
+     fd.name contains "id_dsa" or fd.name contains "id_ecdsa" or
+     fd.name contains "id_ed25519" or fd.name contains "authorized_keys")
+  output: >
+    🔐 SSH KEY ACCESS (user=%user.name container=%container.name 
+    file=%fd.name process=%proc.name)
+  priority: CRITICAL
+  tags: [credential_access, ssh, attack]
+  source: syscall
+
+# ============================================================================
+# 6. PERSISTENCE MECHANISMS
+# ============================================================================
+
+- rule: Cron Job Modification
+  desc: Détecte la modification des tâches cron
+  condition: >
+    (evt.type in (open, openat, openat2) and evt.dir = ">") and
+    (fd.name startswith "/etc/cron" or fd.name contains "crontab" or
+     fd.name = "/var/spool/cron/crontabs")
+  output: >
+    ⏰ CRON JOB MODIFICATION (user=%user.name container=%container.name 
+    file=%fd.name process=%proc.name)
+  priority: WARNING
+  tags: [persistence, cron, backdoor]
+  source: syscall
+
+- rule: Startup Script Modification
+  desc: Détecte la modification des scripts de démarrage
+  condition: >
+    (evt.type in (open, openat, openat2) and evt.dir = ">") and
+    (fd.name startswith "/etc/init" or fd.name startswith "/etc/rc" or
+     fd.name = "/etc/profile" or fd.name = "/etc/bash.bashrc" or
+     fd.name contains ".bashrc" or fd.name contains ".bash_profile")
+  output: >
+    🚀 STARTUP SCRIPT MODIFIED (user=%user.name container=%container.name 
+    file=%fd.name process=%proc.name)
+  priority: WARNING
+  tags: [persistence, startup, backdoor]
+  source: syscall
+
+# ============================================================================
+# 7. PRIVILEGE ESCALATION
+# ============================================================================
+
+- rule: Privilege Escalation Attempt
+  desc: Détecte les tentatives d'élévation de privilèges
+  condition: >
+    spawned_process and
+    (proc.name in (sudo, su, pkexec) or
+     proc.cmdline contains "chmod +s" or
+     proc.cmdline contains "chmod 4755")
+  output: >
+    ⬆️ PRIVILEGE ESCALATION ATTEMPT (user=%user.name container=%container.name 
+    command=%proc.cmdline process=%proc.name)
+  priority: CRITICAL
+  tags: [privilege_escalation, sudo, attack]
+  source: syscall
+
+- rule: Docker Socket Access
+  desc: Détecte l'accès au socket Docker (container escape)
+  condition: >
+    (evt.type in (open, openat, openat2)) and
+    fd.name = "/var/run/docker.sock" and
+    container
+  output: >
+    🐳 DOCKER SOCKET ACCESS (user=%user.name container=%container.name 
+    process=%proc.name command=%proc.cmdline)
+  priority: CRITICAL
+  tags: [container_escape, docker, privilege_escalation]
+  source: syscall
+
+# ============================================================================
+# 8. RECONNAISSANCE & SCANNING
+# ============================================================================
+
+- rule: Port Scanning Detected
+  desc: Détecte les scans de ports
+  condition: >
+    (evt.type = connect and evt.dir = "<") and
+    (proc.name in (nmap, masscan, zmap, nc, netcat) or
+     evt.count > 10)
+  output: >
+    🔍 PORT SCANNING DETECTED (user=%user.name container=%container.name 
+    dest=%fd.sip:%fd.sport process=%proc.name)
+  priority: NOTICE
+  tags: [reconnaissance, port_scan, attack]
+  source: syscall
+
+- rule: File System Enumeration
+  desc: Détecte l'énumération du système de fichiers
+  condition: >
+    spawned_process and
+    (proc.name in (find, locate, ls) and
+     (proc.cmdline contains "-name" or proc.cmdline contains "-type f" or
+      proc.cmdline contains "*.conf" or proc.cmdline contains "*.key"))
+  output: >
+    📂 FILE SYSTEM ENUMERATION (user=%user.name container=%container.name 
+    command=%proc.cmdline)
+  priority: NOTICE
+  tags: [reconnaissance, enumeration]
+  source: syscall
+
+# ============================================================================
+# 9. API ATTACKS
+# ============================================================================
+
+- rule: Excessive API Requests
+  desc: Détecte un volume anormal de requêtes API
+  condition: >
+    evt.type = sendto and container and
+    (proc.cmdline contains "curl" or proc.cmdline contains "wget" or
+     proc.cmdline contains "requests" or proc.cmdline contains "http") and
+    evt.count > 100
+  output: >
+    📡 EXCESSIVE API REQUESTS (user=%user.name container=%container.name 
+    count=%evt.count process=%proc.name)
+  priority: NOTICE
+  tags: [api_abuse, ddos, attack]
+  source: syscall
+
+# ============================================================================
+# 10. DESERIALIZATION ATTACKS
+# ============================================================================
+
+- rule: Insecure Deserialization
+  desc: Détecte les tentatives de désérialisation dangereuse
+  condition: >
+    (evt.type = execve or spawned_process) and
+    (proc.cmdline contains "pickle" or proc.cmdline contains "yaml.load" or
+     proc.cmdline contains "unserialize" or proc.cmdline contains "readObject")
+  output: >
+    🔓 INSECURE DESERIALIZATION (user=%user.name container=%container.name 
+    command=%proc.cmdline)
+  priority: CRITICAL
+  tags: [deserialization, rce, attack]
+  source: syscall
+
+# ============================================================================
+# 11. CONTAINER SPECIFIC
+# ============================================================================
+
+- rule: Container Escape Attempt
+  desc: Détecte les tentatives d'évasion de conteneur
+  condition: >
+    spawned_process and container and
+    (proc.cmdline contains "/host/" or
+     proc.cmdline contains "nsenter" or
+     proc.cmdline contains "unshare" or
+     proc.cmdline contains "chroot /host")
+  output: >
+    🚨 CONTAINER ESCAPE ATTEMPT (user=%user.name container=%container.name 
+    command=%proc.cmdline)
+  priority: CRITICAL
+  tags: [container_escape, breakout, critical]
+  source: syscall
+
+- rule: Container Network Mode Change
+  desc: Détecte les changements de mode réseau du conteneur
+  condition: >
+    spawned_process and container and
+    (proc.cmdline contains "--net=host" or
+     proc.cmdline contains "--privileged")
+  output: >
+    🌐 CONTAINER NETWORK MODE CHANGE (container=%container.name 
+    command=%proc.cmdline)
+  priority: WARNING
+  tags: [container, network, privilege]
+  source: syscall
+
+# ============================================================================
+# 12. ATTACK PATTERNS - COMBINED DETECTION
+# ============================================================================
+
+- rule: Attack Chain Detected
+  desc: Détecte le chaînage d'attaques multiples
+  condition: >
+    spawned_process and
+    ((proc.name in (bash, sh) and proc.cmdline contains "curl") or
+     (proc.cmdline contains "wget" and proc.cmdline contains "-O") or
+     (proc.cmdline contains "python -c" and proc.cmdline contains "import os"))
+  output: >
+    🔗 ATTACK CHAIN DETECTED (user=%user.name container=%container.name 
+    command=%proc.cmdline process=%proc.name)
+  priority: CRITICAL
+  tags: [attack_chain, apt, multi_stage]
+  source: syscall
+
+- rule: Crypto Mining Activity
+  desc: Détecte les activités de cryptomining
+  condition: >
+    spawned_process and
+    (proc.name in (xmrig, minergate, cpuminer, cgminer) or
+     proc.cmdline contains "stratum+" or
+     proc.cmdline contains "mining")
+  output: >
+    💎 CRYPTO MINING DETECTED (user=%user.name container=%container.name 
+    process=%proc.name command=%proc.cmdline)
+  priority: WARNING
+  tags: [cryptomining, resource_abuse]
+  source: syscall
+
+# ============================================================================
+# 13. RATE LIMITING & ABUSE
+# ============================================================================
+
+- rule: Rate Limit Bypass Attempt
+  desc: Détecte les tentatives de contournement du rate limiting
+  condition: >
+    (evt.type = connect or evt.type = sendto) and
+    evt.count > 1000 in 60s
+  output: >
+    🚀 RATE LIMIT BYPASS (user=%user.name container=%container.name 
+    request_count=%evt.count process=%proc.name)
+  priority: NOTICE
+  tags: [rate_limit, abuse, attack]
+  source: syscall
+
+# ============================================================================
+# OUTPUT SETTINGS
+# ============================================================================
+
+- list: trusted_containers
+  items: [ecommerce-prometheus, ecommerce-grafana, ecommerce-loki]
+
+- list: sensitive_files
+  items: 
+    - /etc/passwd
+    - /etc/shadow
+    - /root/.ssh/id_rsa
+    - .env
+    - config.json
+    - credentials.json
+    - users.json
+
+- macro: never_true
+  condition: (evt.num=0)
+
+- macro: always_true
+  condition: (evt.num>=0)

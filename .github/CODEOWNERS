@@ -1,0 +1,31 @@
+# Code Owners for E-commerce A/B Test Dashboard
+
+# Default owners for everything in the repo
+* @Christh2022
+
+# Docker configuration
+/docker/ @Christh2022
+docker-compose*.yml @Christh2022
+
+# Kubernetes configuration
+/k8s/ @Christh2022
+
+# Grafana dashboards
+/grafana_dashboards_scripts/ @Christh2022
+/grafana/ @Christh2022
+
+# Security
+/falco/ @Christh2022
+SECURITY.md @Christh2022
+/docs/*SECURITY*.md @Christh2022
+/docs/*AUTHENTICATION*.md @Christh2022
+
+# Application
+/dashboard/ @Christh2022
+
+# CI/CD
+/.github/ @Christh2022
+
+# Documentation
+*.md @Christh2022
+/docs/ @Christh2022

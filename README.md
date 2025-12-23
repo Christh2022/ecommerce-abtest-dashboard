@@ -1,22 +1,729 @@
 # E-commerce Dashboard & A/B Testing 🚀
 
-Plateforme d'analyse e-commerce avec dashboard interactif et outils d'A/B testing utilisant Python, Dash, PostgreSQL, Docker et Grafana.
+[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Dash](https://img.shields.io/badge/Dash-2.14.2-brightgreen.svg)](https://dash.plotly.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Production-success.svg)](https://github.com/Christh2022/ecommerce-abtest-dashboard)
+
+> 🎤 **Nouveau : Interface vocale interactive !** L'application intègre maintenant la reconnaissance vocale pour une navigation mains-libres. Dites "Explique l'accueil" pour une présentation guidée !
+
+Plateforme d'analyse e-commerce avec dashboard interactif, assistant vocal intelligent et outils d'A/B testing utilisant Python, Dash, PostgreSQL, Docker et Grafana.
 
 ## 📊 Vue d'ensemble
 
 Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1.4M utilisateurs, 235K produits) pour créer un dashboard de visualisation et des outils d'analyse de performance e-commerce.
 
-### Objectifs
+### ✨ Fonctionnalités Principales
 
 - 📈 **Dashboard interactif** : 12+ pages de visualisation en temps réel des KPIs e-commerce
+- 🎤 **Assistant Vocal Intelligent** : Navigation vocale, explications guidées et commandes mains-libres
 - 🧪 **A/B Testing** : 16 scénarios de test simulés avec analyse statistique complète
 - 📉 **Analyse de tendances** : Métriques quotidiennes, entonnoirs de conversion, performance produits
 - 🎯 **Méthodologie** : Guide complet des bonnes pratiques en A/B testing
 - 🐳 **Déploiement** : Application containerisée avec Docker, PostgreSQL et Grafana
+- 🛡️ **Sécurité** : Protection multicouche, tests automatisés, monitoring temps réel
+
+### 🎤 Assistant Vocal - Nouvelle Fonctionnalité !
+
+L'application intègre un **système de reconnaissance vocale** pour une expérience utilisateur révolutionnaire :
+
+**Fonctionnalités vocales :**
+
+- 🗣️ **Accueil personnalisé** : "Bonjour Docteur Christh, comment puis-je vous aider ?"
+- 📚 **Explications détaillées** : Dites "Explique l'accueil" pour une présentation complète
+- 🧭 **Navigation vocale** : "Va sur le dashboard" ou "Montre-moi les conversions"
+- 🔄 **Interaction continue** : L'assistant écoute et répond en boucle
+
+**Commandes vocales disponibles :**
+
+```
+"Explique l'accueil" / "Explique l'application" → Présentation détaillée de la plateforme
+"Dashboard" / "Tableau de bord" → Redirection vers le dashboard principal
+"Connexion" / "Connecter" → Redirection vers la page de connexion
+```
+
+**Compatibilité :** Chrome, Edge, Safari (Web Speech API)
+
+**Essayez maintenant :** Ouvrez http://localhost:8050 et parlez ! 🎙️
+
+## 🛡️ Sécurité - Important pour les Collaborateurs
+
+**📖 [GUIDE COMPLET DE SÉCURITÉ →](SECURITY_GUIDE_COLLABORATORS.md)** (Lecture obligatoire)
+
+### Protections Actives
+
+✅ **Authentification** : Flask-Login + bcrypt  
+✅ **Anti-DDoS** : Rate limiting 200 req/min (94.4% d'efficacité testée)  
+✅ **En-têtes HTTP** : CSP, X-Frame-Options, X-Content-Type-Options, etc.  
+✅ **Tests automatisés** : 41 types d'attaques (SQL injection, XSS, CSRF...)  
+✅ **Monitoring** : Grafana + 32 alertes en temps réel
+
+### 🧪 Tests de l'Application
+
+#### Lancer la Suite de Tests Complète
+
+```bash
+# Windows
+bin\run_tests.bat
+
+# Linux/Mac
+./bin/run_tests.sh
+
+# Ou directement avec Python
+python run_tests.py
+```
+
+**Ce qui est testé** :
+
+- ✅ Connexion au serveur (port 8050)
+- ✅ Page d'accueil publique (landing page)
+- ✅ Page de connexion
+- ✅ Système d'authentification
+- ✅ Protection des pages sécurisées
+- ✅ Services Docker (dash-app, postgres, grafana, prometheus)
+
+**📊 Résultat attendu** :
+
+```
+╔════════════════════════════════════════════════════════════╗
+║   E-Commerce A/B Test Dashboard - Suite de tests         ║
+╚════════════════════════════════════════════════════════════╝
+
+✓ PASS      Connexion serveur
+✓ PASS      Landing page
+✓ PASS      Page de connexion
+✓ PASS      Authentification
+✓ PASS      Pages protégées
+✓ PASS      Services Docker
+
+Résultat: 6/6 tests réussis
+🎉 Tous les tests sont passés !
+```
+
+**⚙️ Configuration** : Modifiez `run_tests.py` si vous avez changé les identifiants par défaut :
+
+```python
+TEST_USER = {
+    "username": "admin",
+    "password": "admin123"  # À modifier selon votre configuration
+}
+```
+
+**📚 Plus d'informations** : Consultez le [Guide Sécurité Collaborateurs](SECURITY_GUIDE_COLLABORATORS.md) pour :
+
+- Procédures de test complètes
+- Bonnes pratiques de développement sécurisé
+- Que faire en cas d'incident de sécurité
+- Ressources de formation cybersécurité
+
+---
+
+## 🚀 Démarrage Rapide - Guide Collaborateur
+
+### ⚡ Installation en 5 Minutes
+
+#### 1️⃣ Prérequis (à installer avant de commencer)
+
+| Logiciel       | Version minimum | Lien de téléchargement                                                               | Vérification       |
+| -------------- | --------------- | ------------------------------------------------------------------------------------ | ------------------ |
+| Docker Desktop | 24.0+           | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop) | `docker --version` |
+| Git            | 2.40+           | [git-scm.com/downloads](https://git-scm.com/downloads)                               | `git --version`    |
+| Python         | 3.10+           | [python.org](https://www.python.org/downloads/)                                      | `python --version` |
+
+**Configuration système requise** :
+
+- 💾 RAM : Minimum 4 GB disponible (8 GB recommandé)
+- 💿 Espace disque : 5 GB libre
+- 🌐 Connexion Internet (pour le premier démarrage)
+
+#### 2️⃣ Cloner le Projet
+
+```bash
+# Cloner le dépôt
+git clone https://github.com/Christh2022/ecommerce-abtest-dashboard.git
+
+# Aller dans le répertoire
+cd ecommerce-abtest-dashboard
+
+# Vérifier que vous êtes sur la bonne branche
+git branch
+```
+
+#### 3️⃣ Installer les Dépendances Python
+
+```bash
+# Créer un environnement virtuel (optionnel mais recommandé)
+python -m venv venv
+
+# Activer l'environnement virtuel
+# Windows :
+venv\Scripts\activate
+# Linux/Mac :
+source venv/bin/activate
+
+# Installer les dépendances
+pip install -r requirements.txt
+```
+
+#### 4️⃣ Lancer les Services Docker
+
+```bash
+# Démarrer tous les conteneurs
+docker compose -f docker-compose.secure.yml up -d --build
+
+# ⏱️ Attendre 2-3 minutes que tous les services démarrent
+```
+
+**Ce qui se passe en arrière-plan** :
+
+- 🐳 Construction des images Docker personnalisées
+- 🗄️ Création de la base de données PostgreSQL
+- 📊 Démarrage de Grafana pour la visualisation
+- 🔍 Lancement de Prometheus pour les métriques
+- 📝 Initialisation de Loki pour les logs
+- 🎨 Démarrage de l'application Dash
+
+#### 5️⃣ Vérifier que Tout Fonctionne
+
+```bash
+# Vérifier l'état des services (tous doivent être "Up" et "healthy")
+docker compose -f docker-compose.secure.yml ps
+
+# Vous devriez voir 7-8 conteneurs en cours d'exécution :
+# ✅ ecommerce-dashboard (healthy)
+# ✅ ecommerce-postgres (healthy)
+# ✅ ecommerce-grafana (healthy)
+# ✅ ecommerce-prometheus (healthy)
+# ✅ ecommerce-loki
+# ✅ ecommerce-promtail
+# ✅ ecommerce-exporter
+# ✅ ecommerce-postgres-exporter
+```
+
+#### 6️⃣ Importer les Données (IMPORTANT !)
+
+Les tables PostgreSQL sont créées automatiquement mais **vides**. Vous devez charger les données.
+
+**⚠️ ATTENTION** : Sur Windows, l'option `-w /` peut causer une erreur. Utilisez la méthode ci-dessous qui fonctionne sur **tous les systèmes** :
+
+```bash
+# Étape 1 : Copier les scripts et données nécessaires
+docker cp scripts/import_data_to_postgres.py ecommerce-dashboard:/tmp/
+docker cp scripts/fix_numeric_overflow.py ecommerce-dashboard:/tmp/
+docker cp data/clean ecommerce-dashboard:/tmp/data
+
+# Étape 2 : Corriger le schéma de la base de données (OBLIGATOIRE)
+# Cette étape corrige les colonnes NUMERIC(5,4) qui ne peuvent pas stocker les pourcentages (0-100)
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && python fix_numeric_overflow.py"
+
+# Vous devriez voir :
+# ✅ user_behavior.bounce_rate → NUMERIC(6,2)
+# ✅ products_summary.conversion_rate → NUMERIC(6,2)
+# ✅ ab_test_results.conversion_rate → NUMERIC(6,2)
+# ✅ ab_test_results.statistical_significance → NUMERIC(6,2)
+# ✅ funnel_stages.conversion_rate → NUMERIC(6,2)
+
+# Étape 3 : Exécuter l'import des données
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "
+cd /tmp &&
+sed 's|Path(__file__).parent.parent / '\''data'\'' / '\''clean'\''|Path('\''/tmp/data'\'')|g' import_data_to_postgres.py > import_fixed.py &&
+python import_fixed.py
+"
+
+# Étape 4 : ✅ Vérifier que l'import a réussi
+docker exec -e DB_HOST=postgres ecommerce-dashboard python -c "import psycopg2; conn = psycopg2.connect(host='postgres', database='ecommerce_db', user='dashuser', password='dashpass'); cur = conn.cursor(); cur.execute('SELECT COUNT(*) FROM daily_metrics'); dm = cur.fetchone()[0]; cur.execute('SELECT COUNT(*) FROM products_summary'); ps = cur.fetchone()[0]; cur.execute('SELECT COUNT(*) FROM funnel_stages'); fs = cur.fetchone()[0]; cur.execute('SELECT COUNT(*) FROM ab_test_results'); ab = cur.fetchone()[0]; cur.execute('SELECT COUNT(*) FROM traffic_sources'); ts = cur.fetchone()[0]; print(f'✅ daily_metrics: {dm} rows'); print(f'✅ products_summary: {ps:,} rows'); print(f'✅ funnel_stages: {fs} rows'); print(f'✅ ab_test_results: {ab} rows'); print(f'✅ traffic_sources: {ts} rows')"
+```
+
+**✅ Résultat attendu** :
+
+```
+✅ daily_metrics: 139 rows
+✅ products_summary: 235,061 rows
+✅ funnel_stages: 417 rows
+✅ ab_test_results: 480 rows
+✅ traffic_sources: 139 rows
+```
+
+**⏱️ Durée de l'import** : ~2 minutes (correction schéma) + ~2 minutes (import des données)
+
+**💡 Note importante** : La correction du schéma (Étape 2) est **obligatoire** et doit être exécutée **avant** l'import des données. Elle modifie les colonnes de pourcentage de NUMERIC(5,4) à NUMERIC(6,2) pour permettre le stockage de valeurs de 0 à 100.
+
+**🔧 Résolution des problèmes courants** :
+
+<details>
+<summary>❌ Erreur "numeric field overflow" (si Étape 2 non exécutée)</summary>
+
+Si vous avez oublié l'Étape 2, vous verrez cette erreur :
+
+```
+psycopg2.errors.NumericValueOutOfRange: numeric field overflow
+DETAIL: A field with precision 5, scale 4 must round to an absolute value less than 10^1.
+```
+
+**Solution** : Retournez à l'Étape 2 et exécutez le script de correction du schéma :
+
+```bash
+docker exec -e DB_HOST=postgres ecommerce-dashboard sh -c "cd /tmp && python fix_numeric_overflow.py"
+```
+
+Puis relancez l'import (Étape 3).
+
+</details>
+
+<details>
+<summary>❌ Erreur "CSV not found" lors de l'import</summary>
+
+Vérifiez que les fichiers CSV sont bien copiés :
+
+```bash
+# Vérifier que les fichiers sont présents
+docker exec ecommerce-dashboard sh -c "ls -la /tmp/data/*.csv | head -10"
+
+# Vous devriez voir : daily_metrics.csv, products_summary.csv, etc.
+```
+
+Si les fichiers ne sont pas là, recommencez l'Étape 1 (docker cp).
+
+</details>
+
+**💡 Pourquoi cette méthode ?** : L'import se fait depuis l'intérieur du réseau Docker, ce qui évite les problèmes de connexion localhost sur Windows et les problèmes de chemins relatifs. La correction du schéma est nécessaire car les données de pourcentage sont stockées au format 0-100 et non 0.00-1.00.
+
+#### 7️⃣ Créer les Dashboards Grafana
+
+Les dashboards Grafana doivent être créés après l'import des données (prend ~2 minutes).
+
+**🎯 Méthode 1 : Script Automatique (Recommandé)**
+
+```bash
+# Windows
+bin\run_all_dashboards.bat
+
+# Linux/Mac
+./bin/run_all_dashboards.sh
+
+# Ou directement avec Python
+python run_all_dashboards.py
+```
+
+Ce script exécute automatiquement tous les scripts de création de dashboards dans l'ordre avec un résumé détaillé.
+
+**🔧 Méthode 2 : Exécution Manuelle**
+
+```bash
+# Installer les dépendances si nécessaire
+pip install requests python-dotenv
+
+# Exécuter tous les scripts de création de dashboards
+python grafana_dashboards_scripts/create_dashboards_1_3.py
+python grafana_dashboards_scripts/create_dashboards_4_6.py
+python grafana_dashboards_scripts/create_bi_dashboard.py
+python grafana_dashboards_scripts/create_full_dashboard.py
+python grafana_dashboards_scripts/create_monitoring_dashboard.py
+python grafana_dashboards_scripts/create_prometheus_dashboard.py
+```
+
+**✅ Messages de confirmation attendus** :
+
+```
+✓ Product Performance Analysis created successfully
+✓ Customer Segmentation Analysis created successfully
+✓ Customer Journey & Funnel Analysis created successfully
+✓ E-Commerce A/B Test Analytics created successfully
+✓ Cohort Analysis & Retention created successfully
+✓ Predictive Analytics & Forecasting created successfully
+✓ Business Intelligence & Decision Support created successfully
+✓ E-Commerce Full Overview Dashboard created successfully
+✓ E-Commerce Monitoring Dashboard created successfully
+✓ E-Commerce Dashboard (Prometheus) created successfully
+```
+
+**📊 Dashboards créés (10 au total)** :
+
+1. Product Performance Analysis
+2. Customer Segmentation Analysis
+3. Customer Journey & Funnel Analysis
+4. E-Commerce A/B Test Analytics
+5. Cohort Analysis & Retention
+6. Predictive Analytics & Forecasting
+7. Business Intelligence & Decision Support
+8. E-Commerce Full Overview Dashboard
+9. E-Commerce Monitoring Dashboard
+10. E-Commerce Dashboard (Prometheus)
+
+**🔧 En cas d'erreur** :
+
+```bash
+# Vérifier que Grafana est accessible
+curl http://localhost:3000/api/health
+
+# Vérifier les identifiants Grafana
+# Par défaut : admin / admin123
+```
+
+**✅ Messages de confirmation attendus** :
+
+```
+✓ Product Performance Analysis created successfully
+✓ Customer Segmentation Analysis created successfully
+✓ Customer Journey & Funnel Analysis created successfully
+✓ E-Commerce A/B Test Analytics created successfully
+✓ Cohort Analysis & Retention created successfully
+✓ Predictive Analytics & Forecasting created successfully
+✓ Business Intelligence & Decision Support created successfully
+✓ E-Commerce Full Overview Dashboard created successfully
+✓ E-Commerce Monitoring Dashboard created successfully
+✓ E-Commerce Dashboard (Prometheus) created successfully
+```
+
+**📊 Dashboards créés (10 au total)** :
+
+1. Product Performance Analysis
+2. Customer Segmentation Analysis
+3. Customer Journey & Funnel Analysis
+4. E-Commerce A/B Test Analytics
+5. Cohort Analysis & Retention
+6. Predictive Analytics & Forecasting
+7. Business Intelligence & Decision Support
+8. E-Commerce Full Overview Dashboard
+9. E-Commerce Monitoring Dashboard
+10. E-Commerce Dashboard (Prometheus)
+
+**🔧 En cas d'erreur** :
+
+```bash
+# Vérifier que Grafana est accessible
+curl http://localhost:3000/api/health
+
+# Vérifier les identifiants Grafana
+# Par défaut : admin / admin123
+```
+
+#### 8️⃣ Accéder aux Applications
+
+| Application           | URL                                            | Identifiants        | Description                                            |
+| --------------------- | ---------------------------------------------- | ------------------- | ------------------------------------------------------ |
+| 🎨 **Dashboard Dash** | [http://localhost:8050](http://localhost:8050) | admin / admin123    | Application principale avec 12 pages + Assistant Vocal |
+| 📊 **Grafana**        | [http://localhost:3000](http://localhost:3000) | admin / admin123    | 10 dashboards de monitoring                            |
+| 🔍 **Prometheus**     | [http://localhost:9090](http://localhost:9090) | Aucun               | Métriques en temps réel                                |
+| 🗄️ **PostgreSQL**     | localhost:5432                                 | dashuser / dashpass | Base de données (connexion via client SQL)             |
+
+> **🎤 Astuce :** Une fois sur http://localhost:8050, cliquez sur la page puis dites "Explique l'accueil" pour découvrir toutes les fonctionnalités !
+
+---
+
+### 🎯 Tester que Tout Fonctionne
+
+**Test 1 : Dashboard Dash**
+
+1. Ouvrir http://localhost:8050
+2. Vous devriez voir la page d'accueil avec des KPIs
+
+**Test 2 : Grafana**
+
+1. Ouvrir http://localhost:3000
+2. Se connecter avec admin / admin123
+3. Aller dans Dashboards → Vous devriez voir 10 dashboards
+
+**Test 3 : Données PostgreSQL**
+
+```bash
+# Vérifier le nombre de produits
+docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c "SELECT COUNT(*) as nb_produits FROM products_summary;"
+# Devrait afficher un nombre > 0
+```
+
+---
+
+### � Tests de Sécurité Automatisés
+
+Le projet inclut un système complet de **détection d'attaques en temps réel** avec 41 types d'attaques simulées et monitoring via Grafana.
+
+#### 🚀 Lancement Rapide des Tests de Sécurité
+
+**Windows** :
+
+```bash
+# Double-cliquer sur le fichier ou exécuter dans cmd :
+lancer_tests_securite.bat
+```
+
+**Linux/Mac** :
+
+```bash
+# Rendre le script exécutable et lancer :
+chmod +x lancer_tests_securite.sh
+./lancer_tests_securite.sh
+```
+
+Le script effectue automatiquement :
+
+1. ✅ Vérification des services (Dashboard, Prometheus, Pushgateway)
+2. 🎯 Lancement de 41 tests d'attaque sur l'application
+3. 📊 Envoi des métriques vers Prometheus
+4. 📈 Affichage du résumé des résultats
+
+#### 📊 Visualisation des Alertes dans Grafana
+
+**Accéder au Dashboard de Sécurité** :
+
+1. Ouvrir [http://localhost:3000](http://localhost:3000)
+2. Se connecter avec `admin` / `admin123`
+3. Aller dans **Dashboards** → **Security Attacks - Real-time Monitoring**
+
+**Dashboard inclut 8 panneaux** :
+
+- 🎯 Compteur total des attaques détectées
+- 🔴 Attaques critiques (SQL injection, Command injection, etc.)
+- 🟠 Attaques haute sévérité (XSS, CSRF, etc.)
+- 🟡 Attaques moyenne sévérité (Information disclosure, etc.)
+- 📈 Taux d'attaques par minute
+- 📊 Distribution par catégorie et sévérité
+- 📋 Tableau des 20 dernières attaques
+
+#### 🚨 Règles d'Alerte Configurées
+
+**32+ règles d'alerte actives** incluant :
+
+- 🔴 **Critical** : SQL Injection, Command Injection, Path Traversal
+- 🟠 **High** : XSS, CSRF, File Upload, Authentication Bypass
+- 🟡 **Medium** : Information Disclosure, Weak Cryptography
+
+Les alertes se déclenchent **30-60 secondes** après détection d'une attaque.
+
+#### 🔍 Types d'Attaques Testées (41 au total)
+
+| Catégorie                   | Nombre | Exemples                                     |
+| --------------------------- | ------ | -------------------------------------------- |
+| 🗄️ Injection SQL            | 5      | UNION attacks, Blind SQL, Time-based SQLi    |
+| 💻 Injection de Commandes   | 3      | OS command injection, Shell injection        |
+| 🌐 Cross-Site Scripting     | 4      | Stored XSS, Reflected XSS, DOM XSS           |
+| 🔐 Authentification         | 6      | Brute force, Session hijacking, Token bypass |
+| 📁 Manipulation de Fichiers | 5      | Path traversal, File upload, LFI/RFI         |
+| 🔒 Sécurité Session         | 4      | Session fixation, Cookie hijacking           |
+| 🛡️ CSRF                     | 3      | Token bypass, Same-site bypass               |
+| 📊 Information Disclosure   | 4      | Error exposure, Directory listing            |
+| 🔓 Access Control           | 3      | IDOR, Privilege escalation                   |
+| ⚡ DoS/Resource Abuse       | 4      | Rate limit bypass, Resource exhaustion       |
+
+#### 🛠️ Test Manuel (avancé)
+
+```bash
+# Activer l'environnement virtuel
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Linux/Mac
+
+# Lancer les tests
+python test_security_simple.py
+
+# Résultats attendus :
+# ✅ 41 attaques testées
+# ✅ Métriques envoyées à Prometheus
+# ✅ Rapports générés dans security-reports/attack-results/
+```
+
+#### 📁 Fichiers et Documentation
+
+- `test_security_simple.py` - Script de test principal (41 attaques)
+- `GUIDE_COLLABORATEURS.md` - Guide complet pour collaborateurs
+- `grafana/dashboards/security-attacks-realtime.json` - Dashboard Grafana
+- `grafana/provisioning/alerting/attack-alerts.yml` - Règles d'alerte (32+)
+- `security-reports/attack-results/` - Rapports JSON des tests
+
+#### ⚠️ Notes Importantes
+
+- Les tests sont **non destructifs** et utilisent l'endpoint `/health` de l'application
+- Toutes les attaques sont **simulées** et **loggées** uniquement
+- Les métriques sont conservées dans Prometheus pendant 15 jours
+- Falco n'est pas disponible sur WSL2 (incompatibilité kernel)
+
+---
+
+### �🛠️ Commandes Utiles au Quotidien
+
+#### Redémarrer les Services
+
+```bash
+# Redémarrer tous les services
+docker compose -f docker-compose.secure.yml restart
+
+# Redémarrer un service spécifique
+docker compose -f docker-compose.secure.yml restart grafana
+```
+
+#### Voir les Logs
+
+```bash
+# Logs de tous les services
+docker compose -f docker-compose.secure.yml logs -f
+
+# Logs d'un service spécifique
+docker logs ecommerce-dashboard -f
+docker logs ecommerce-postgres -f
+docker logs ecommerce-grafana -f
+```
+
+#### Arrêter les Services
+
+```bash
+# Arrêter sans supprimer les données
+docker compose -f docker-compose.secure.yml down
+
+# Arrêter ET supprimer toutes les données (⚠️ ATTENTION)
+docker compose -f docker-compose.secure.yml down -v
+```
+
+#### Reconstruire après Modifications du Code
+
+```bash
+# Reconstruire et redémarrer
+docker compose -f docker-compose.secure.yml up -d --build
+
+# Forcer la reconstruction complète
+docker compose -f docker-compose.secure.yml build --no-cache
+docker compose -f docker-compose.secure.yml up -d
+```
+
+---
+
+### 🆘 Résolution des Problèmes Courants
+
+#### ❌ Problème : "Port already in use"
+
+```bash
+# Trouver quel processus utilise le port
+# Windows :
+netstat -ano | findstr :8050
+netstat -ano | findstr :3000
+
+# Linux/Mac :
+lsof -i :8050
+lsof -i :3000
+
+# Solution : Arrêter le processus ou changer le port dans docker-compose.secure.yml
+```
+
+#### ❌ Problème : "Container is unhealthy"
+
+```bash
+# Voir les détails de santé du conteneur
+docker inspect ecommerce-postgres --format='{{.State.Health}}'
+
+# Voir les logs pour comprendre le problème
+docker logs ecommerce-postgres --tail 50
+
+# Solution : Redémarrer le conteneur problématique
+docker compose -f docker-compose.secure.yml restart postgres
+```
+
+#### ❌ Problème : "No data in Grafana dashboards"
+
+```bash
+# 1. Vérifier que PostgreSQL contient des données
+docker exec -e DB_HOST=postgres ecommerce-dashboard python -c "import psycopg2; conn = psycopg2.connect(host='postgres', database='ecommerce_db', user='dashuser', password='dashpass'); cur = conn.cursor(); cur.execute('SELECT COUNT(*) FROM daily_metrics'); print(f'daily_metrics: {cur.fetchone()[0]} rows'); cur.execute('SELECT COUNT(*) FROM products_summary'); print(f'products_summary: {cur.fetchone()[0]} rows')"
+
+# Si le résultat est 0, refaites l'import des données (Étape 6)
+
+# 2. Vérifier que l'exporter Prometheus fonctionne
+curl http://localhost:9200/metrics 2>/dev/null | grep ecommerce
+
+# 3. Vérifier que Prometheus scrape l'exporter
+# Ouvrir http://localhost:9090/targets et vérifier que "ecommerce-exporter" est UP
+
+# 4. Recréer les dashboards Grafana si nécessaire (Étape 7)
+python grafana_dashboards_scripts/create_dashboards_1_3.py
+python grafana_dashboards_scripts/create_dashboards_4_6.py
+# ... (tous les autres scripts)
+```
+
+#### ❌ Problème : "Cannot import psycopg2" lors de la création des dashboards
+
+```bash
+# Installer les dépendances Python localement
+pip install psycopg2-binary requests python-dotenv
+
+# Réessayer la création des dashboards
+python grafana_dashboards_scripts/create_dashboards_1_3.py
+```
+
+**Note** : Cette erreur apparaît uniquement lors de l'exécution des scripts de création de dashboards Grafana depuis votre machine locale, pas lors de l'import des données qui s'exécute dans le conteneur Docker.
+
+---
+
+### 📚 Structure du Projet
+
+```
+ecommerce-abtest-dashboard/
+├── dashboard/              # Application Dash (Frontend)
+│   ├── app.py             # Point d'entrée principal
+│   ├── pages/             # Pages du dashboard
+│   └── components/        # Composants réutilisables
+├── data/
+│   └── clean/             # Données CSV nettoyées
+├── docker/                # 🆕 Dockerfiles du projet
+│   ├── Dockerfile         # Image principale Dash
+│   ├── Dockerfile.exporter        # Image exporteur Prometheus
+│   ├── Dockerfile.dashboard-init  # Image init dashboards
+│   └── README.md          # Documentation des Dockerfiles
+├── grafana/
+│   ├── dashboards/        # Fichiers JSON des dashboards
+│   └── provisioning/      # Configuration Grafana
+├── grafana_dashboards_scripts/  # 🆕 Scripts de création des dashboards
+│   ├── create_dashboards_1_3.py # Dashboards 1-3
+│   ├── create_dashboards_4_6.py # Dashboards 4-6
+│   ├── create_bi_dashboard.py   # BI Dashboard
+│   ├── create_full_dashboard.py # Full Dashboard
+│   ├── create_monitoring_dashboard.py
+│   ├── create_prometheus_dashboard.py
+│   └── README.md          # Documentation des scripts
+├── bin/                   # 🆕 Scripts exécutables
+│   ├── run_all_dashboards.bat   # Windows - Créer dashboards
+│   ├── run_all_dashboards.sh    # Linux/Mac - Créer dashboards
+│   ├── run_tests.bat            # Windows - Lancer tests
+│   ├── run_tests.sh             # Linux/Mac - Lancer tests
+│   └── README.md          # Documentation des scripts
+├── scripts/               # Scripts d'import et d'analyse
+│   ├── import_data_to_postgres.py  # Import des données
+│   └── init_db.sql        # Initialisation de la DB
+├── run_all_dashboards.py  # Script Python pour créer tous les dashboards
+├── docker-compose.secure.yml  # Configuration Docker
+└── README.md              # Ce fichier
+```
+
+**🆕 Nouveautés** :
+
+- Les scripts de création de dashboards Grafana sont organisés dans `grafana_dashboards_scripts/`
+- Les Dockerfiles sont regroupés dans `docker/`
+- Les scripts exécutables (.bat/.sh) sont dans `bin/`
+
+---
+
+### 🤝 Contribution
+
+Pour contribuer au projet :
+
+1. Créer une branche : `git checkout -b feature/ma-fonctionnalite`
+2. Faire vos modifications
+3. Tester localement : `docker compose -f docker-compose.secure.yml up -d --build`
+4. Commit : `git commit -m "feat: description"`
+5. Push : `git push origin feature/ma-fonctionnalite`
+6. Créer une Pull Request sur GitHub
+
+---
+
+### 📞 Support
+
+- 📧 Email : [votre-email@example.com]
+- 💬 Slack : #ecommerce-dashboard
+- 📖 Documentation complète : [docs/README.md](docs/)
+
+---
+
+---
 
 ## ✨ Démo en Ligne
 
-**Dashboard accessible à** : http://127.0.0.1:8050
+**Dashboard accessible à** : http://localhost:8050
 
 **Pages disponibles** :
 
@@ -32,6 +739,21 @@ Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1
 - 📈 Visualisations - Graphiques avancés
 - 📚 Méthodologie - Guide complet
 - ℹ️ À Propos - Documentation projet
+
+**Grafana Dashboards** : http://localhost:3000 (admin/admin123)
+
+Après avoir exécuté les scripts ci-dessus, vous aurez accès à 10 dashboards :
+
+- Business Intelligence & Decision Support
+- Cohort Analysis & Retention
+- Customer Journey & Funnel Analysis
+- Customer Segmentation Analysis
+- E-Commerce A/B Test Analytics
+- E-Commerce Dashboard (Prometheus)
+- E-Commerce Monitoring Dashboard
+- Predictive Analytics & Forecasting
+- Product Performance Analysis
+- Real-Time Performance Monitoring
 
 ---
 
@@ -383,7 +1105,7 @@ python scripts/generate_products_summary.py
 
 ### 🚧 Milestone 5 : Docker & Déploiement
 
-**Statut** : EN COURS (0/14 issues)  
+**Statut** : EN COURS (11/14 issues complétées)  
 **Branche** : `feature/docker-setup`  
 **Date** : Décembre 2025
 
@@ -391,29 +1113,36 @@ python scripts/generate_products_summary.py
 
 #### Containerisation Dash App (Issues #28-31)
 
-- [ ] **#28** - Créer Dockerfile pour l'application Dash
-- [ ] **#29** - Créer docker-compose.yml multi-services
-- [ ] **#30** - Tester build de l'image Docker
-- [ ] **#31** - Tester run et accès port 8050
+- [x] **#28** - Créer Dockerfile pour l'application Dash ✅
+- [x] **#29** - Créer docker-compose.yml multi-services ✅
+- [x] **#30** - Tester build de l'image Docker ✅
+- [x] **#31** - Tester run et accès port 8050 ✅
 
 #### PostgreSQL Integration (Issues #41-43)
 
-- [ ] **#41** - Créer service Postgres dans docker-compose
-- [ ] **#42** - Créer script de migration/init SQL
-- [ ] **#43** - Importer les KPIs dans Postgres automatiquement
+- [x] **#41** - Créer service Postgres dans docker-compose ✅
+- [x] **#42** - Créer script de migration/init SQL ✅
+- [x] **#43** - Importer les KPIs dans Postgres automatiquement ✅
 
 #### Grafana Monitoring (Issues #44-48)
 
-- [ ] **#44** - Ajouter Grafana dans docker-compose
-- [ ] **#45** - Configurer datasource Postgres
-- [ ] **#46** - Créer dashboard Grafana (JSON)
+- [x] **#44** - Ajouter Grafana dans docker-compose ✅
+- [x] **#45** - Configurer datasource Postgres ✅
+- [x] **#46** - Créer dashboard Grafana (JSON) ✅
 - [ ] **#47** - Panels : sessions, conversion, revenues, erreurs
-- [ ] **#48** - Test accès http://localhost:3000
+- [x] **#48** - Test accès http://localhost:3000 ✅
 
-#### Tests & Optimisation (Issues #49-50)
+#### Sécurité & Monitoring (Issues #50, #52-53, #55-56)
 
-- [ ] **#49** - docker-compose up — tests complets
-- [ ] **#50** - Optimiser volumes et réseaux
+- [x] **#50** - Optimiser volumes et réseaux ✅
+- [x] **#52** - Configurer Falco pour monitoring sécurité ✅
+- [x] **#53** - Ajouter Loki et Promtail pour collecte logs ✅
+- [x] **#55** - Configurer Grafana pour afficher les logs de sécurité ✅
+- [x] **#56** - Ajouter alertes (connexions suspectes, shell, modifications fichiers) ✅
+
+#### Tests Complets (Issue #49)
+
+- [ ] **#49** - docker-compose up — tests complets end-to-end
 
 **Architecture cible** :
 
@@ -523,7 +1252,42 @@ Ce projet utilise le dataset RetailRocket sous licence publique Kaggle.
 
 ---
 
-**Dernière mise à jour** : 11 décembre 2025  
-**Version** : 1.0.0  
+**Dernière mise à jour** : 17 décembre 2025  
+**Version** : 1.1.0  
 **Milestones complétés** : 4/5 ✅  
 **Issues résolues** : 43/57
+
+**Changelog v1.1.0** (17 décembre 2025) :
+
+- ✨ **NOUVEAU** : Assistant vocal intelligent avec reconnaissance vocale
+- 🎤 Système de commandes vocales pour navigation mains-libres
+- 🗣️ Explications guidées de l'application par la voix
+- 🔄 Interaction continue avec questions/réponses automatiques
+- 📢 Synthèse vocale multilingue (français)
+- 🎨 Amélioration des icônes Font Awesome (v6.5.1)
+- 📝 Documentation enrichie avec section assistant vocal
+
+**Changelog v1.0.1** (14 décembre 2025) :
+
+- ✅ Correction du problème de numeric overflow lors de l'import des données
+- ✅ Ajout du script `fix_numeric_overflow.py` pour corriger automatiquement le schéma
+- ✅ Mise à jour de la documentation avec les étapes correctes d'import
+- ✅ Amélioration des instructions pour les collaborateurs
+
+---
+
+## 🎯 Roadmap Future
+
+### Version 1.2.0 (À venir)
+
+- 🤖 Extension des commandes vocales (20+ commandes)
+- 📊 Navigation vocale vers toutes les pages du dashboard
+- 🎨 Visualisation réactive aux commandes vocales
+- 🌍 Support multilingue (anglais, espagnol)
+
+### Version 2.0.0 (Q1 2026)
+
+- 🧠 Intégration d'IA pour analyses prédictives
+- 📈 Recommandations automatiques basées sur les KPIs
+- 🔔 Alertes vocales en temps réel
+- 📱 Application mobile avec assistant vocal

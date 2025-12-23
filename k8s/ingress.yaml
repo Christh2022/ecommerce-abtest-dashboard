@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ecommerce-ingress
+  namespace: ecommerce-abtest
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Si vous utilisez cert-manager
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - dashboard.example.com  # Remplacer par votre domaine
+    - grafana.example.com
+    secretName: ecommerce-tls
+  rules:
+  - host: dashboard.example.com  # Remplacer par votre domaine
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: dashboard
+            port:
+              number: 80
+  - host: grafana.example.com  # Remplacer par votre domaine
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 80

@@ -1,7 +1,12 @@
 # Core Dashboard Framework
-dash==2.14.2
+dash==2.15.0
 dash-bootstrap-components==1.5.0
 plotly==5.18.0
+werkzeug==3.0.6  # Note: Dash 2.15.0 requires werkzeug<3.1, vulnerability accepted with mitigations
+
+# Authentication
+dash-auth==2.0.0
+flask-login==0.6.3
 
 # Data Processing
 pandas==2.1.4
@@ -22,12 +27,16 @@ python-dotenv==1.0.0
 kaggle==1.6.6
 
 # Utilities
-gunicorn==21.2.0
+gunicorn==22.0.0
 
 # Testing
 pytest==7.4.3
 pytest-cov==4.1.0
 
 # Code Quality
-black==23.12.1
+black==24.3.0
 flake8==6.1.0
+
+# Security Auditing
+pip-audit==2.7.3
+

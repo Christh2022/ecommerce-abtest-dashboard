@@ -1,0 +1,829 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: Security Attack Alerts
+    folder: Security
+    interval: 30s
+    rules:
+      # ========================================================================
+      # INJECTION ATTACKS
+      # ========================================================================
+      
+      - uid: sql_injection_alert
+        title: 🚨 SQL Injection Attack Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="sql_injection"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ SQL Injection attack detected! {{ $values.A }} attempts in the last 5 minutes. Check security logs immediately.'
+          summary: 'SQL Injection - CRITICAL Security Alert'
+          dashboard: 'Security Dashboard'
+        labels:
+          severity: critical
+          category: injection
+          attack_type: sql_injection
+          team: security
+
+      - uid: nosql_injection_alert
+        title: 🚨 NoSQL Injection Attack Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="nosql_injection"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ NoSQL Injection attack detected! {{ $values.A }} attempts in the last 5 minutes.'
+          summary: 'NoSQL Injection - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: injection
+          attack_type: nosql_injection
+
+      - uid: command_injection_alert
+        title: 🚨 Command Injection Attack Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="command_injection"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Command Injection attack detected! System commands may be executing. {{ $values.A }} attempts detected.'
+          summary: 'Command Injection - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: injection
+          attack_type: command_injection
+
+      - uid: ldap_injection_alert
+        title: 🚨 LDAP Injection Attack Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="ldap_injection"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ LDAP Injection attack detected! {{ $values.A }} attempts in the last 5 minutes.'
+          summary: 'LDAP Injection - HIGH Security Alert'
+        labels:
+          severity: high
+          category: injection
+          attack_type: ldap_injection
+
+      - uid: xpath_injection_alert
+        title: 🚨 XPath Injection Attack Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="xpath_injection"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ XPath Injection attack detected! {{ $values.A }} attempts in the last 5 minutes.'
+          summary: 'XPath Injection - HIGH Security Alert'
+        labels:
+          severity: high
+          category: injection
+          attack_type: xpath_injection
+
+      # ========================================================================
+      # DATA EXPOSURE & LEAKAGE
+      # ========================================================================
+
+      - uid: sensitive_data_exposure_alert
+        title: 🔓 Sensitive Data Exposure Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="sensitive_data_exposure"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Sensitive data has been exposed! {{ $values.A }} incidents detected. Immediate action required.'
+          summary: 'Sensitive Data Exposure - HIGH Security Alert'
+        labels:
+          severity: high
+          category: data_exposure
+          attack_type: sensitive_data_exposure
+
+      - uid: information_disclosure_alert
+        title: 📢 Information Disclosure Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="information_disclosure"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Information disclosure detected! System information may have leaked. {{ $values.A }} incidents.'
+          summary: 'Information Disclosure - MEDIUM Security Alert'
+        labels:
+          severity: medium
+          category: data_exposure
+          attack_type: information_disclosure
+
+      # ========================================================================
+      # DATA MANIPULATION
+      # ========================================================================
+
+      - uid: parameter_tampering_alert
+        title: 🔧 Parameter Tampering Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="parameter_tampering"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Parameter tampering detected! User input manipulation in progress. {{ $values.A }} attempts.'
+          summary: 'Parameter Tampering - HIGH Security Alert'
+        labels:
+          severity: high
+          category: data_manipulation
+          attack_type: parameter_tampering
+
+      - uid: mass_assignment_alert
+        title: 📝 Mass Assignment Attack Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="mass_assignment"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Mass assignment attack detected! Unauthorized field manipulation. {{ $values.A }} attempts.'
+          summary: 'Mass Assignment - HIGH Security Alert'
+        labels:
+          severity: high
+          category: data_manipulation
+          attack_type: mass_assignment
+
+      - uid: race_condition_alert
+        title: 🏃 Race Condition Exploitation Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="race_condition"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Race condition exploitation detected! Concurrent request abuse. {{ $values.A }} attempts.'
+          summary: 'Race Condition - HIGH Security Alert'
+        labels:
+          severity: high
+          category: data_manipulation
+          attack_type: race_condition
+
+      - uid: business_logic_abuse_alert
+        title: 💼 Business Logic Abuse Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="business_logic_abuse"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Business logic abuse detected! Application workflow manipulation. {{ $values.A }} attempts.'
+          summary: 'Business Logic Abuse - MEDIUM Security Alert'
+        labels:
+          severity: medium
+          category: data_manipulation
+          attack_type: business_logic_abuse
+
+      # ========================================================================
+      # FILE ATTACKS
+      # ========================================================================
+
+      - uid: file_upload_vulnerability_alert
+        title: 📤 Malicious File Upload Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="file_upload_vulnerability"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Malicious file upload detected! Potential webshell or malware. {{ $values.A }} attempts. CRITICAL!'
+          summary: 'File Upload Attack - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: file_attack
+          attack_type: file_upload
+
+      - uid: path_traversal_alert
+        title: 📁 Path Traversal Attack Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="path_traversal"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Path traversal attack detected! Unauthorized file system access. {{ $values.A }} attempts.'
+          summary: 'Path Traversal - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: file_attack
+          attack_type: path_traversal
+
+      - uid: lfi_alert
+        title: 📂 Local File Inclusion Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="local_file_inclusion"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ LFI attack detected! Local file inclusion attempt. {{ $values.A }} attempts.'
+          summary: 'Local File Inclusion - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: file_attack
+          attack_type: lfi
+
+      - uid: rfi_alert
+        title: 🌐 Remote File Inclusion Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="remote_file_inclusion"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ RFI attack detected! Remote file inclusion attempt. {{ $values.A }} attempts. CRITICAL!'
+          summary: 'Remote File Inclusion - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: file_attack
+          attack_type: rfi
+
+      # ========================================================================
+      # SERIALIZATION ATTACKS
+      # ========================================================================
+
+      - uid: deserialization_alert
+        title: 🔓 Insecure Deserialization Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="insecure_deserialization"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Insecure deserialization detected! Remote code execution risk. {{ $values.A }} attempts.'
+          summary: 'Insecure Deserialization - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: serialization
+          attack_type: deserialization
+
+      # ========================================================================
+      # ADVANCED INJECTIONS
+      # ========================================================================
+
+      - uid: blind_sql_injection_alert
+        title: 🔍 Blind SQL Injection Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="blind_sql_injection"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Blind SQL Injection detected! Time-based or boolean-based SQLi. {{ $values.A }} attempts.'
+          summary: 'Blind SQL Injection - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: advanced_injection
+          attack_type: blind_sql
+
+      - uid: second_order_injection_alert
+        title: 🔄 Second-Order Injection Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="second_order_injection"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Second-order injection detected! Stored payload execution. {{ $values.A }} attempts.'
+          summary: 'Second-Order Injection - HIGH Security Alert'
+        labels:
+          severity: high
+          category: advanced_injection
+          attack_type: second_order
+
+      - uid: polyglot_injection_alert
+        title: 🎭 Polyglot Injection Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="polyglot_injection"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Polyglot injection detected! Multi-context payload. {{ $values.A }} attempts.'
+          summary: 'Polyglot Injection - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: advanced_injection
+          attack_type: polyglot
+
+      # ========================================================================
+      # API ATTACKS
+      # ========================================================================
+
+      - uid: api_data_exposure_alert
+        title: 📡 API Excessive Data Exposure Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="excessive_data_exposure"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ API excessive data exposure detected! Sensitive data in API responses. {{ $values.A }} incidents.'
+          summary: 'API Data Exposure - HIGH Security Alert'
+        labels:
+          severity: high
+          category: api_attack
+          attack_type: api_data_exposure
+
+      - uid: bola_alert
+        title: 🔐 BOLA Attack Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="bola"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ BOLA attack detected! Broken Object Level Authorization. {{ $values.A }} unauthorized access attempts.'
+          summary: 'BOLA - HIGH Security Alert'
+        labels:
+          severity: high
+          category: api_attack
+          attack_type: bola
+
+      - uid: graphql_abuse_alert
+        title: 🔺 GraphQL Abuse Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="graphql_abuse"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ GraphQL abuse detected! Introspection or batch query abuse. {{ $values.A }} attempts.'
+          summary: 'GraphQL Abuse - MEDIUM Security Alert'
+        labels:
+          severity: medium
+          category: api_attack
+          attack_type: graphql
+
+      # ========================================================================
+      # SUPPLY CHAIN
+      # ========================================================================
+
+      - uid: dependency_exposure_alert
+        title: 📦 Vulnerable Dependencies Exposed
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="dependency_vulnerability_check"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Vulnerable dependencies exposed! Package information leaked. {{ $values.A }} exposures.'
+          summary: 'Dependency Exposure - MEDIUM Security Alert'
+        labels:
+          severity: medium
+          category: supply_chain
+          attack_type: dependency
+
+      # ========================================================================
+      # LOW & SLOW ATTACKS
+      # ========================================================================
+
+      - uid: slow_exfiltration_alert
+        title: 🐌 Slow Data Exfiltration Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="slow_data_exfiltration"}[10m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 1m
+        annotations:
+          description: '⚠️ Slow data exfiltration detected! Low and slow attack in progress. {{ $values.A }} attempts.'
+          summary: 'Slow Exfiltration - HIGH Security Alert'
+        labels:
+          severity: high
+          category: exfiltration
+          attack_type: slow_exfiltration
+
+      - uid: rate_limit_bypass_alert
+        title: 🚀 Rate Limit Bypass Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="rate_limit_bypass"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Rate limit bypass detected! Attacker evading rate limiting. {{ $values.A }} attempts.'
+          summary: 'Rate Limit Bypass - MEDIUM Security Alert'
+        labels:
+          severity: medium
+          category: evasion
+          attack_type: rate_limit_bypass
+
+      # ========================================================================
+      # PERSISTENCE ATTACKS
+      # ========================================================================
+
+      - uid: webshell_upload_alert
+        title: 🐚 Webshell Upload Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="webshell_detection"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '🚨 WEBSHELL UPLOAD DETECTED! Critical threat - immediate action required! {{ $values.A }} webshells uploaded.'
+          summary: 'Webshell Upload - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: persistence
+          attack_type: webshell
+
+      - uid: backdoor_alert
+        title: 🚪 Backdoor Creation Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="backdoor_functionality_abuse"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '🚨 Backdoor creation detected! Persistent access established. {{ $values.A }} attempts.'
+          summary: 'Backdoor - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: persistence
+          attack_type: backdoor
+
+      # ========================================================================
+      # DATA EXFILTRATION
+      # ========================================================================
+
+      - uid: dns_exfiltration_alert
+        title: 🌐 DNS Exfiltration Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="dns_exfiltration"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ DNS exfiltration detected! Data being exfiltrated via DNS queries. {{ $values.A }} attempts.'
+          summary: 'DNS Exfiltration - HIGH Security Alert'
+        labels:
+          severity: high
+          category: exfiltration
+          attack_type: dns_exfiltration
+
+      - uid: api_exfiltration_alert
+        title: 📤 API Data Exfiltration Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="api_legitimate_exfiltration"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '⚠️ Data exfiltration via legitimate API detected! {{ $values.A }} exfiltration attempts.'
+          summary: 'API Exfiltration - MEDIUM Security Alert'
+        labels:
+          severity: medium
+          category: exfiltration
+          attack_type: api_exfiltration
+
+      # ========================================================================
+      # ATTACK CHAINING
+      # ========================================================================
+
+      - uid: attack_chain_alert
+        title: 🔗 Attack Chaining Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'increase(security_attacks_total{attack_type="attack_chain_information_to_access"}[5m]) > 0'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 10s
+        annotations:
+          description: '🚨 ATTACK CHAINING DETECTED! Multiple vulnerabilities being exploited together. {{ $values.A }} chains detected. CRITICAL!'
+          summary: 'Attack Chaining - CRITICAL Security Alert'
+        labels:
+          severity: critical
+          category: advanced
+          attack_type: attack_chain
+
+      # ========================================================================
+      # OVERALL SECURITY METRICS
+      # ========================================================================
+
+      - uid: critical_vulnerabilities_found
+        title: 🚨 Critical Vulnerabilities Found
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'sum(increase(security_attacks_total{severity="critical"}[5m])) > 5'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 30s
+        annotations:
+          description: '🚨 MULTIPLE CRITICAL VULNERABILITIES FOUND! {{ $values.A }} critical issues in the last 5 minutes. Immediate response required!'
+          summary: 'Multiple Critical Vulnerabilities - EMERGENCY'
+        labels:
+          severity: critical
+          category: summary
+          attack_type: multiple
+
+      - uid: high_attack_volume
+        title: 📈 High Attack Volume Detected
+        condition: A
+        data:
+          - refId: A
+            queryType: ''
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'sum(increase(security_attacks_total[5m])) > 50'
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 1m
+        annotations:
+          description: '⚠️ HIGH ATTACK VOLUME! {{ $values.A }} total attacks in the last 5 minutes. System under active attack!'
+          summary: 'High Attack Volume - Security Alert'
+        labels:
+          severity: high
+          category: summary
+          attack_type: volume

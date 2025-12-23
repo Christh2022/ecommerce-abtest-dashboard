@@ -1,0 +1,412 @@
+# Configuration Docker - Version Sécurisée avec Ports Minimisés
+# Cette version expose uniquement les ports essentiels depuis l'hôte
+
+services:
+  # Dash Application
+  dash-app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: ecommerce-dashboard
+    ports:
+      # Port exposé uniquement pour l'accès utilisateur
+      - "127.0.0.1:8050:8050" # Bind to localhost only
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql://dashuser:dashpass@postgres:5432/ecommerce_db
+      - FLASK_DEBUG=False # SECURITY: Disable debug mode in production
+      - FLASK_ENV=production
+      - SECRET_KEY=717de09da767a91c002e8c45fc35844a8e380af1695a6c4db595ab043e6232c8 # SECURITY: Strong secret key for session signing
+    volumes:
+      - ./dashboard:/app/dashboard
+      - ./data/clean:/app/data/clean
+      - dash-logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - frontend-network
+      - backend-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import requests; requests.get('http://localhost:8050', timeout=5)",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: ecommerce-postgres
+    ports:
+      # Port accessible UNIQUEMENT depuis localhost pour admin
+      - "127.0.0.1:5432:5432"
+    environment:
+      - POSTGRES_DB=ecommerce_db
+      - POSTGRES_USER=dashuser
+      - POSTGRES_PASSWORD=dashpass
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_SHARED_BUFFERS=256MB
+      - POSTGRES_EFFECTIVE_CACHE_SIZE=1GB
+      - POSTGRES_WORK_MEM=16MB
+      - POSTGRES_MAINTENANCE_WORK_MEM=64MB
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/01_init.sql
+    networks:
+      - backend-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dashuser -d ecommerce_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+
+  # Prometheus for Metrics
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ecommerce-prometheus
+    ports:
+      # Accessible uniquement depuis localhost
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+      - "--storage.tsdb.retention.size=5GB"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+      - "--web.enable-lifecycle"
+    networks:
+      - monitoring-network
+      - backend-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    security_opt:
+      - no-new-privileges:true
+
+  # Prometheus Pushgateway for Attack Metrics
+  pushgateway:
+    image: prom/pushgateway:latest
+    container_name: ecommerce-pushgateway
+    ports:
+      - "127.0.0.1:9091:9091" # Accessible depuis localhost
+    networks:
+      - monitoring-network
+      - frontend-network # Ajout pour l'accessibilité depuis l'hôte
+    restart: unless-stopped
+    command:
+      - "--web.listen-address=:9091"
+      - "--persistence.interval=5m"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+    security_opt:
+      - no-new-privileges:true
+
+  # Postgres Exporter for Prometheus
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: ecommerce-postgres-exporter
+    environment:
+      - DATA_SOURCE_NAME=postgresql://dashuser:dashpass@postgres:5432/ecommerce_db?sslmode=disable
+    # PAS de port exposé - uniquement accessible depuis le réseau Docker interne
+    expose:
+      - "9187"
+    depends_on:
+      - postgres
+    networks:
+      - backend-network
+      - monitoring-network
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  # E-commerce Metrics Exporter for Prometheus
+  ecommerce-exporter:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.exporter
+    container_name: ecommerce-exporter
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=ecommerce_db
+      - DB_USER=dashuser
+      - DB_PASSWORD=dashpass
+      - EXPORTER_PORT=9200
+    # PAS de port exposé - uniquement accessible depuis le réseau Docker interne
+    expose:
+      - "9200"
+    depends_on:
+      - postgres
+    networks:
+      - backend-network
+      - monitoring-network
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  # Grafana for Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ecommerce-grafana
+    ports:
+      # Accessible depuis localhost uniquement par défaut
+      # Pour accès externe, utiliser un reverse proxy avec HTTPS
+      - "127.0.0.1:3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_SERVER_ROOT_URL=http://localhost:3000
+      - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
+      - GF_DATABASE_WAL=true
+      - GF_LOG_LEVEL=warn
+      - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=10s
+      # Security headers
+      - GF_SECURITY_COOKIE_SECURE=false
+      - GF_SECURITY_COOKIE_SAMESITE=lax
+      - GF_SECURITY_STRICT_TRANSPORT_SECURITY=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      prometheus:
+        condition: service_healthy
+    networks:
+      - frontend-network
+      - monitoring-network
+      - backend-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test:
+        ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    user: "472:472" # Grafana user
+
+  # Falco Runtime Security - ENABLED
+  # Détection en temps réel des attaques de sécurité
+  falco:
+    image: falcosecurity/falco-no-driver:latest
+    container_name: ecommerce-falco
+    privileged: true
+    command:
+      - /usr/bin/falco
+      - -o
+      - json_output=true
+      - -o
+      - json_include_output_property=true
+      - -o
+      - log_stderr=true
+      - -o
+      - log_level=info
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - /sys/kernel/debug:/sys/kernel/debug:ro
+      - ./falco/falco.yaml:/etc/falco/falco.yaml:ro
+      - ./falco/security_attack_rules_v2.yaml:/etc/falco/security_attack_rules_v2.yaml:ro
+    networks:
+      - monitoring-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+        labels: "falco"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.2"
+          memory: 256M
+
+  # Loki for Log Aggregation
+  loki:
+    image: grafana/loki:latest
+    container_name: ecommerce-loki
+    ports:
+      # Accessible uniquement depuis localhost
+      - "127.0.0.1:3100:3100"
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - monitoring-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    security_opt:
+      - no-new-privileges:true
+
+  # Promtail for Log Collection (including Falco logs)
+  promtail:
+    image: grafana/promtail:latest
+    container_name: ecommerce-promtail
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      - ./promtail/promtail-falco.yml:/etc/promtail/promtail-falco.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - dash-logs:/var/log/dash:ro
+      - falco-logs:/var/log/falco:ro
+    command: -config.file=/etc/promtail/config.yml -config.expand-env=true
+    # PAS de port exposé
+    depends_on:
+      - loki
+      - falco
+    networks:
+      - monitoring-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  postgres-data:
+    driver: local
+    name: ecommerce-postgres-data
+    labels:
+      com.ecommerce.description: "PostgreSQL database data"
+      com.ecommerce.service: "postgres"
+
+  grafana-data:
+    driver: local
+    name: ecommerce-grafana-data
+    labels:
+      com.ecommerce.description: "Grafana dashboards and settings"
+      com.ecommerce.service: "grafana"
+
+  prometheus-data:
+    driver: local
+    name: ecommerce-prometheus-data
+    labels:
+      com.ecommerce.description: "Prometheus time-series database"
+      com.ecommerce.service: "prometheus"
+
+  dash-logs:
+    driver: local
+    name: ecommerce-dash-logs
+    labels:
+      com.ecommerce.description: "Dash application logs"
+      com.ecommerce.service: "dash-app"
+
+  loki-data:
+    driver: local
+    name: ecommerce-loki-data
+    labels:
+      com.ecommerce.description: "Loki log aggregation data"
+      com.ecommerce.service: "loki"
+
+  falco-logs:
+    driver: local
+    name: ecommerce-falco-logs
+    labels:
+      com.ecommerce.description: "Falco security event logs"
+      com.ecommerce.service: "falco"
+
+networks:
+  # Réseau Frontend - Accès utilisateur
+  frontend-network:
+    driver: bridge
+    name: ecommerce-frontend
+    internal: false
+    labels:
+      com.ecommerce.description: "Frontend network for user-facing services"
+      com.ecommerce.security: "public"
+
+  # Réseau Backend - Base de données et services internes
+  backend-network:
+    driver: bridge
+    name: ecommerce-backend
+    internal: true # Réseau interne - pas d'accès externe
+    labels:
+      com.ecommerce.description: "Backend network for database and internal services"
+      com.ecommerce.security: "private"
+
+  # Réseau Monitoring - Prometheus, Grafana, Loki
+  monitoring-network:
+    driver: bridge
+    name: ecommerce-monitoring
+    internal: true # Réseau interne
+    labels:
+      com.ecommerce.description: "Monitoring network for metrics and logs"
+      com.ecommerce.security: "private"

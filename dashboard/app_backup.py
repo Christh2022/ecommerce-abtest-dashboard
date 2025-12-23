@@ -12,6 +12,14 @@ from flask import request, redirect, session
 from flask_login import current_user
 from auth import AuthManager
 
+# Import text-to-speech for welcome message
+try:
+    import pyttsx3
+    TTS_AVAILABLE = True
+except ImportError:
+    TTS_AVAILABLE = False
+    logging.warning("pyttsx3 not available - voice greeting disabled")
+
 # Configure logging for application monitoring
 logging.basicConfig(
     level=logging.INFO,
@@ -25,8 +33,7 @@ app = Dash(
     use_pages=True,  # Enable multi-page functionality
     external_stylesheets=[
         dbc.themes.DARKLY,  # Dark theme
-        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css",  # Font Awesome icons (updated)
-        "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css",  # Font Awesome backup CDN
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css",  # Font Awesome icons
     ],
     suppress_callback_exceptions=True,
     title="E-Commerce A/B Test Dashboard",
@@ -60,24 +67,21 @@ def add_security_headers(response):
     response.headers['X-XSS-Protection'] = '1; mode=block'
     
     # Content Security Policy - restrict resource loading
-    # Ajout de media-src pour l'assistant vocal et domaines CDN nécessaires
     response.headers['Content-Security-Policy'] = (
         "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.plot.ly https://cdnjs.cloudflare.com; "
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; "
-        "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://cdnjs.cloudflare.com; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.plot.ly; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
+        "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; "
         "img-src 'self' data: https:; "
-        "connect-src 'self' https://cdn.jsdelivr.net; "
-        "media-src 'self' blob:"
+        "connect-src 'self'"
     )
     
     # Control referrer information
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     
     # Permissions policy (formerly Feature-Policy)
-    # Autoriser le microphone pour l'assistant vocal (permissif pour localhost)
     response.headers['Permissions-Policy'] = (
-        'geolocation=(), microphone=*, camera=(), '
+        'geolocation=(), microphone=(), camera=(), '
         'payment=(), usb=(), magnetometer=(), gyroscope=()'
     )
     
@@ -392,6 +396,16 @@ def toggle_header_sidebar(pathname):
 
 
 if __name__ == '__main__':
+    # Dire le message de bienvenue avec synthèse vocale
+    if TTS_AVAILABLE:
+        try:
+            engine = pyttsx3.init()
+            engine.setProperty('rate', 150)  # Vitesse de parole
+            engine.say("Bonjour Docteur Christh")
+            engine.runAndWait()
+        except Exception as e:
+            logger.warning(f"Text-to-speech error: {e}")
+    
     print("\n" + "="*60)
     print("🎩 Bonjour Docteur Christh !")
     print("="*60)
