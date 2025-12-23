@@ -37,33 +37,16 @@ Le projet utilise **GitHub Actions** pour automatiser les builds, tests, déploi
 
 ---
 
-### 2. **CD - Deploy** ([cd.yml](.github/workflows/cd.yml))
+### 2. **CD - Deploy** (DÉSACTIVÉ)
 
-**Déclenchement**:
+**Status**: ⚠️ **Workflow désactivé** - Renommé en `cd.yml.disabled`
 
-- Push sur `main`
-- Tags `v*.*.*`
-- Manuel via `workflow_dispatch`
+**Raison**: Déploiement en production géré manuellement pour l'instant.
 
-**Jobs**:
-
-1. **build-and-push** - Build et push des images
-   - 🐳 Build de toutes les images Docker
-   - 📦 Push vers GitHub Container Registry (ghcr.io)
-   - 🏷️ Tags: branch, PR, semver, sha
-2. **deploy-k8s** - Déploiement Kubernetes
-   - ☸️ Déploiement complet sur K8s
-   - ✅ Attente du rollout
-   - ✅ Vérification du déploiement
-3. **deploy-docker-compose** - Déploiement Docker Compose
-   - 📤 Copie des fichiers vers le serveur
-   - 🚀 Déploiement via SSH
-   - ✅ Vérification des services
-4. **create-release** - Création de release
-   - 📋 Release automatique pour les tags
-   - 📝 Notes de version
-5. **notify** - Notification
-   - 📧 Notification du statut du déploiement
+**Pour réactiver**: 
+```bash
+git mv .github/workflows/cd.yml.disabled .github/workflows/cd.yml
+```
 
 ---
 
@@ -71,13 +54,13 @@ Le projet utilise **GitHub Actions** pour automatiser les builds, tests, déploi
 
 **Déclenchement**:
 
-- Push sur `main` ou `develop` avec modifications dans `grafana_dashboards_scripts/`
-- Manuel via `workflow_dispatch`
+- Manuel via `workflow_dispatch` uniquement
 
 **Jobs**:
 
 - 📊 Création automatique des 10 dashboards Grafana
 - ✅ Vérification des dashboards créés
+- ⚠️ Nécessite secrets GRAFANA_URL, GRAFANA_USER, GRAFANA_PASSWORD
 
 ---
 

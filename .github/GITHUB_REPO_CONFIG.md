@@ -67,16 +67,21 @@ Fork pull request workflows from outside collaborators:
 
 #### Secrets à Configurer (Production):
 
+**Secrets Actifs**:
 | Secret Name        | Description               | Utilisé Dans   | Requis       |
 | ------------------ | ------------------------- | -------------- | ------------ |
 | `GRAFANA_URL`      | URL Grafana production    | dashboards.yml | ✅           |
 | `GRAFANA_USER`     | Username Grafana admin    | dashboards.yml | ✅           |
 | `GRAFANA_PASSWORD` | Password Grafana admin    | dashboards.yml | ✅           |
-| `DOCKER_USERNAME`  | Docker Hub username       | cd.yml         | ⚠️ Optionnel |
-| `DOCKER_PASSWORD`  | Docker Hub password       | cd.yml         | ⚠️ Optionnel |
-| `SSH_PRIVATE_KEY`  | Clé SSH pour déploiement  | cd.yml         | ⚠️ Optionnel |
-| `DEPLOY_HOST`      | Serveur de production     | cd.yml         | ⚠️ Optionnel |
-| `DEPLOY_USER`      | User SSH pour déploiement | cd.yml         | ⚠️ Optionnel |
+
+**Secrets CD (Déploiement Désactivé - cd.yml.disabled)**:
+| Secret Name        | Description               | Utilisé Dans          | Status                    |
+| ------------------ | ------------------------- | --------------------- | ------------------------- |
+| `DOCKER_USERNAME`  | Docker Hub username       | cd.yml (disabled)     | ❌ Non utilisé            |
+| `DOCKER_PASSWORD`  | Docker Hub password       | cd.yml (disabled)     | ❌ Non utilisé            |
+| `SSH_PRIVATE_KEY`  | Clé SSH pour déploiement  | cd.yml (disabled)     | ❌ Non utilisé            |
+| `DEPLOY_HOST`      | Serveur de production     | cd.yml (disabled)     | ❌ Non utilisé            |
+| `DEPLOY_USER`      | User SSH pour déploiement | cd.yml (disabled)     | ❌ Non utilisé            |
 
 #### Comment Ajouter un Secret:
 
@@ -271,7 +276,7 @@ uses: github/codeql-action/upload-sarif@v4
 | Workflow                  | Status               | Corrections Appliquées                            |
 | ------------------------- | -------------------- | ------------------------------------------------- |
 | **ci.yml**                | ✅ Prêt              | Permissions ajoutées, CodeQL v4, test-results fix |
-| **cd.yml**                | ✅ Prêt              | Permissions ajoutées                              |
+| **cd.yml**                | ⛔ Désactivé         | Renommé en cd.yml.disabled - Déploiement manuel   |
 | **dashboards.yml**        | ⚠️ Nécessite secrets | Permissions OK, secrets GRAFANA\_\* requis        |
 | **dependency-review.yml** | ⚠️ Désactivé         | Attend activation Dependency Graph                |
 | **security-audit.yml**    | ✅ Prêt              | Permissions ajoutées                              |
