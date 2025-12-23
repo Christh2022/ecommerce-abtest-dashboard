@@ -16,6 +16,12 @@ on:
           - staging
           - production
 
+permissions:
+  contents: read
+  packages: write
+  deployments: write
+  actions: read
+
 env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: ${{ github.repository_owner }}

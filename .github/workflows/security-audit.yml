@@ -13,6 +13,11 @@ on:
   schedule:
     - cron: "0 9 * * 1"
 
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
 jobs:
   pip-audit:
     name: Python Dependencies Security Audit
