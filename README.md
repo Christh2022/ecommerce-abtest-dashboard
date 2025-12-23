@@ -690,7 +690,8 @@ ecommerce-abtest-dashboard/
 └── README.md              # Ce fichier
 ```
 
-**🆕 Nouveautés** : 
+**🆕 Nouveautés** :
+
 - Les scripts de création de dashboards Grafana sont organisés dans `grafana_dashboards_scripts/`
 - Les Dockerfiles sont regroupés dans `docker/`
 - Les scripts exécutables (.bat/.sh) sont dans `bin/`

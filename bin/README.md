@@ -7,17 +7,21 @@ Ce dossier contient tous les scripts exécutables pour faciliter l'utilisation d
 ### 🎨 Dashboards Grafana
 
 #### `run_all_dashboards.bat` (Windows)
+
 Script batch pour créer tous les dashboards Grafana en une seule commande.
 
 **Utilisation:**
+
 ```cmd
 bin\run_all_dashboards.bat
 ```
 
 #### `run_all_dashboards.sh` (Linux/Mac)
+
 Script shell pour créer tous les dashboards Grafana en une seule commande.
 
 **Utilisation:**
+
 ```bash
 ./bin/run_all_dashboards.sh
 # ou
@@ -25,6 +29,7 @@ bash bin/run_all_dashboards.sh
 ```
 
 **Ce que fait ce script:**
+
 - ✅ Vérifie que Python est installé
 - ✅ Exécute `run_all_dashboards.py`
 - ✅ Crée automatiquement les 10 dashboards Grafana
@@ -35,17 +40,21 @@ bash bin/run_all_dashboards.sh
 ### 🧪 Tests
 
 #### `run_tests.bat` (Windows)
+
 Script batch pour exécuter tous les tests du projet.
 
 **Utilisation:**
+
 ```cmd
 bin\run_tests.bat
 ```
 
 #### `run_tests.sh` (Linux/Mac)
+
 Script shell pour exécuter tous les tests du projet.
 
 **Utilisation:**
+
 ```bash
 ./bin/run_tests.sh
 # ou
@@ -53,6 +62,7 @@ bash bin/run_tests.sh
 ```
 
 **Ce que fait ce script:**
+
 - ✅ Vérifie que Python est installé
 - ✅ Exécute `run_tests.py`
 - ✅ Lance tous les tests unitaires
@@ -95,13 +105,14 @@ run_tests.bat
 
 Les scripts de dashboards utilisent ces variables:
 
-| Variable | Description | Défaut |
-|----------|-------------|--------|
-| `GRAFANA_URL` | URL de Grafana | `http://localhost:3000` |
-| `GRAFANA_USER` | Utilisateur Grafana | `admin` |
-| `GRAFANA_PASSWORD` | Mot de passe | `admin123` |
+| Variable           | Description         | Défaut                  |
+| ------------------ | ------------------- | ----------------------- |
+| `GRAFANA_URL`      | URL de Grafana      | `http://localhost:3000` |
+| `GRAFANA_USER`     | Utilisateur Grafana | `admin`                 |
+| `GRAFANA_PASSWORD` | Mot de passe        | `admin123`              |
 
 **Exemple:**
+
 ```bash
 # Windows (CMD)
 set GRAFANA_URL=http://grafana.example.com:3000
@@ -118,7 +129,8 @@ export GRAFANA_URL=http://grafana.example.com:3000
 
 ## 🔍 Que Font Ces Scripts ?
 
-### run_all_dashboards.*
+### run_all_dashboards.\*
+
 1. Vérifie que Python est installé
 2. Exécute le script Python `run_all_dashboards.py`
 3. Ce script Python:
@@ -130,7 +142,8 @@ export GRAFANA_URL=http://grafana.example.com:3000
    - Crée le dashboard Prometheus
 4. Affiche un résumé avec statistiques
 
-### run_tests.*
+### run_tests.\*
+
 1. Vérifie que Python est installé
 2. Exécute le script Python `run_tests.py`
 3. Ce script Python:
@@ -192,19 +205,20 @@ python run_tests.py
 ```
 
 Les scripts batch/shell sont juste des wrappers pratiques qui:
+
 - Vérifient les prérequis
 - Gèrent les erreurs
 - Affichent des messages formatés
 
 ## 🎯 Avantages de Ces Scripts
 
-| Avantage | Description |
-|----------|-------------|
-| **Simplicité** | Une seule commande pour tout exécuter |
-| **Multi-plateforme** | Versions Windows et Unix |
-| **Vérifications** | Détection automatique des problèmes |
-| **Messages clairs** | Output formaté et lisible |
-| **Gestion d'erreurs** | Codes de retour appropriés |
+| Avantage              | Description                           |
+| --------------------- | ------------------------------------- |
+| **Simplicité**        | Une seule commande pour tout exécuter |
+| **Multi-plateforme**  | Versions Windows et Unix              |
+| **Vérifications**     | Détection automatique des problèmes   |
+| **Messages clairs**   | Output formaté et lisible             |
+| **Gestion d'erreurs** | Codes de retour appropriés            |
 
 ## 📊 Structure
 

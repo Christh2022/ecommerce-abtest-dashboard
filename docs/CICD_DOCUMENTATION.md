@@ -9,29 +9,27 @@ Le projet utilise **GitHub Actions** pour automatiser les builds, tests, déploi
 ### 1. **CI - Build and Test** ([ci.yml](.github/workflows/ci.yml))
 
 **Déclenchement**:
+
 - Push sur `main`, `develop`, ou `feature/*`
 - Pull requests vers `main` ou `develop`
 
 **Jobs**:
+
 1. **validate** - Validation de la structure du projet
    - ✅ Validation avec `validate_dashboard_organization.py`
    - ✅ Vérification de la syntaxe Python
-   
 2. **test** - Exécution des tests
    - ✅ Tests unitaires et d'intégration
    - ✅ Base de données PostgreSQL de test
    - ✅ Upload des résultats
-   
 3. **build-docker** - Build des images Docker
    - ✅ Build de `dashboard`
    - ✅ Build de `exporter`
    - ✅ Build de `dashboard-init`
    - ✅ Cache optimisé
-   
 4. **security-scan** - Scan de sécurité
    - ✅ Trivy vulnerability scanner
    - ✅ Upload vers GitHub Security
-   
 5. **lint** - Qualité du code
    - ✅ Flake8 (erreurs syntaxe)
    - ✅ Black (formatage)
@@ -42,30 +40,28 @@ Le projet utilise **GitHub Actions** pour automatiser les builds, tests, déploi
 ### 2. **CD - Deploy** ([cd.yml](.github/workflows/cd.yml))
 
 **Déclenchement**:
+
 - Push sur `main`
 - Tags `v*.*.*`
 - Manuel via `workflow_dispatch`
 
 **Jobs**:
+
 1. **build-and-push** - Build et push des images
    - 🐳 Build de toutes les images Docker
    - 📦 Push vers GitHub Container Registry (ghcr.io)
    - 🏷️ Tags: branch, PR, semver, sha
-   
 2. **deploy-k8s** - Déploiement Kubernetes
    - ☸️ Déploiement complet sur K8s
    - ✅ Attente du rollout
    - ✅ Vérification du déploiement
-   
 3. **deploy-docker-compose** - Déploiement Docker Compose
    - 📤 Copie des fichiers vers le serveur
    - 🚀 Déploiement via SSH
    - ✅ Vérification des services
-   
 4. **create-release** - Création de release
    - 📋 Release automatique pour les tags
    - 📝 Notes de version
-   
 5. **notify** - Notification
    - 📧 Notification du statut du déploiement
 
@@ -74,10 +70,12 @@ Le projet utilise **GitHub Actions** pour automatiser les builds, tests, déploi
 ### 3. **Create Grafana Dashboards** ([dashboards.yml](.github/workflows/dashboards.yml))
 
 **Déclenchement**:
+
 - Push sur `main` ou `develop` avec modifications dans `grafana_dashboards_scripts/`
 - Manuel via `workflow_dispatch`
 
 **Jobs**:
+
 - 📊 Création automatique des 10 dashboards Grafana
 - ✅ Vérification des dashboards créés
 
@@ -86,9 +84,11 @@ Le projet utilise **GitHub Actions** pour automatiser les builds, tests, déploi
 ### 4. **Dependency Review** ([dependency-review.yml](.github/workflows/dependency-review.yml))
 
 **Déclenchement**:
+
 - Pull requests vers `main` ou `develop`
 
 **Jobs**:
+
 - 🔍 Revue des dépendances
 - 🛡️ Check de sécurité avec `safety`
 - ⚠️ Fail si vulnérabilités modérées ou critiques
@@ -98,10 +98,12 @@ Le projet utilise **GitHub Actions** pour automatiser les builds, tests, déploi
 ### 5. **Cleanup** ([cleanup.yml](.github/workflows/cleanup.yml))
 
 **Déclenchement**:
+
 - Hebdomadaire (Dimanche à 2h)
 - Manuel via `workflow_dispatch`
 
 **Jobs**:
+
 - 🧹 Suppression des artifacts > 30 jours
 - 🧹 Suppression des images Docker > 30 jours
 - 💾 Conservation des 5 plus récents
@@ -112,16 +114,16 @@ Le projet utilise **GitHub Actions** pour automatiser les builds, tests, déploi
 
 ### GitHub Secrets à Configurer
 
-| Secret | Description | Requis Pour |
-|--------|-------------|-------------|
-| `GITHUB_TOKEN` | Token GitHub (auto) | CD, Cleanup |
-| `KUBECONFIG` | Config Kubernetes (base64) | Deploy K8s |
-| `DEPLOY_HOST` | Serveur de déploiement | Deploy Docker Compose |
-| `DEPLOY_USER` | User SSH | Deploy Docker Compose |
-| `DEPLOY_SSH_KEY` | Clé SSH privée | Deploy Docker Compose |
-| `GRAFANA_URL` | URL Grafana | Dashboards |
-| `GRAFANA_USER` | Username Grafana | Dashboards |
-| `GRAFANA_PASSWORD` | Password Grafana | Dashboards |
+| Secret             | Description                | Requis Pour           |
+| ------------------ | -------------------------- | --------------------- |
+| `GITHUB_TOKEN`     | Token GitHub (auto)        | CD, Cleanup           |
+| `KUBECONFIG`       | Config Kubernetes (base64) | Deploy K8s            |
+| `DEPLOY_HOST`      | Serveur de déploiement     | Deploy Docker Compose |
+| `DEPLOY_USER`      | User SSH                   | Deploy Docker Compose |
+| `DEPLOY_SSH_KEY`   | Clé SSH privée             | Deploy Docker Compose |
+| `GRAFANA_URL`      | URL Grafana                | Dashboards            |
+| `GRAFANA_USER`     | Username Grafana           | Dashboards            |
+| `GRAFANA_PASSWORD` | Password Grafana           | Dashboards            |
 
 ### Configuration des Secrets
 
@@ -143,6 +145,7 @@ gh secret set GRAFANA_PASSWORD --body "your-password"
 ### Branch Protection Rules
 
 **`main`**:
+
 - ✅ Require PR reviews (1 approbation)
 - ✅ Require status checks (CI doit passer)
 - ✅ Require up-to-date branches
@@ -151,6 +154,7 @@ gh secret set GRAFANA_PASSWORD --body "your-password"
 - ❌ Allow deletions
 
 **`develop`**:
+
 - ✅ Require status checks (CI doit passer)
 - ✅ Require up-to-date branches
 - ✅ Allow force pushes (pour rebase)
@@ -209,10 +213,12 @@ docker pull ghcr.io/christh2022/ecommerce-dashboard-init:latest
 ### Déploiement Automatique
 
 **Staging** (develop):
+
 - ✅ CI automatique sur chaque push
 - ✅ Déploiement Docker Compose automatique
 
 **Production** (main):
+
 - ✅ CI automatique sur chaque push
 - ✅ Build et push des images
 - ✅ Déploiement Kubernetes automatique
@@ -292,6 +298,7 @@ gh run view <run-id> --log
 ### Dependabot
 
 Configuration dans [.github/dependabot.yml](.github/dependabot.yml):
+
 - ✅ Updates Python packages hebdomadaires
 - ✅ Updates Docker images hebdomadaires
 - ✅ Updates GitHub Actions hebdomadaires
@@ -301,6 +308,7 @@ Configuration dans [.github/dependabot.yml](.github/dependabot.yml):
 ### Code Owners
 
 Configuration dans [.github/CODEOWNERS](.github/CODEOWNERS):
+
 - ✅ Review automatique sur les PRs
 - ✅ Protection par composant
 
@@ -324,11 +332,13 @@ gh run rerun <run-id> --job <job-id>
 ### Build Failures
 
 1. Vérifier la syntaxe:
+
    ```bash
    python -m py_compile dashboard/app.py
    ```
 
 2. Tester localement:
+
    ```bash
    python run_tests.py
    python tools/validate_dashboard_organization.py
@@ -343,11 +353,13 @@ gh run rerun <run-id> --job <job-id>
 ### Deploy Failures
 
 1. Vérifier les secrets:
+
    ```bash
    gh secret list
    ```
 
 2. Tester la connexion SSH:
+
    ```bash
    ssh $DEPLOY_USER@$DEPLOY_HOST
    ```

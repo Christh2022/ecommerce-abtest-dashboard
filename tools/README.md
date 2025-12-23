@@ -5,16 +5,19 @@ Ce dossier contient les scripts utilitaires et outils du projet.
 ## 📋 Scripts Disponibles
 
 ### 🔍 `ecommerce_exporter.py`
+
 **Exporteur de métriques Prometheus pour e-commerce**
 
 Script qui exporte les métriques de la base de données PostgreSQL vers Prometheus.
 
 **Utilisation:**
+
 ```bash
 python tools/ecommerce_exporter.py
 ```
 
 **Variables d'environnement:**
+
 - `DB_HOST` - Hôte PostgreSQL (défaut: localhost)
 - `DB_PORT` - Port PostgreSQL (défaut: 5432)
 - `DB_NAME` - Nom de la base de données (défaut: ecommerce_db)
@@ -26,11 +29,13 @@ python tools/ecommerce_exporter.py
 ---
 
 ### 📊 `import_dashboard.py`
+
 **Import de dashboards dans Grafana**
 
 Script pour importer des dashboards Grafana depuis des fichiers JSON.
 
 **Utilisation:**
+
 ```bash
 python tools/import_dashboard.py
 ```
@@ -38,16 +43,19 @@ python tools/import_dashboard.py
 ---
 
 ### 📊 `import_dashboard_to_grafana.py`
+
 **Import avancé de dashboards**
 
 Version améliorée pour l'import de dashboards dans Grafana avec plus d'options.
 
 **Utilisation:**
+
 ```bash
 python tools/import_dashboard_to_grafana.py
 ```
 
 **Variables d'environnement:**
+
 - `GRAFANA_URL` - URL de Grafana
 - `GRAFANA_USER` - Utilisateur Grafana
 - `GRAFANA_PASSWORD` - Mot de passe
@@ -55,16 +63,19 @@ python tools/import_dashboard_to_grafana.py
 ---
 
 ### ✅ `validate_dashboard_organization.py`
+
 **Validation de l'organisation du projet**
 
 Script de validation pour vérifier que tous les fichiers de dashboards sont correctement organisés.
 
 **Utilisation:**
+
 ```bash
 python tools/validate_dashboard_organization.py
 ```
 
 **Ce qu'il vérifie:**
+
 - ✅ Existence du dossier `grafana_dashboards_scripts/`
 - ✅ Présence de tous les scripts de dashboards
 - ✅ Syntaxe Python valide
@@ -91,6 +102,7 @@ python tools/validate_dashboard_organization.py
 ### Avec Docker
 
 L'exporteur est exécuté automatiquement dans le container `ecommerce-exporter`:
+
 ```bash
 docker-compose -f docker-compose.secure.yml up -d ecommerce-exporter
 ```
@@ -108,12 +120,14 @@ docker-compose -f docker-compose.secure.yml up -d ecommerce-exporter
 ## 🔧 Dépendances
 
 Ces scripts nécessitent:
+
 - Python 3.11+
 - `requests` - Pour les appels API
 - `psycopg2-binary` - Pour PostgreSQL (exporter)
 - `prometheus_client` - Pour l'exporteur
 
 Installation:
+
 ```bash
 pip install -r requirements.txt
 ```

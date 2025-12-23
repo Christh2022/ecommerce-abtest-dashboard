@@ -10,7 +10,7 @@ echo "=== Initialisation des Dashboards Grafana ==="
 echo "⏳ Attente de Grafana..."
 GRAFANA_URL="${GRAFANA_URL:-http://grafana:3000}"
 GRAFANA_USER="${GRAFANA_USER:-admin}"
-GRAFANA_PASSWORD="${GRAFANA_PASSWORD:-admin123}"
+GRAFANA_PASSWORD="${GRAFANA_PASSWORD:-changeme}"
 MAX_RETRIES=30
 RETRY_COUNT=0
 
@@ -75,6 +75,6 @@ echo ""
 echo "✅ Tous les dashboards ont été créés avec succès!"
 echo ""
 echo "🌐 Accédez à Grafana: http://localhost:3000"
-echo "   Utilisateur: admin"
-echo "   Mot de passe: admin123"
+echo "   Utilisateur: \$GRAFANA_USER"
+echo "   Mot de passe: Voir variable d'environnement GRAFANA_PASSWORD"
 echo ""

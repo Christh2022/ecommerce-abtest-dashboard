@@ -1,38 +1,38 @@
 name: Dependency Review
 
 on:
-  pull_request:
-    branches: [ main, develop ]
+    pull_request:
+        branches: [main, develop]
 
 permissions:
-  contents: read
-  pull-requests: write
+    contents: read
+    pull-requests: write
 
 jobs:
-  dependency-review:
-    name: Review Dependencies
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Dependency Review
-      uses: actions/dependency-review-action@v4
-      with:
-        fail-on-severity: moderate
-        
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-        
-    - name: Install safety
-      run: |
-        python -m pip install --upgrade pip
-        pip install safety
-        
-    - name: Check dependencies with safety
-      run: |
-        pip install -r requirements.txt
-        safety check || true
+    dependency-review:
+        name: Review Dependencies
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Dependency Review
+              uses: actions/dependency-review-action@v4
+              with:
+                  fail-on-severity: moderate
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install safety
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install safety
+
+            - name: Check dependencies with safety
+              run: |
+                  pip install -r requirements.txt
+                  safety check || true

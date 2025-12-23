@@ -115,6 +115,7 @@ ecommerce-abtest-dashboard/
 ## 🎯 Logique d'Organisation
 
 ### 1. **grafana_dashboards_scripts/** - Scripts Grafana
+
 - **Objectif** : Centraliser tous les scripts de création de dashboards Grafana
 - **Avantages** :
   - Séparation claire du code métier
@@ -123,6 +124,7 @@ ecommerce-abtest-dashboard/
   - Documentation centralisée
 
 ### 2. **docker/** - Dockerfiles
+
 - **Objectif** : Regrouper toutes les définitions d'images Docker
 - **Avantages** :
   - Structure claire pour les builds
@@ -131,6 +133,7 @@ ecommerce-abtest-dashboard/
   - Documentation centralisée des images
 
 ### 3. **bin/** - Scripts Exécutables
+
 - **Objectif** : Scripts wrapper pour Windows et Unix
 - **Avantages** :
   - Point d'entrée clair pour les utilisateurs
@@ -139,6 +142,7 @@ ecommerce-abtest-dashboard/
   - Vérification automatique des dépendances
 
 ### 4. **tools/** - Utilitaires
+
 - **Objectif** : Outils Python annexes et utilitaires
 - **Avantages** :
   - Séparation entre application et outils
@@ -151,29 +155,33 @@ ecommerce-abtest-dashboard/
 ### Démarrage Rapide
 
 1. **Créer tous les dashboards Grafana** :
+
    ```bash
    # Windows
    bin\run_all_dashboards.bat
-   
+
    # Unix/Mac
    ./bin/run_all_dashboards.sh
    ```
 
 2. **Lancer l'application complète** :
+
    ```bash
    docker-compose -f docker-compose.secure.yml up -d
    ```
 
 3. **Valider l'organisation** :
+
    ```bash
    python tools/validate_dashboard_organization.py
    ```
 
 4. **Exécuter les tests** :
+
    ```bash
    # Windows
    bin\run_tests.bat
-   
+
    # Unix/Mac
    ./bin/run_tests.sh
    ```
@@ -181,18 +189,21 @@ ecommerce-abtest-dashboard/
 ### Workflows Communs
 
 #### Créer un nouveau dashboard Grafana
+
 1. Créer un nouveau script dans `grafana_dashboards_scripts/`
 2. Suivre le template des scripts existants
 3. Mettre à jour `run_all_dashboards.py` si nécessaire
 4. Documenter dans `grafana_dashboards_scripts/README.md`
 
 #### Modifier l'image Docker
+
 1. Éditer le Dockerfile approprié dans `docker/`
 2. Rebuild avec `docker-compose build <service>`
 3. Tester localement
 4. Mettre à jour `docker/README.md` si nécessaire
 
 #### Ajouter un nouvel outil
+
 1. Créer le script dans `tools/`
 2. Documenter dans `tools/README.md`
 3. Ajouter les dépendances dans `requirements.txt`
@@ -202,28 +213,28 @@ ecommerce-abtest-dashboard/
 
 ### Documentation par Dossier
 
-| Dossier | Documentation | Description |
-|---------|--------------|-------------|
-| **grafana_dashboards_scripts/** | [README.md](grafana_dashboards_scripts/README.md) | Création et gestion des dashboards |
-| **docker/** | [README.md](docker/README.md) | Images Docker et containerisation |
-| **bin/** | [README.md](bin/README.md) | Scripts exécutables et wrappers |
-| **tools/** | [README.md](tools/README.md) | Utilitaires et scripts de maintenance |
-| **k8s/** | [README.md](k8s/README.md) | Déploiement Kubernetes |
-| **dashboard/** | [AUTH_README.md](dashboard/AUTH_README.md) | Application Dash et authentification |
-| **grafana/** | [README.md](grafana/README.md) | Configuration Grafana |
-| **promtail/** | [README.md](promtail/README.md) | Collecte de logs |
-| **loki/** | [README.md](loki/README.md) | Agrégation de logs |
-| **scripts/** | [README.md](scripts/README.md) | Scripts SQL et migrations |
+| Dossier                         | Documentation                                     | Description                           |
+| ------------------------------- | ------------------------------------------------- | ------------------------------------- |
+| **grafana_dashboards_scripts/** | [README.md](grafana_dashboards_scripts/README.md) | Création et gestion des dashboards    |
+| **docker/**                     | [README.md](docker/README.md)                     | Images Docker et containerisation     |
+| **bin/**                        | [README.md](bin/README.md)                        | Scripts exécutables et wrappers       |
+| **tools/**                      | [README.md](tools/README.md)                      | Utilitaires et scripts de maintenance |
+| **k8s/**                        | [README.md](k8s/README.md)                        | Déploiement Kubernetes                |
+| **dashboard/**                  | [AUTH_README.md](dashboard/AUTH_README.md)        | Application Dash et authentification  |
+| **grafana/**                    | [README.md](grafana/README.md)                    | Configuration Grafana                 |
+| **promtail/**                   | [README.md](promtail/README.md)                   | Collecte de logs                      |
+| **loki/**                       | [README.md](loki/README.md)                       | Agrégation de logs                    |
+| **scripts/**                    | [README.md](scripts/README.md)                    | Scripts SQL et migrations             |
 
 ### Documentation Thématique
 
-| Type | Fichier | Sujet |
-|------|---------|-------|
-| **Sécurité** | [SECURITY.md](SECURITY.md) | Politique de sécurité |
-| **Sécurité** | [docs/AUTHENTICATION_ARCHITECTURE.md](docs/AUTHENTICATION_ARCHITECTURE.md) | Architecture d'authentification |
-| **Sécurité** | [docs/DDOS_PROTECTION_REPORT.md](docs/DDOS_PROTECTION_REPORT.md) | Protection DDoS |
-| **Données** | [docs/DATASET.md](docs/DATASET.md) | Structure et description des données |
-| **Général** | [README.md](README.md) | Vue d'ensemble du projet |
+| Type         | Fichier                                                                    | Sujet                                |
+| ------------ | -------------------------------------------------------------------------- | ------------------------------------ |
+| **Sécurité** | [SECURITY.md](SECURITY.md)                                                 | Politique de sécurité                |
+| **Sécurité** | [docs/AUTHENTICATION_ARCHITECTURE.md](docs/AUTHENTICATION_ARCHITECTURE.md) | Architecture d'authentification      |
+| **Sécurité** | [docs/DDOS_PROTECTION_REPORT.md](docs/DDOS_PROTECTION_REPORT.md)           | Protection DDoS                      |
+| **Données**  | [docs/DATASET.md](docs/DATASET.md)                                         | Structure et description des données |
+| **Général**  | [README.md](README.md)                                                     | Vue d'ensemble du projet             |
 
 ## 🔧 Commandes Utiles
 
@@ -315,6 +326,7 @@ python tools/validate_dashboard_organization.py
 ```
 
 Ce script vérifie :
+
 - ✅ Présence des dossiers requis
 - ✅ Présence des fichiers essentiels
 - ✅ Structure correcte des fichiers
@@ -324,6 +336,7 @@ Ce script vérifie :
 ## 📞 Support
 
 Pour toute question sur l'organisation du projet :
+
 1. Consulter la documentation dans chaque dossier
 2. Vérifier ce fichier ORGANISATION_PROJET.md
 3. Lire le README.md principal

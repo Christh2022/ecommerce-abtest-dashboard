@@ -1,30 +1,30 @@
 name: Cleanup Old Artifacts
 
 on:
-  schedule:
-    - cron: '0 2 * * 0'  # Weekly on Sunday at 2 AM
-  workflow_dispatch:
+    schedule:
+        - cron: "0 2 * * 0" # Weekly on Sunday at 2 AM
+    workflow_dispatch:
 
 jobs:
-  cleanup:
-    name: Delete Old Artifacts and Images
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      packages: write
-      
-    steps:
-    - name: Delete old artifacts
-      uses: c-hive/gha-remove-artifacts@v1
-      with:
-        age: '30 days'
-        skip-recent: 5
-        
-    - name: Delete old container images
-      uses: snok/container-retention-policy@v2
-      with:
-        image-names: ecommerce-*
-        cut-off: 30 days ago UTC
-        keep-at-least: 5
-        account-type: org
-        token: ${{ secrets.GITHUB_TOKEN }}
+    cleanup:
+        name: Delete Old Artifacts and Images
+        runs-on: ubuntu-latest
+        permissions:
+            actions: write
+            packages: write
+
+        steps:
+            - name: Delete old artifacts
+              uses: c-hive/gha-remove-artifacts@v1
+              with:
+                  age: "30 days"
+                  skip-recent: 5
+
+            - name: Delete old container images
+              uses: snok/container-retention-policy@v2
+              with:
+                  image-names: ecommerce-*
+                  cut-off: 30 days ago UTC
+                  keep-at-least: 5
+                  account-type: org
+                  token: ${{ secrets.GITHUB_TOKEN }}

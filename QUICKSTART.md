@@ -5,16 +5,19 @@
 ### 1️⃣ Créer Tous les Dashboards Grafana
 
 **Windows** :
+
 ```bash
 bin\run_all_dashboards.bat
 ```
 
 **Unix/Mac/Linux** :
+
 ```bash
 ./bin/run_all_dashboards.sh
 ```
 
 **Direct Python** :
+
 ```bash
 python run_all_dashboards.py
 ```
@@ -40,16 +43,19 @@ python tools/validate_dashboard_organization.py
 ### 4️⃣ Exécuter les Tests
 
 **Windows** :
+
 ```bash
 bin\run_tests.bat
 ```
 
 **Unix/Mac/Linux** :
+
 ```bash
 ./bin/run_tests.sh
 ```
 
 **Direct Python** :
+
 ```bash
 python run_tests.py
 ```
@@ -83,24 +89,26 @@ ecommerce-abtest-dashboard/
 
 ### Après `docker-compose up -d` :
 
-| Service | URL | Identifiants |
-|---------|-----|--------------|
-| **Dashboard Dash** | http://localhost:8050 | Voir `dashboard/users.json` |
-| **Grafana** | http://localhost:3000 | admin / admin |
-| **Prometheus** | http://localhost:9090 | - |
-| **Métriques** | http://localhost:9200/metrics | - |
+| Service            | URL                           | Identifiants                |
+| ------------------ | ----------------------------- | --------------------------- |
+| **Dashboard Dash** | http://localhost:8050         | Voir `dashboard/users.json` |
+| **Grafana**        | http://localhost:3000         | admin / admin               |
+| **Prometheus**     | http://localhost:9090         | -                           |
+| **Métriques**      | http://localhost:9200/metrics | -                           |
 
 ---
 
 ## 📚 Documentation Complète
 
 ### Par Dossier
+
 - [grafana_dashboards_scripts/README.md](grafana_dashboards_scripts/README.md) - Dashboards
 - [docker/README.md](docker/README.md) - Docker
 - [bin/README.md](bin/README.md) - Scripts
 - [tools/README.md](tools/README.md) - Utilitaires
 
 ### Générale
+
 - [ORGANISATION_PROJET.md](ORGANISATION_PROJET.md) - Structure complète
 - [RECAPITULATIF_REORGANISATION.md](RECAPITULATIF_REORGANISATION.md) - Réorganisation
 - [README.md](README.md) - Documentation principale
@@ -112,17 +120,20 @@ ecommerce-abtest-dashboard/
 ### Développement Local
 
 1. **Démarrer les services** :
+
    ```bash
    docker-compose -f docker-compose.secure.yml up -d
    ```
 
 2. **Créer les dashboards** :
+
    ```bash
    bin\run_all_dashboards.bat   # Windows
    ./bin/run_all_dashboards.sh  # Unix
    ```
 
 3. **Accéder à l'application** :
+
    - Dashboard : http://localhost:8050
    - Grafana : http://localhost:3000
 
@@ -136,16 +147,18 @@ ecommerce-abtest-dashboard/
 ### Déploiement Kubernetes
 
 1. **Build les images** :
+
    ```bash
    docker build -t ecommerce-dashboard:latest -f docker/Dockerfile .
    docker build -t ecommerce-exporter:latest -f docker/Dockerfile.exporter .
    ```
 
 2. **Déployer** :
+
    ```bash
    # Windows
    .\k8s\deploy.ps1
-   
+
    # Unix
    ./k8s/deploy.sh
    ```
@@ -160,6 +173,7 @@ ecommerce-abtest-dashboard/
 ## 🛠️ Commandes Docker Utiles
 
 ### Logs
+
 ```bash
 # Tous les services
 docker-compose -f docker-compose.secure.yml logs -f
@@ -169,6 +183,7 @@ docker-compose -f docker-compose.secure.yml logs -f dashboard
 ```
 
 ### Rebuild
+
 ```bash
 # Rebuild complet
 docker-compose -f docker-compose.secure.yml up -d --build
@@ -179,6 +194,7 @@ docker-compose -f docker-compose.secure.yml up -d dashboard
 ```
 
 ### Arrêt/Nettoyage
+
 ```bash
 # Arrêter
 docker-compose -f docker-compose.secure.yml down
@@ -191,20 +207,21 @@ docker-compose -f docker-compose.secure.yml down -v
 
 ## 📊 Les 10 Dashboards Grafana
 
-| # | Nom | Description |
-|---|-----|-------------|
-| 1 | Performance Générale | Vue d'ensemble des KPIs |
-| 2 | Analyse des Conversions | Taux de conversion et tunnel |
-| 3 | Comportement Utilisateurs | Navigation et engagement |
-| 4 | Revenue Analysis | Revenus et panier moyen |
-| 5 | Traffic Sources | Sources de trafic |
-| 6 | Device Analytics | Analyse par appareil |
-| 7 | Full E-commerce | Dashboard complet |
-| 8 | BI Dashboard | Business Intelligence |
-| 9 | Monitoring | Monitoring système |
-| 10 | Prometheus Metrics | Métriques techniques |
+| #   | Nom                       | Description                  |
+| --- | ------------------------- | ---------------------------- |
+| 1   | Performance Générale      | Vue d'ensemble des KPIs      |
+| 2   | Analyse des Conversions   | Taux de conversion et tunnel |
+| 3   | Comportement Utilisateurs | Navigation et engagement     |
+| 4   | Revenue Analysis          | Revenus et panier moyen      |
+| 5   | Traffic Sources           | Sources de trafic            |
+| 6   | Device Analytics          | Analyse par appareil         |
+| 7   | Full E-commerce           | Dashboard complet            |
+| 8   | BI Dashboard              | Business Intelligence        |
+| 9   | Monitoring                | Monitoring système           |
+| 10  | Prometheus Metrics        | Métriques techniques         |
 
 **Créer tous les dashboards** :
+
 ```bash
 python run_all_dashboards.py
 ```
@@ -214,6 +231,7 @@ python run_all_dashboards.py
 ## 🆘 Résolution Rapide
 
 ### Dashboard ne se lance pas
+
 ```bash
 # Vérifier les logs
 docker-compose -f docker-compose.secure.yml logs dashboard
@@ -224,6 +242,7 @@ docker-compose -f docker-compose.secure.yml up -d dashboard
 ```
 
 ### Grafana ne crée pas les dashboards
+
 ```bash
 # Vérifier les logs d'initialisation
 docker-compose -f docker-compose.secure.yml logs dashboard-init
@@ -234,6 +253,7 @@ bin\run_all_dashboards.bat   # Windows
 ```
 
 ### Base de données problématique
+
 ```bash
 # Réinitialiser
 docker-compose -f docker-compose.secure.yml down -v
@@ -265,21 +285,25 @@ git push
 ## 🎓 Bonnes Pratiques
 
 ### 1. Toujours Documenter
+
 - Créer un README.md dans chaque nouveau dossier
 - Mettre à jour la documentation existante
 - Commenter le code complexe
 
 ### 2. Valider Régulièrement
+
 ```bash
 python tools/validate_dashboard_organization.py
 ```
 
 ### 3. Tester Avant de Commit
+
 ```bash
 python run_tests.py
 ```
 
 ### 4. Suivre les Conventions
+
 - **Scripts Python** : `snake_case.py`
 - **Scripts Shell** : `kebab-case.sh`
 - **Documentation** : `UPPERCASE.md`
@@ -290,10 +314,12 @@ python run_tests.py
 ## 📞 Aide
 
 ### Documentation Détaillée
+
 - [ORGANISATION_PROJET.md](ORGANISATION_PROJET.md) - Structure complète
 - [README.md](README.md) - Vue d'ensemble
 
 ### Documentation Sécurité
+
 - [SECURITY.md](SECURITY.md) - Politique de sécurité
 - [docs/AUTHENTICATION_ARCHITECTURE.md](docs/AUTHENTICATION_ARCHITECTURE.md)
 - [docs/DDOS_PROTECTION_REPORT.md](docs/DDOS_PROTECTION_REPORT.md)

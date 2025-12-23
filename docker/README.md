@@ -5,6 +5,7 @@ Ce dossier contient tous les Dockerfiles nécessaires pour construire les images
 ## 📦 Fichiers
 
 ### 1. `Dockerfile`
+
 **Image principale de l'application Dash**
 
 - **Base**: Python 3.12-slim
@@ -16,6 +17,7 @@ Ce dossier contient tous les Dockerfiles nécessaires pour construire les images
   ```
 
 **Contenu**:
+
 - Application Dash (dashboard/)
 - Pages et composants interactifs
 - Système d'authentification
@@ -23,6 +25,7 @@ Ce dossier contient tous les Dockerfiles nécessaires pour construire les images
 - Assets et visualizations
 
 ### 2. `Dockerfile.exporter`
+
 **Image de l'exporteur Prometheus**
 
 - **Base**: Python 3.11-slim
@@ -34,12 +37,14 @@ Ce dossier contient tous les Dockerfiles nécessaires pour construire les images
   ```
 
 **Contenu**:
+
 - Script tools/ecommerce_exporter.py
 - Métriques personnalisées pour Prometheus
 - Connexion à PostgreSQL
 - Export des KPIs e-commerce
 
 ### 3. `Dockerfile.dashboard-init`
+
 **Image d'initialisation des dashboards Grafana**
 
 - **Base**: Python 3.11-slim
@@ -48,6 +53,7 @@ Ce dossier contient tous les Dockerfiles nécessaires pour construire les images
 - **Exécution**: Une fois au démarrage
 
 **Contenu**:
+
 - Scripts de création de dashboards (grafana_dashboards_scripts/)
 - Script d'initialisation (scripts/init_grafana_dashboards.sh)
 - Attend que Grafana soit prêt
@@ -83,6 +89,7 @@ Docker Compose construit automatiquement les images avec les bons Dockerfiles.
 ## 📋 Structure des Images
 
 ### Dockerfile (Application Dash)
+
 ```
 FROM python:3.12-slim
 │
@@ -95,6 +102,7 @@ FROM python:3.12-slim
 ```
 
 ### Dockerfile.exporter (Exporteur Prometheus)
+
 ```
 FROM python:3.11-slim
 │
@@ -106,6 +114,7 @@ FROM python:3.11-slim
 ```
 
 ### Dockerfile.dashboard-init (Init Grafana)
+
 ```
 FROM python:3.11-slim
 │
@@ -123,29 +132,32 @@ FROM python:3.11-slim
 Les Dockerfiles utilisent les variables d'environnement définies dans `docker-compose.secure.yml`:
 
 **Dockerfile (Dash)**:
+
 - `DATABASE_URL`: Connexion PostgreSQL
 - `FLASK_DEBUG`: Mode debug (False en production)
 - `FLASK_ENV`: Environnement (production)
 - `SECRET_KEY`: Clé secrète pour les sessions
 
 **Dockerfile.exporter**:
+
 - `DB_HOST`: Hôte PostgreSQL
 - `DB_NAME`: Nom de la base de données
 - `DB_USER`: Utilisateur de la base
 - `DB_PASSWORD`: Mot de passe
 
 **Dockerfile.dashboard-init**:
+
 - `GRAFANA_URL`: URL de Grafana
 - `GRAFANA_USER`: Utilisateur Grafana
 - `GRAFANA_PASSWORD`: Mot de passe Grafana
 
 ## 📊 Ports Exposés
 
-| Image | Port | Service |
-|-------|------|---------|
-| Dockerfile | 8050 | Application Dash |
-| Dockerfile.exporter | 9200 | Métriques Prometheus |
-| Dockerfile.dashboard-init | - | Pas de port (init seulement) |
+| Image                     | Port | Service                      |
+| ------------------------- | ---- | ---------------------------- |
+| Dockerfile                | 8050 | Application Dash             |
+| Dockerfile.exporter       | 9200 | Métriques Prometheus         |
+| Dockerfile.dashboard-init | -    | Pas de port (init seulement) |
 
 ## 🛡️ Sécurité
 
@@ -195,12 +207,12 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-  
+
   prometheus-exporter:
     build:
       context: .
       dockerfile: docker/Dockerfile.exporter
-  
+
   dashboard-init:
     build:
       context: .
@@ -210,6 +222,7 @@ services:
 ## 📝 Changelog
 
 ### v1.0.0 (2025-12-23)
+
 - ✅ Organisation des Dockerfiles dans le dossier docker/
 - ✅ Documentation complète du dossier
 - ✅ Mise à jour des références dans docker-compose.secure.yml
