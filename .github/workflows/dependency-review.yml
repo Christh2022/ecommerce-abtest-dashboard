@@ -1,8 +1,14 @@
 name: Dependency Review
 
+# DÉSACTIVÉ: Ce workflow nécessite que "Dependency Graph" soit activé dans les settings du repo
+# Pour l'activer: Settings → Security → Code security and analysis → Dependency graph
+# https://github.com/Christh2022/ecommerce-abtest-dashboard/settings/security_analysis
+
 on:
-    pull_request:
-        branches: [main, develop]
+    # Désactivé temporairement - décommenter après activation du Dependency Graph
+    # pull_request:
+    #     branches: [main, develop]
+    workflow_dispatch: # Permet l'exécution manuelle uniquement
 
 permissions:
     contents: read
