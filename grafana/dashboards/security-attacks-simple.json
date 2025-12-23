@@ -1,0 +1,98 @@
+{
+  "id": null,
+  "uid": "security-attacks-working",
+  "title": "Security Attacks - Working Dashboard",
+  "tags": ["security", "attacks"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 0,
+  "refresh": "10s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Total Attacks",
+      "type": "stat",
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{
+        "expr": "max(security_attacks_total)",
+        "refId": "A"
+      }],
+      "options": {
+        "reduceOptions": {"values": false, "calcs": ["lastNotNull"]},
+        "textMode": "value_and_name",
+        "colorMode": "background"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Critical",
+      "type": "stat",
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{
+        "expr": "security_attack_by_severity{severity=\"critical\"}",
+        "refId": "A"
+      }],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "red"}
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "High",
+      "type": "stat",
+      "gridPos": {"h": 6, "w": 6, "x": 12, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{
+        "expr": "security_attack_by_severity{severity=\"high\"}",
+        "refId": "A"
+      }],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "orange"}
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Medium",
+      "type": "stat",
+      "gridPos": {"h": 6, "w": 6, "x": 18, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{
+        "expr": "security_attack_by_severity{severity=\"medium\"}",
+        "refId": "A"
+      }],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "yellow"}
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "By Category",
+      "type": "piechart",
+      "gridPos": {"h": 10, "w": 12, "x": 0, "y": 6},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{
+        "expr": "security_attack_by_category",
+        "legendFormat": "{{category}}"
+      }]
+    },
+    {
+      "id": 6,
+      "title": "By Severity",
+      "type": "piechart",
+      "gridPos": {"h": 10, "w": 12, "x": 12, "y": 6},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{
+        "expr": "security_attack_by_severity",
+        "legendFormat": "{{severity}}"
+      }]
+    }
+  ]
+}

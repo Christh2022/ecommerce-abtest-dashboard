@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+RUN pip install --no-cache-dir prometheus-client psycopg2-binary
+
+# Copy exporter script
+COPY tools/ecommerce_exporter.py /app/
+
+# Expose metrics port
+EXPOSE 9200
+
+# Run exporter
+CMD ["python", "/app/ecommerce_exporter.py"]

@@ -6,7 +6,7 @@ services:
   dash-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile
     container_name: ecommerce-dashboard
     ports:
       # Port exposé uniquement pour l'accès utilisateur
@@ -14,9 +14,9 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - DATABASE_URL=postgresql://dashuser:dashpass@postgres:5432/ecommerce_db
-      - FLASK_DEBUG=False  # SECURITY: Disable debug mode in production
+      - FLASK_DEBUG=False # SECURITY: Disable debug mode in production
       - FLASK_ENV=production
-      - SECRET_KEY=717de09da767a91c002e8c45fc35844a8e380af1695a6c4db595ab043e6232c8  # SECURITY: Strong secret key for session signing
+      - SECRET_KEY=717de09da767a91c002e8c45fc35844a8e380af1695a6c4db595ab043e6232c8 # SECURITY: Strong secret key for session signing
     volumes:
       - ./dashboard:/app/dashboard
       - ./data/clean:/app/data/clean
@@ -171,7 +171,7 @@ services:
   ecommerce-exporter:
     build:
       context: .
-      dockerfile: Dockerfile.exporter
+      dockerfile: docker/Dockerfile.exporter
     container_name: ecommerce-exporter
     environment:
       - DB_HOST=postgres
@@ -253,8 +253,6 @@ services:
     privileged: true
     command:
       - /usr/bin/falco
-      - -o
-      - engine.kind=modern_bpf
       - -o
       - json_output=true
       - -o

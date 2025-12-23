@@ -15,6 +15,7 @@ Protection anti-DDoS implémentée avec succès dans l'application e-commerce. L
 ### Module de Protection: `dashboard/ddos_protection.py`
 
 **Fonctionnalités:**
+
 - ✅ Rate limiting par IP en mémoire
 - ✅ Tracking des requêtes avec horodatage
 - ✅ Blocage automatique des IP abusives (5 minutes)
@@ -22,6 +23,7 @@ Protection anti-DDoS implémentée avec succès dans l'application e-commerce. L
 - ✅ Routes exclues configurables (health checks, assets)
 
 **Limites Configurées:**
+
 ```python
 GENERAL_LIMIT = 200      # 200 req/min (endpoints généraux)
 SENSITIVE_LIMIT = 20     # 20 req/min (login, admin, api)
@@ -40,13 +42,16 @@ La protection s'active automatiquement via Flask `before_request` hook.
 ## 🧪 Tests de Validation
 
 ### Test #1: Rate Limit Basique
+
 **Script:** `test_rate_limit.py`  
 **Configuration:**
+
 - 250 requêtes totales
 - Délai de 100ms entre requêtes
 - Cible: `http://localhost:8050/`
 
 **Résultats:**
+
 ```
 ✅ Succès:        14 (5.6%)
 🚫 Bloquées:     236 (94.4%)
@@ -60,11 +65,13 @@ La protection s'active automatiquement via Flask `before_request` hook.
 ### Test #2: Scripts DDoS Disponibles
 
 #### `test_ddos_advanced.py` (Python Async)
+
 - **3 types d'attaque:** HTTP Flood, POST Flood, Slowloris
 - **Configuration:** 200 threads concurrents, 10,000 requêtes
 - **Monitoring:** Statistiques temps réel, taux de succès/échec
 
 **Usage:**
+
 ```bash
 python test_ddos_advanced.py http_flood
 python test_ddos_advanced.py post_flood
@@ -72,11 +79,13 @@ python test_ddos_advanced.py slowloris
 ```
 
 #### `test_ddos_simple.sh` (Bash)
+
 - **Attaque:** HTTP Flood basique
 - **Configuration:** 100 threads, 60 secondes
 - **Simplicité:** Aucune dépendance Python
 
 **Usage:**
+
 ```bash
 bash test_ddos_simple.sh
 ```
@@ -106,18 +115,21 @@ Client Request
 ## 🔒 Endpoints Protégés
 
 **Rate Limit Standard (200 req/min):**
+
 - `/` (Home)
 - `/dashboard`
 - `/visualizations/*`
 - `/api/*` (endpoints publics)
 
 **Rate Limit Renforcé (20 req/min):**
+
 - `/login`
 - `/admin/*`
 - `/api/users/*`
 - `/api/transactions/*`
 
 **Exclusions (Pas de rate limit):**
+
 - `/health`
 - `/metrics`
 - `/_dash-*` (assets Dash)
@@ -125,29 +137,32 @@ Client Request
 
 ## 🎯 Efficacité de la Protection
 
-| Métrique | Valeur | Status |
-|----------|--------|--------|
-| Taux de blocage | 94.4% | ✅ Excellent |
-| Faux positifs | 0% | ✅ Parfait |
-| Temps de réponse 429 | <50ms | ✅ Rapide |
-| Consommation mémoire | ~5KB/1000 IPs | ✅ Efficace |
-| CPU overhead | <1% | ✅ Négligeable |
+| Métrique             | Valeur        | Status         |
+| -------------------- | ------------- | -------------- |
+| Taux de blocage      | 94.4%         | ✅ Excellent   |
+| Faux positifs        | 0%            | ✅ Parfait     |
+| Temps de réponse 429 | <50ms         | ✅ Rapide      |
+| Consommation mémoire | ~5KB/1000 IPs | ✅ Efficace    |
+| CPU overhead         | <1%           | ✅ Négligeable |
 
 ## 🚀 Améliorations Futures
 
 ### Court Terme
+
 - [ ] Persistance Redis pour cluster multi-instances
 - [ ] Dashboard Grafana pour monitoring rate limiting
 - [ ] Alertes Prometheus sur IP bloquées
 - [ ] Whitelist d'IP connues (monitoring, APIs)
 
 ### Moyen Terme
+
 - [ ] Rate limiting progressif (progressive delays)
 - [ ] CAPTCHA après X tentatives
 - [ ] Intégration avec Cloudflare/WAF
 - [ ] Analyse comportementale des patterns d'attaque
 
 ### Long Terme
+
 - [ ] Machine Learning pour détection d'anomalies
 - [ ] Blocage géographique configurable
 - [ ] Honeypot endpoints pour trap bots
@@ -156,12 +171,14 @@ Client Request
 ## 📝 Logs et Monitoring
 
 **Logs de Blocage:**
+
 ```
 2025-12-16 16:44:43 - WARNING - IP 172.20.0.1 blocked (rate limit exceeded)
 2025-12-16 16:44:45 - WARNING - IP 127.0.0.1 blocked (rate limit exceeded)
 ```
 
 **Métriques Prometheus (à implémenter):**
+
 ```prometheus
 # HELP ddos_requests_blocked_total Total requests blocked by rate limiter
 # TYPE ddos_requests_blocked_total counter
@@ -175,23 +192,28 @@ ddos_active_blocked_ips 2
 ## 🔐 Recommandations de Déploiement
 
 ### Production
+
 1. **Ajuster les limites selon le traffic réel**
+
    ```python
    GENERAL_LIMIT = 500      # Pour apps à fort trafic
    SENSITIVE_LIMIT = 50     # Pour APIs authentifiées
    ```
 
 2. **Utiliser Redis pour la persistance**
+
    - Partage entre plusieurs instances
    - Survit aux redémarrages
    - Performance élevée
 
 3. **Ajouter monitoring externe**
+
    - Grafana: Visualisation des attaques
    - Prometheus: Métriques et alertes
    - ELK Stack: Logs centralisés
 
 4. **Configurer reverse proxy (Nginx/HAProxy)**
+
    ```nginx
    limit_req_zone $binary_remote_addr zone=general:10m rate=10r/s;
    limit_req_zone $binary_remote_addr zone=sensitive:10m rate=1r/s;

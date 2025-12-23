@@ -44,32 +44,32 @@ echo "DEBUG: GRAFANA_URL=$GRAFANA_URL"
 
 # Dashboards 1-3: Funnel, Segments, Products
 echo "  → Dashboards 1-3 (Funnel, Segmentation, Products)..."
-python /app/create_dashboards_1_3.py
+python /app/grafana_dashboards_scripts/create_dashboards_1_3.py
 sleep 2
 
 # Dashboards 4-6: Cohorts, Real-Time, Predictive
 echo "  → Dashboards 4-6 (Cohorts, Real-Time, Predictive)..."
-python /app/create_dashboards_4_6.py
+python /app/grafana_dashboards_scripts/create_dashboards_4_6.py
 sleep 2
 
 # Business Intelligence Dashboard
 echo "  → Business Intelligence Dashboard..."
-python /app/create_bi_dashboard.py
+python /app/grafana_dashboards_scripts/create_bi_dashboard.py
 sleep 2
 
 # Full E-Commerce Dashboard
 echo "  → E-Commerce A/B Test Analytics Dashboard..."
-python /app/create_full_dashboard.py
+python /app/grafana_dashboards_scripts/create_full_dashboard.py
 sleep 2
 
 # Monitoring Dashboard
 echo "  → Monitoring Dashboard..."
-python /app/create_monitoring_dashboard.py
+python /app/grafana_dashboards_scripts/create_monitoring_dashboard.py
 sleep 2
 
 # Prometheus Dashboard
 echo "  → Prometheus Dashboard..."
-python /app/create_prometheus_dashboard.py
+python /app/grafana_dashboards_scripts/create_prometheus_dashboard.py
 
 echo ""
 echo "✅ Tous les dashboards ont été créés avec succès!"

@@ -1,21 +1,51 @@
 # E-commerce Dashboard & A/B Testing 🚀
 
-Plateforme d'analyse e-commerce avec dashboard interactif et outils d'A/B testing utilisant Python, Dash, PostgreSQL, Docker et Grafana.
+[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Dash](https://img.shields.io/badge/Dash-2.14.2-brightgreen.svg)](https://dash.plotly.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Production-success.svg)](https://github.com/Christh2022/ecommerce-abtest-dashboard)
+
+> 🎤 **Nouveau : Interface vocale interactive !** L'application intègre maintenant la reconnaissance vocale pour une navigation mains-libres. Dites "Explique l'accueil" pour une présentation guidée !
+
+Plateforme d'analyse e-commerce avec dashboard interactif, assistant vocal intelligent et outils d'A/B testing utilisant Python, Dash, PostgreSQL, Docker et Grafana.
 
 ## 📊 Vue d'ensemble
 
 Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1.4M utilisateurs, 235K produits) pour créer un dashboard de visualisation et des outils d'analyse de performance e-commerce.
 
-### Objectifs
+### ✨ Fonctionnalités Principales
 
 - 📈 **Dashboard interactif** : 12+ pages de visualisation en temps réel des KPIs e-commerce
+- 🎤 **Assistant Vocal Intelligent** : Navigation vocale, explications guidées et commandes mains-libres
 - 🧪 **A/B Testing** : 16 scénarios de test simulés avec analyse statistique complète
 - 📉 **Analyse de tendances** : Métriques quotidiennes, entonnoirs de conversion, performance produits
 - 🎯 **Méthodologie** : Guide complet des bonnes pratiques en A/B testing
 - 🐳 **Déploiement** : Application containerisée avec Docker, PostgreSQL et Grafana
 - 🛡️ **Sécurité** : Protection multicouche, tests automatisés, monitoring temps réel
 
----
+### 🎤 Assistant Vocal - Nouvelle Fonctionnalité !
+
+L'application intègre un **système de reconnaissance vocale** pour une expérience utilisateur révolutionnaire :
+
+**Fonctionnalités vocales :**
+
+- 🗣️ **Accueil personnalisé** : "Bonjour Docteur Christh, comment puis-je vous aider ?"
+- 📚 **Explications détaillées** : Dites "Explique l'accueil" pour une présentation complète
+- 🧭 **Navigation vocale** : "Va sur le dashboard" ou "Montre-moi les conversions"
+- 🔄 **Interaction continue** : L'assistant écoute et répond en boucle
+
+**Commandes vocales disponibles :**
+
+```
+"Explique l'accueil" / "Explique l'application" → Présentation détaillée de la plateforme
+"Dashboard" / "Tableau de bord" → Redirection vers le dashboard principal
+"Connexion" / "Connecter" → Redirection vers la page de connexion
+```
+
+**Compatibilité :** Chrome, Edge, Safari (Web Speech API)
+
+**Essayez maintenant :** Ouvrez http://localhost:8050 et parlez ! 🎙️
 
 ## 🛡️ Sécurité - Important pour les Collaborateurs
 
@@ -29,20 +59,59 @@ Ce projet analyse les données du dataset **RetailRocket** (2.7M événements, 1
 ✅ **Tests automatisés** : 41 types d'attaques (SQL injection, XSS, CSRF...)  
 ✅ **Monitoring** : Grafana + 32 alertes en temps réel
 
-### Tests de Sécurité (Avant Chaque PR)
+### 🧪 Tests de l'Application
+
+#### Lancer la Suite de Tests Complète
 
 ```bash
 # Windows
-lancer_tests_securite.bat
+bin\run_tests.bat
 
-# Linux/Mac  
-./lancer_tests_securite.sh
+# Linux/Mac
+./bin/run_tests.sh
 
-# Test DDoS (optionnel)
-python test_rate_limit.py
+# Ou directement avec Python
+python run_tests.py
+```
+
+**Ce qui est testé** :
+
+- ✅ Connexion au serveur (port 8050)
+- ✅ Page d'accueil publique (landing page)
+- ✅ Page de connexion
+- ✅ Système d'authentification
+- ✅ Protection des pages sécurisées
+- ✅ Services Docker (dash-app, postgres, grafana, prometheus)
+
+**📊 Résultat attendu** :
+
+```
+╔════════════════════════════════════════════════════════════╗
+║   E-Commerce A/B Test Dashboard - Suite de tests         ║
+╚════════════════════════════════════════════════════════════╝
+
+✓ PASS      Connexion serveur
+✓ PASS      Landing page
+✓ PASS      Page de connexion
+✓ PASS      Authentification
+✓ PASS      Pages protégées
+✓ PASS      Services Docker
+
+Résultat: 6/6 tests réussis
+🎉 Tous les tests sont passés !
+```
+
+**⚙️ Configuration** : Modifiez `run_tests.py` si vous avez changé les identifiants par défaut :
+
+```python
+TEST_USER = {
+    "username": "admin",
+    "password": "admin123"  # À modifier selon votre configuration
+}
 ```
 
 **📚 Plus d'informations** : Consultez le [Guide Sécurité Collaborateurs](SECURITY_GUIDE_COLLABORATORS.md) pour :
+
 - Procédures de test complètes
 - Bonnes pratiques de développement sécurisé
 - Que faire en cas d'incident de sécurité
@@ -222,19 +291,36 @@ Si les fichiers ne sont pas là, recommencez l'Étape 1 (docker cp).
 
 #### 7️⃣ Créer les Dashboards Grafana
 
-Les dashboards Grafana doivent être créés après l'import des données (prend ~2 minutes) :
+Les dashboards Grafana doivent être créés après l'import des données (prend ~2 minutes).
+
+**🎯 Méthode 1 : Script Automatique (Recommandé)**
+
+```bash
+# Windows
+bin\run_all_dashboards.bat
+
+# Linux/Mac
+./bin/run_all_dashboards.sh
+
+# Ou directement avec Python
+python run_all_dashboards.py
+```
+
+Ce script exécute automatiquement tous les scripts de création de dashboards dans l'ordre avec un résumé détaillé.
+
+**🔧 Méthode 2 : Exécution Manuelle**
 
 ```bash
 # Installer les dépendances si nécessaire
 pip install requests python-dotenv
 
 # Exécuter tous les scripts de création de dashboards
-python create_dashboards_1_3.py
-python create_dashboards_4_6.py
-python create_bi_dashboard.py
-python create_full_dashboard.py
-python create_monitoring_dashboard.py
-python create_prometheus_dashboard.py
+python grafana_dashboards_scripts/create_dashboards_1_3.py
+python grafana_dashboards_scripts/create_dashboards_4_6.py
+python grafana_dashboards_scripts/create_bi_dashboard.py
+python grafana_dashboards_scripts/create_full_dashboard.py
+python grafana_dashboards_scripts/create_monitoring_dashboard.py
+python grafana_dashboards_scripts/create_prometheus_dashboard.py
 ```
 
 **✅ Messages de confirmation attendus** :
@@ -315,12 +401,14 @@ curl http://localhost:3000/api/health
 
 #### 8️⃣ Accéder aux Applications
 
-| Application           | URL                                            | Identifiants        | Description                                    |
-| --------------------- | ---------------------------------------------- | ------------------- | ---------------------------------------------- |
-| 🎨 **Dashboard Dash** | [http://localhost:8050](http://localhost:8050) | Aucun               | Application principale avec 12 pages d'analyse |
-| 📊 **Grafana**        | [http://localhost:3000](http://localhost:3000) | admin / admin123    | 10 dashboards de monitoring                    |
-| 🔍 **Prometheus**     | [http://localhost:9090](http://localhost:9090) | Aucun               | Métriques en temps réel                        |
-| 🗄️ **PostgreSQL**     | localhost:5432                                 | dashuser / dashpass | Base de données (connexion via client SQL)     |
+| Application           | URL                                            | Identifiants        | Description                                            |
+| --------------------- | ---------------------------------------------- | ------------------- | ------------------------------------------------------ |
+| 🎨 **Dashboard Dash** | [http://localhost:8050](http://localhost:8050) | admin / admin123    | Application principale avec 12 pages + Assistant Vocal |
+| 📊 **Grafana**        | [http://localhost:3000](http://localhost:3000) | admin / admin123    | 10 dashboards de monitoring                            |
+| 🔍 **Prometheus**     | [http://localhost:9090](http://localhost:9090) | Aucun               | Métriques en temps réel                                |
+| 🗄️ **PostgreSQL**     | localhost:5432                                 | dashuser / dashpass | Base de données (connexion via client SQL)             |
+
+> **🎤 Astuce :** Une fois sur http://localhost:8050, cliquez sur la page puis dites "Explique l'accueil" pour découvrir toutes les fonctionnalités !
 
 ---
 
@@ -354,12 +442,14 @@ Le projet inclut un système complet de **détection d'attaques en temps réel**
 #### 🚀 Lancement Rapide des Tests de Sécurité
 
 **Windows** :
+
 ```bash
 # Double-cliquer sur le fichier ou exécuter dans cmd :
 lancer_tests_securite.bat
 ```
 
 **Linux/Mac** :
+
 ```bash
 # Rendre le script exécutable et lancer :
 chmod +x lancer_tests_securite.sh
@@ -367,6 +457,7 @@ chmod +x lancer_tests_securite.sh
 ```
 
 Le script effectue automatiquement :
+
 1. ✅ Vérification des services (Dashboard, Prometheus, Pushgateway)
 2. 🎯 Lancement de 41 tests d'attaque sur l'application
 3. 📊 Envoi des métriques vers Prometheus
@@ -375,11 +466,13 @@ Le script effectue automatiquement :
 #### 📊 Visualisation des Alertes dans Grafana
 
 **Accéder au Dashboard de Sécurité** :
+
 1. Ouvrir [http://localhost:3000](http://localhost:3000)
 2. Se connecter avec `admin` / `admin123`
 3. Aller dans **Dashboards** → **Security Attacks - Real-time Monitoring**
 
 **Dashboard inclut 8 panneaux** :
+
 - 🎯 Compteur total des attaques détectées
 - 🔴 Attaques critiques (SQL injection, Command injection, etc.)
 - 🟠 Attaques haute sévérité (XSS, CSRF, etc.)
@@ -391,6 +484,7 @@ Le script effectue automatiquement :
 #### 🚨 Règles d'Alerte Configurées
 
 **32+ règles d'alerte actives** incluant :
+
 - 🔴 **Critical** : SQL Injection, Command Injection, Path Traversal
 - 🟠 **High** : XSS, CSRF, File Upload, Authentication Bypass
 - 🟡 **Medium** : Information Disclosure, Weak Cryptography
@@ -399,18 +493,18 @@ Les alertes se déclenchent **30-60 secondes** après détection d'une attaque.
 
 #### 🔍 Types d'Attaques Testées (41 au total)
 
-| Catégorie                  | Nombre | Exemples                                      |
-| -------------------------- | ------ | --------------------------------------------- |
-| 🗄️ Injection SQL           | 5      | UNION attacks, Blind SQL, Time-based SQLi     |
-| 💻 Injection de Commandes   | 3      | OS command injection, Shell injection         |
-| 🌐 Cross-Site Scripting     | 4      | Stored XSS, Reflected XSS, DOM XSS            |
-| 🔐 Authentification         | 6      | Brute force, Session hijacking, Token bypass  |
-| 📁 Manipulation de Fichiers | 5      | Path traversal, File upload, LFI/RFI          |
-| 🔒 Sécurité Session         | 4      | Session fixation, Cookie hijacking            |
-| 🛡️ CSRF                     | 3      | Token bypass, Same-site bypass                |
-| 📊 Information Disclosure   | 4      | Error exposure, Directory listing             |
-| 🔓 Access Control           | 3      | IDOR, Privilege escalation                    |
-| ⚡ DoS/Resource Abuse       | 4      | Rate limit bypass, Resource exhaustion        |
+| Catégorie                   | Nombre | Exemples                                     |
+| --------------------------- | ------ | -------------------------------------------- |
+| 🗄️ Injection SQL            | 5      | UNION attacks, Blind SQL, Time-based SQLi    |
+| 💻 Injection de Commandes   | 3      | OS command injection, Shell injection        |
+| 🌐 Cross-Site Scripting     | 4      | Stored XSS, Reflected XSS, DOM XSS           |
+| 🔐 Authentification         | 6      | Brute force, Session hijacking, Token bypass |
+| 📁 Manipulation de Fichiers | 5      | Path traversal, File upload, LFI/RFI         |
+| 🔒 Sécurité Session         | 4      | Session fixation, Cookie hijacking           |
+| 🛡️ CSRF                     | 3      | Token bypass, Same-site bypass               |
+| 📊 Information Disclosure   | 4      | Error exposure, Directory listing            |
+| 🔓 Access Control           | 3      | IDOR, Privilege escalation                   |
+| ⚡ DoS/Resource Abuse       | 4      | Rate limit bypass, Resource exhaustion       |
 
 #### 🛠️ Test Manuel (avancé)
 
@@ -537,8 +631,8 @@ curl http://localhost:9200/metrics 2>/dev/null | grep ecommerce
 # Ouvrir http://localhost:9090/targets et vérifier que "ecommerce-exporter" est UP
 
 # 4. Recréer les dashboards Grafana si nécessaire (Étape 7)
-python create_dashboards_1_3.py
-python create_dashboards_4_6.py
+python grafana_dashboards_scripts/create_dashboards_1_3.py
+python grafana_dashboards_scripts/create_dashboards_4_6.py
 # ... (tous les autres scripts)
 ```
 
@@ -549,7 +643,7 @@ python create_dashboards_4_6.py
 pip install psycopg2-binary requests python-dotenv
 
 # Réessayer la création des dashboards
-python create_dashboards_1_3.py
+python grafana_dashboards_scripts/create_dashboards_1_3.py
 ```
 
 **Note** : Cette erreur apparaît uniquement lors de l'exécution des scripts de création de dashboards Grafana depuis votre machine locale, pas lors de l'import des données qui s'exécute dans le conteneur Docker.
@@ -566,16 +660,40 @@ ecommerce-abtest-dashboard/
 │   └── components/        # Composants réutilisables
 ├── data/
 │   └── clean/             # Données CSV nettoyées
+├── docker/                # 🆕 Dockerfiles du projet
+│   ├── Dockerfile         # Image principale Dash
+│   ├── Dockerfile.exporter        # Image exporteur Prometheus
+│   ├── Dockerfile.dashboard-init  # Image init dashboards
+│   └── README.md          # Documentation des Dockerfiles
 ├── grafana/
 │   ├── dashboards/        # Fichiers JSON des dashboards
 │   └── provisioning/      # Configuration Grafana
+├── grafana_dashboards_scripts/  # 🆕 Scripts de création des dashboards
+│   ├── create_dashboards_1_3.py # Dashboards 1-3
+│   ├── create_dashboards_4_6.py # Dashboards 4-6
+│   ├── create_bi_dashboard.py   # BI Dashboard
+│   ├── create_full_dashboard.py # Full Dashboard
+│   ├── create_monitoring_dashboard.py
+│   ├── create_prometheus_dashboard.py
+│   └── README.md          # Documentation des scripts
+├── bin/                   # 🆕 Scripts exécutables
+│   ├── run_all_dashboards.bat   # Windows - Créer dashboards
+│   ├── run_all_dashboards.sh    # Linux/Mac - Créer dashboards
+│   ├── run_tests.bat            # Windows - Lancer tests
+│   ├── run_tests.sh             # Linux/Mac - Lancer tests
+│   └── README.md          # Documentation des scripts
 ├── scripts/               # Scripts d'import et d'analyse
 │   ├── import_data_to_postgres.py  # Import des données
 │   └── init_db.sql        # Initialisation de la DB
-├── create_*.py            # Scripts de création des dashboards Grafana
+├── run_all_dashboards.py  # Script Python pour créer tous les dashboards
 ├── docker-compose.secure.yml  # Configuration Docker
 └── README.md              # Ce fichier
 ```
+
+**🆕 Nouveautés** : 
+- Les scripts de création de dashboards Grafana sont organisés dans `grafana_dashboards_scripts/`
+- Les Dockerfiles sont regroupés dans `docker/`
+- Les scripts exécutables (.bat/.sh) sont dans `bin/`
 
 ---
 
@@ -1124,14 +1242,42 @@ Ce projet utilise le dataset RetailRocket sous licence publique Kaggle.
 
 ---
 
-**Dernière mise à jour** : 14 décembre 2025  
-**Version** : 1.0.1  
+**Dernière mise à jour** : 17 décembre 2025  
+**Version** : 1.1.0  
 **Milestones complétés** : 4/5 ✅  
 **Issues résolues** : 43/57
 
-**Changelog v1.0.1** :
+**Changelog v1.1.0** (17 décembre 2025) :
+
+- ✨ **NOUVEAU** : Assistant vocal intelligent avec reconnaissance vocale
+- 🎤 Système de commandes vocales pour navigation mains-libres
+- 🗣️ Explications guidées de l'application par la voix
+- 🔄 Interaction continue avec questions/réponses automatiques
+- 📢 Synthèse vocale multilingue (français)
+- 🎨 Amélioration des icônes Font Awesome (v6.5.1)
+- 📝 Documentation enrichie avec section assistant vocal
+
+**Changelog v1.0.1** (14 décembre 2025) :
 
 - ✅ Correction du problème de numeric overflow lors de l'import des données
 - ✅ Ajout du script `fix_numeric_overflow.py` pour corriger automatiquement le schéma
 - ✅ Mise à jour de la documentation avec les étapes correctes d'import
 - ✅ Amélioration des instructions pour les collaborateurs
+
+---
+
+## 🎯 Roadmap Future
+
+### Version 1.2.0 (À venir)
+
+- 🤖 Extension des commandes vocales (20+ commandes)
+- 📊 Navigation vocale vers toutes les pages du dashboard
+- 🎨 Visualisation réactive aux commandes vocales
+- 🌍 Support multilingue (anglais, espagnol)
+
+### Version 2.0.0 (Q1 2026)
+
+- 🧠 Intégration d'IA pour analyses prédictives
+- 📈 Recommandations automatiques basées sur les KPIs
+- 🔔 Alertes vocales en temps réel
+- 📱 Application mobile avec assistant vocal

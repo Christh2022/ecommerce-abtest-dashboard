@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: ecommerce-abtest
+  labels:
+    app: dashboard
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+        tier: frontend
+    spec:
+      containers:
+      - name: dashboard
+        image: ecommerce-dashboard:latest  # Remplacer par votre registry
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8050
+          name: http
+        envFrom:
+        - configMapRef:
+            name: dashboard-config
+        - secretRef:
+            name: dashboard-secret
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8050
+          initialDelaySeconds: 40
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8050
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+  namespace: ecommerce-abtest
+  labels:
+    app: dashboard
+spec:
+  type: LoadBalancer  # Ou NodePort selon votre cluster
+  ports:
+  - port: 80
+    targetPort: 8050
+    protocol: TCP
+    name: http
+  selector:
+    app: dashboard
