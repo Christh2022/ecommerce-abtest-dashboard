@@ -5,7 +5,7 @@ plotly==5.18.0
 werkzeug==3.0.6  # Note: Dash 2.15.0 requires werkzeug<3.1, vulnerability accepted with mitigations
 
 # Authentication
-dash-auth==2.0.0
+dash-auth==2.3.0
 flask-login==0.6.3
 
 # Data Processing
