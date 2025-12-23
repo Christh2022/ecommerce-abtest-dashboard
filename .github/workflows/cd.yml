@@ -71,7 +71,7 @@ jobs:
             type=sha
 
       - name: Build and push ${{ matrix.image.name }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ${{ matrix.image.dockerfile }}
