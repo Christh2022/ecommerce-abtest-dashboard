@@ -245,45 +245,12 @@ services:
       - no-new-privileges:true
     user: "472:472" # Grafana user
 
-  # Falco Runtime Security - ENABLED
-  # Détection en temps réel des attaques de sécurité
-  falco:
-    image: falcosecurity/falco-no-driver:latest
-    container_name: ecommerce-falco
-    privileged: true
-    command:
-      - /usr/bin/falco
-      - -o
-      - json_output=true
-      - -o
-      - json_include_output_property=true
-      - -o
-      - log_stderr=true
-      - -o
-      - log_level=info
-    volumes:
-      - /var/run/docker.sock:/host/var/run/docker.sock:ro
-      - /proc:/host/proc:ro
-      - /sys/kernel/debug:/sys/kernel/debug:ro
-      - ./falco/falco.yaml:/etc/falco/falco.yaml:ro
-      - ./falco/security_attack_rules_v2.yaml:/etc/falco/security_attack_rules_v2.yaml:ro
-    networks:
-      - monitoring-network
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "5"
-        labels: "falco"
-    deploy:
-      resources:
-        limits:
-          cpus: "1.0"
-          memory: 512M
-        reservations:
-          cpus: "0.2"
-          memory: 256M
+  # Falco Runtime Security - DISABLED (incompatible avec WSL2)
+  # Pour activer: installer le kernel module ou utiliser un environnement Linux natif
+  # Nécessite un kernel Linux natif, pas compatible avec WSL2
+  # falco:
+  #   image: falcosecurity/falco-no-driver:latest
+  #   container_name: ecommerce-falco
 
   # Loki for Log Aggregation
   loki:
@@ -310,22 +277,19 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  # Promtail for Log Collection (including Falco logs)
+  # Promtail for Log Collection (Falco disabled on WSL2)
   promtail:
     image: grafana/promtail:latest
     container_name: ecommerce-promtail
     volumes:
       - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
-      - ./promtail/promtail-falco.yml:/etc/promtail/promtail-falco.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - dash-logs:/var/log/dash:ro
-      - falco-logs:/var/log/falco:ro
     command: -config.file=/etc/promtail/config.yml -config.expand-env=true
     # PAS de port exposé
     depends_on:
       - loki
-      - falco
     networks:
       - monitoring-network
     restart: unless-stopped

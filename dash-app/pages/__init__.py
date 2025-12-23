@@ -1,3 +1,0 @@
-"""
-Initialisation du package pages
-"""
