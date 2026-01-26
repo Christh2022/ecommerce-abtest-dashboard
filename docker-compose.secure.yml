@@ -6,7 +6,7 @@ services:
   dash-app:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: infrastructure/docker/Dockerfile
     container_name: ecommerce-dashboard
     ports:
       # Port exposé uniquement pour l'accès utilisateur
@@ -94,7 +94,7 @@ services:
       # Accessible uniquement depuis localhost
       - "9090:9090"
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
@@ -171,7 +171,7 @@ services:
   ecommerce-exporter:
     build:
       context: .
-      dockerfile: docker/Dockerfile.exporter
+      dockerfile: infrastructure/docker/Dockerfile.exporter
     container_name: ecommerce-exporter
     environment:
       - DB_HOST=postgres
@@ -214,8 +214,8 @@ services:
       - GF_SECURITY_STRICT_TRANSPORT_SECURITY=false
     volumes:
       - grafana-data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -260,7 +260,7 @@ services:
       # Accessible uniquement depuis localhost
       - "127.0.0.1:3100:3100"
     volumes:
-      - ./loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - ./monitoring/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
       - loki-data:/loki
     command: -config.file=/etc/loki/local-config.yaml
     networks:
@@ -282,7 +282,7 @@ services:
     image: grafana/promtail:latest
     container_name: ecommerce-promtail
     volumes:
-      - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      - ./monitoring/promtail/promtail-config.yml:/etc/promtail/config.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - dash-logs:/var/log/dash:ro

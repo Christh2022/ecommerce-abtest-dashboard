@@ -292,11 +292,11 @@ docker-compose -f docker-compose.secure.yml up -d
 
 #### Whitelist d'Hôtes
 
-**Fichier**: `config/allowed_hosts.txt`
+**Fichier**: `infrastructure/config/allowed_hosts.txt`
 
 ```bash
 # Ajouter les IPs/réseaux autorisés
-echo "192.168.1.0/24" >> config/allowed_hosts.txt
+echo "192.168.1.0/24" >> infrastructure/config/allowed_hosts.txt
 
 # Recharger le firewall
 sudo ./scripts/configure_firewall.sh

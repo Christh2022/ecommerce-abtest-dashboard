@@ -68,20 +68,20 @@ Fork pull request workflows from outside collaborators:
 #### Secrets à Configurer (Production):
 
 **Secrets Actifs**:
-| Secret Name        | Description               | Utilisé Dans   | Requis       |
+| Secret Name | Description | Utilisé Dans | Requis |
 | ------------------ | ------------------------- | -------------- | ------------ |
-| `GRAFANA_URL`      | URL Grafana production    | dashboards.yml | ✅           |
-| `GRAFANA_USER`     | Username Grafana admin    | dashboards.yml | ✅           |
-| `GRAFANA_PASSWORD` | Password Grafana admin    | dashboards.yml | ✅           |
+| `GRAFANA_URL` | URL Grafana production | dashboards.yml | ✅ |
+| `GRAFANA_USER` | Username Grafana admin | dashboards.yml | ✅ |
+| `GRAFANA_PASSWORD` | Password Grafana admin | dashboards.yml | ✅ |
 
 **Secrets CD (Déploiement Désactivé - cd.yml.disabled)**:
-| Secret Name        | Description               | Utilisé Dans          | Status                    |
+| Secret Name | Description | Utilisé Dans | Status |
 | ------------------ | ------------------------- | --------------------- | ------------------------- |
-| `DOCKER_USERNAME`  | Docker Hub username       | cd.yml (disabled)     | ❌ Non utilisé            |
-| `DOCKER_PASSWORD`  | Docker Hub password       | cd.yml (disabled)     | ❌ Non utilisé            |
-| `SSH_PRIVATE_KEY`  | Clé SSH pour déploiement  | cd.yml (disabled)     | ❌ Non utilisé            |
-| `DEPLOY_HOST`      | Serveur de production     | cd.yml (disabled)     | ❌ Non utilisé            |
-| `DEPLOY_USER`      | User SSH pour déploiement | cd.yml (disabled)     | ❌ Non utilisé            |
+| `DOCKER_USERNAME` | Docker Hub username | cd.yml (disabled) | ❌ Non utilisé |
+| `DOCKER_PASSWORD` | Docker Hub password | cd.yml (disabled) | ❌ Non utilisé |
+| `SSH_PRIVATE_KEY` | Clé SSH pour déploiement | cd.yml (disabled) | ❌ Non utilisé |
+| `DEPLOY_HOST` | Serveur de production | cd.yml (disabled) | ❌ Non utilisé |
+| `DEPLOY_USER` | User SSH pour déploiement | cd.yml (disabled) | ❌ Non utilisé |
 
 #### Comment Ajouter un Secret:
 

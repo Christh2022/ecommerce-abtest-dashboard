@@ -1,65 +1,65 @@
 name: Create Grafana Dashboards
 
 on:
-    # Désactivé pour push automatique - Nécessite instance Grafana accessible
-    # Décommenter après configuration de GRAFANA_URL, GRAFANA_USER, GRAFANA_PASSWORD dans secrets
-    # push:
-    #     branches: [main, develop]
-    #     paths:
-    #         - "grafana_dashboards_scripts/**"
-    #         - "grafana/dashboards/**"
-    workflow_dispatch:
-        inputs:
-            grafana_url:
-                description: "Grafana URL"
-                required: true
-                default: "http://localhost:3000"
+  # Désactivé pour push automatique - Nécessite instance Grafana accessible
+  # Décommenter après configuration de GRAFANA_URL, GRAFANA_USER, GRAFANA_PASSWORD dans secrets
+  # push:
+  #     branches: [main, develop]
+  #     paths:
+  #         - "grafana_dashboards_scripts/**"
+  #         - "grafana/dashboards/**"
+  workflow_dispatch:
+    inputs:
+      grafana_url:
+        description: "Grafana URL"
+        required: true
+        default: "http://localhost:3000"
 
 permissions:
-    contents: read
+  contents: read
 
 jobs:
-    create-dashboards:
-        name: Create All Grafana Dashboards
-        runs-on: ubuntu-latest
+  create-dashboards:
+    name: Create All Grafana Dashboards
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.12"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-            - name: Install dependencies
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install requests python-dotenv
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests python-dotenv
 
-            - name: Wait for Grafana to be ready
-              run: |
-                  echo "Waiting for Grafana..."
-                  timeout 60 bash -c 'until curl -sf ${{ github.event.inputs.grafana_url || secrets.GRAFANA_URL }}/api/health; do sleep 2; done' || true
+      - name: Wait for Grafana to be ready
+        run: |
+          echo "Waiting for Grafana..."
+          timeout 60 bash -c 'until curl -sf ${{ github.event.inputs.grafana_url || secrets.GRAFANA_URL }}/api/health; do sleep 2; done' || true
 
-            - name: Create dashboards
-              env:
-                  GRAFANA_URL: ${{ github.event.inputs.grafana_url || secrets.GRAFANA_URL || 'http://localhost:3000' }}
-                  GRAFANA_USER: ${{ secrets.GRAFANA_USER || 'admin' }}
-                  GRAFANA_PASSWORD: ${{ secrets.GRAFANA_PASSWORD || 'admin' }}
-              run: |
-                  if [ -z "$GRAFANA_URL" ]; then
-                    echo "❌ GRAFANA_URL not configured"
-                    echo "Configure secrets in: Settings → Secrets and variables → Actions"
-                    exit 1
-                  fi
-                  python run_all_dashboards.py
+      - name: Create dashboards
+        env:
+          GRAFANA_URL: ${{ github.event.inputs.grafana_url || secrets.GRAFANA_URL || 'http://localhost:3000' }}
+          GRAFANA_USER: ${{ secrets.GRAFANA_USER || 'admin' }}
+          GRAFANA_PASSWORD: ${{ secrets.GRAFANA_PASSWORD || 'admin' }}
+        run: |
+          if [ -z "$GRAFANA_URL" ]; then
+            echo "❌ GRAFANA_URL not configured"
+            echo "Configure secrets in: Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+          python run_all_dashboards.py
 
-            - name: Verify dashboards
-              env:
-                  GRAFANA_URL: ${{ github.event.inputs.grafana_url || secrets.GRAFANA_URL }}
-                  GRAFANA_USER: ${{ secrets.GRAFANA_USER }}
-                  GRAFANA_PASSWORD: ${{ secrets.GRAFANA_PASSWORD }}
-              run: |
-                  curl -u $GRAFANA_USER:$GRAFANA_PASSWORD \
-                    $GRAFANA_URL/api/search?type=dash-db | jq '.'
+      - name: Verify dashboards
+        env:
+          GRAFANA_URL: ${{ github.event.inputs.grafana_url || secrets.GRAFANA_URL }}
+          GRAFANA_USER: ${{ secrets.GRAFANA_USER }}
+          GRAFANA_PASSWORD: ${{ secrets.GRAFANA_PASSWORD }}
+        run: |
+          curl -u $GRAFANA_USER:$GRAFANA_PASSWORD \
+            $GRAFANA_URL/api/search?type=dash-db | jq '.'

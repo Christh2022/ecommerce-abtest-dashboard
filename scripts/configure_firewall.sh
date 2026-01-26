@@ -25,7 +25,7 @@ fi
 
 # Configuration
 DOCKER_NETWORK="172.20.0.0/16"
-ALLOWED_HOSTS_FILE="./config/allowed_hosts.txt"
+ALLOWED_HOSTS_FILE="./infrastructure/config/allowed_hosts.txt"
 LOCALHOST="127.0.0.1"
 
 echo -e "${YELLOW}📋 Configuration:${NC}"

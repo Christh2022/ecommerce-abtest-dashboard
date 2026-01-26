@@ -65,10 +65,10 @@ L'application intègre un **système de reconnaissance vocale** pour une expéri
 
 ```bash
 # Windows
-bin\run_tests.bat
+scripts\bin\run_tests.bat
 
 # Linux/Mac
-./bin/run_tests.sh
+./scripts/bin/run_tests.sh
 
 # Ou directement avec Python
 python run_tests.py
@@ -297,10 +297,10 @@ Les dashboards Grafana doivent être créés après l'import des données (prend
 
 ```bash
 # Windows
-bin\run_all_dashboards.bat
+scripts\bin\run_all_dashboards.bat
 
 # Linux/Mac
-./bin/run_all_dashboards.sh
+./scripts/bin/run_all_dashboards.sh
 
 # Ou directement avec Python
 python run_all_dashboards.py
@@ -526,8 +526,8 @@ python test_security_simple.py
 
 - `test_security_simple.py` - Script de test principal (41 attaques)
 - `GUIDE_COLLABORATEURS.md` - Guide complet pour collaborateurs
-- `grafana/dashboards/security-attacks-realtime.json` - Dashboard Grafana
-- `grafana/provisioning/alerting/attack-alerts.yml` - Règles d'alerte (32+)
+- `monitoring/grafana/dashboards/security-attacks-realtime.json` - Dashboard Grafana
+- `monitoring/grafana/provisioning/alerting/attack-alerts.yml` - Règles d'alerte (32+)
 - `security-reports/attack-results/` - Rapports JSON des tests
 
 #### ⚠️ Notes Importantes
@@ -660,31 +660,43 @@ ecommerce-abtest-dashboard/
 │   └── components/        # Composants réutilisables
 ├── data/
 │   └── clean/             # Données CSV nettoyées
-├── docker/                # 🆕 Dockerfiles du projet
-│   ├── Dockerfile         # Image principale Dash
-│   ├── Dockerfile.exporter        # Image exporteur Prometheus
-│   ├── Dockerfile.dashboard-init  # Image init dashboards
-│   └── README.md          # Documentation des Dockerfiles
-├── grafana/
-│   ├── dashboards/        # Fichiers JSON des dashboards
-│   └── provisioning/      # Configuration Grafana
-├── grafana_dashboards_scripts/  # 🆕 Scripts de création des dashboards
-│   ├── create_dashboards_1_3.py # Dashboards 1-3
-│   ├── create_dashboards_4_6.py # Dashboards 4-6
-│   ├── create_bi_dashboard.py   # BI Dashboard
-│   ├── create_full_dashboard.py # Full Dashboard
-│   ├── create_monitoring_dashboard.py
-│   ├── create_prometheus_dashboard.py
-│   └── README.md          # Documentation des scripts
-├── bin/                   # 🆕 Scripts exécutables
-│   ├── run_all_dashboards.bat   # Windows - Créer dashboards
-│   ├── run_all_dashboards.sh    # Linux/Mac - Créer dashboards
-│   ├── run_tests.bat            # Windows - Lancer tests
-│   ├── run_tests.sh             # Linux/Mac - Lancer tests
-│   └── README.md          # Documentation des scripts
-├── scripts/               # Scripts d'import et d'analyse
-│   ├── import_data_to_postgres.py  # Import des données
-│   └── init_db.sql        # Initialisation de la DB
+├── infrastructure/        # 🆕 Infrastructure & Deployment
+│   ├── docker/            # Dockerfiles du projet
+│   │   ├── Dockerfile         # Image principale Dash
+│   │   ├── Dockerfile.exporter        # Image exporteur Prometheus
+│   │   ├── Dockerfile.dashboard-init  # Image init dashboards
+│   │   └── README.md          # Documentation des Dockerfiles
+│   ├── k8s/               # Manifests Kubernetes
+│   └── config/            # Configuration réseau/firewall
+├── monitoring/            # 🆕 Stack Observabilité
+│   ├── grafana/           # Dashboards & alertes
+│   │   ├── dashboards/        # Fichiers JSON des dashboards
+│   │   └── provisioning/      # Configuration Grafana
+│   ├── prometheus/        # Métriques time-series
+│   ├── loki/              # Agrégation logs
+│   ├── promtail/          # Collection logs
+│   ├── falco/             # Détection intrusions
+│   ├── grafana_dashboards_scripts/  # Scripts création dashboards
+│   │   ├── create_dashboards_1_3.py # Dashboards 1-3
+│   │   ├── create_dashboards_4_6.py # Dashboards 4-6
+│   │   ├── create_bi_dashboard.py   # BI Dashboard
+│   │   ├── create_full_dashboard.py # Full Dashboard
+│   │   ├── create_monitoring_dashboard.py
+│   │   ├── create_prometheus_dashboard.py
+│   │   └── README.md          # Documentation des scripts
+│   └── tools/             # Outils monitoring
+├── scripts/               # Scripts ETL & Analyse
+│   ├── bin/               # 🆕 Scripts exécutables
+│   │   ├── run_all_dashboards.bat   # Windows - Créer dashboards
+│   │   ├── run_all_dashboards.sh    # Linux/Mac - Créer dashboards
+│   │   ├── run_tests.bat            # Windows - Lancer tests
+│   │   ├── run_tests.sh             # Linux/Mac - Lancer tests
+│   │   └── README.md          # Documentation des scripts
+│   ├── data_prep/         # ETL pipeline
+│   ├── kpi_analysis/      # Analyse KPI
+│   └── ab_testing/        # Tests A/B
+├── docs/                  # Documentation
+│   └── visualizations/    # Graphiques PNG
 ├── run_all_dashboards.py  # Script Python pour créer tous les dashboards
 ├── docker-compose.secure.yml  # Configuration Docker
 └── README.md              # Ce fichier
@@ -692,9 +704,9 @@ ecommerce-abtest-dashboard/
 
 **🆕 Nouveautés** :
 
-- Les scripts de création de dashboards Grafana sont organisés dans `grafana_dashboards_scripts/`
-- Les Dockerfiles sont regroupés dans `docker/`
-- Les scripts exécutables (.bat/.sh) sont dans `bin/`
+- Infrastructure consolidée dans `infrastructure/` (docker, k8s, config)
+- Stack monitoring complète dans `monitoring/`
+- Scripts organisés par fonction dans `scripts/`
 
 ---
 
@@ -1207,7 +1219,7 @@ python scripts/generate_products_summary.py
 
 ### Avec Docker (à venir - Milestone 5)
 
-```bash
+````bash
 # Build et run tous les services
 =======
 ### Avec Docker (à venir)
@@ -1219,7 +1231,7 @@ docker-compose up --build
 # - Dashboard: http://localhost:8050
 # - Grafana: http://localhost:3000
 # - PostgreSQL: localhost:5432
-```
+````
 
 ---
 

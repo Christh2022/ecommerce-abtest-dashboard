@@ -396,7 +396,6 @@ def toggle_header_sidebar(pathname):
 
 
 if __name__ == '__main__':
-    # Dire le message de bienvenue avec synthèse vocale
     if TTS_AVAILABLE:
         try:
             engine = pyttsx3.init()
