@@ -24,7 +24,7 @@ NUM_TRANSACTIONS = 5000
 
 def generate_users(n=NUM_USERS):
     """Générer des utilisateurs fictifs"""
-    print(f"📝 Génération de {n} utilisateurs...")
+    print(f" Génération de {n} utilisateurs...")
     
     countries = ['France', 'USA', 'UK', 'Germany', 'Spain', 'Italy', 'Canada']
     segments = ['Premium', 'Regular', 'Occasional', 'New']
@@ -45,7 +45,7 @@ def generate_users(n=NUM_USERS):
 
 def generate_products(n=NUM_PRODUCTS):
     """Générer des produits fictifs"""
-    print(f"📦 Génération de {n} produits...")
+    print(f" Génération de {n} produits...")
     
     categories = ['Electronics', 'Clothing', 'Books', 'Home', 'Sports', 'Beauty']
     
@@ -62,7 +62,7 @@ def generate_products(n=NUM_PRODUCTS):
 
 def generate_sessions(users_df, n=NUM_TRANSACTIONS):
     """Générer des sessions utilisateur"""
-    print(f"🌐 Génération de {n} sessions...")
+    print(f" Génération de {n} sessions...")
     
     devices = ['Desktop', 'Mobile', 'Tablet']
     browsers = ['Chrome', 'Firefox', 'Safari', 'Edge']
@@ -92,7 +92,7 @@ def generate_sessions(users_df, n=NUM_TRANSACTIONS):
 
 def generate_transactions(sessions_df, n=NUM_TRANSACTIONS):
     """Générer des transactions"""
-    print(f"💳 Génération de {n} transactions...")
+    print(f" Génération de {n} transactions...")
     
     # Seulement 30% des sessions aboutissent à une transaction
     n_transactions = int(n * 0.3)
@@ -116,7 +116,7 @@ def generate_transactions(sessions_df, n=NUM_TRANSACTIONS):
 
 def generate_transaction_items(transactions_df, products_df):
     """Générer les items de transaction"""
-    print(f"🛒 Génération des items de transaction...")
+    print(f" Génération des items de transaction...")
     
     items = []
     item_id = 1
@@ -141,7 +141,7 @@ def generate_transaction_items(transactions_df, products_df):
 
 def generate_ab_tests():
     """Générer des tests A/B"""
-    print(f"🧪 Génération des tests A/B...")
+    print(f" Génération des tests A/B...")
     
     tests = pd.DataFrame({
         'test_id': [1, 2, 3],
@@ -175,7 +175,7 @@ def generate_ab_tests():
 
 def generate_ab_test_assignments(users_df, tests_df):
     """Générer les assignations de tests A/B"""
-    print(f"🎲 Génération des assignations A/B...")
+    print(f" Génération des assignations A/B...")
     
     assignments = []
     assignment_id = 1
@@ -200,7 +200,7 @@ def generate_ab_test_assignments(users_df, tests_df):
 
 def generate_ab_test_results(assignments_df, transactions_df):
     """Générer les résultats de tests A/B"""
-    print(f"📊 Génération des résultats A/B...")
+    print(f" Génération des résultats A/B...")
     
     results = []
     result_id = 1
@@ -232,7 +232,7 @@ def generate_ab_test_results(assignments_df, transactions_df):
 
 def load_to_database(dataframes, engine):
     """Charger les données dans la base de données"""
-    print("\n📤 Chargement des données dans la base de données...")
+    print("\n Chargement des données dans la base de données...")
     
     table_names = [
         'users', 'products', 'sessions', 'transactions',
@@ -244,8 +244,7 @@ def load_to_database(dataframes, engine):
         df.to_sql(table_name, engine, if_exists='append', index=False)
         print(f"    ✓ {table_name} chargée")
     
-    print("\n✅ Toutes les données ont été chargées avec succès!")
-
+    print("\n Toutes les données ont été chargées avec succès!")    
 
 def main():
     """Fonction principale"""
@@ -277,9 +276,9 @@ def main():
     load_to_database(dataframes, engine)
     
     print("\n" + "=" * 60)
-    print("✨ Processus terminé avec succès!")
+    print(" Processus terminé avec succès!")
     print("=" * 60)
-    print(f"\n📊 Statistiques:")
+    print(f"\n Statistiques:")
     print(f"  - {len(users_df)} utilisateurs")
     print(f"  - {len(products_df)} produits")
     print(f"  - {len(sessions_df)} sessions")

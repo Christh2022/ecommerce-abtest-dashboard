@@ -5,7 +5,7 @@
 set -e
 
 echo "========================================"
-echo "🧪 Testing Database Migrations"
+echo " Testing Database Migrations"
 echo "========================================"
 
 # Colors
@@ -20,11 +20,11 @@ DB_NAME="ecommerce_db"
 DB_USER="dashuser"
 
 echo ""
-echo "📋 Pre-flight checks..."
+echo " Pre-flight checks..."
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
-    echo -e "${RED}❌ Docker is not running${NC}"
+    echo -e "${RED} Docker is not running${NC}"
     exit 1
 fi
 echo -e "${GREEN}✓${NC} Docker is running"
@@ -40,21 +40,21 @@ echo -e "${GREEN}✓${NC} PostgreSQL container is running"
 
 # Check database connectivity
 if ! docker exec $DB_CONTAINER pg_isready -U $DB_USER > /dev/null 2>&1; then
-    echo -e "${RED}❌ Cannot connect to database${NC}"
+    echo -e "${RED} Cannot connect to database${NC}"
     exit 1
 fi
 echo -e "${GREEN}✓${NC} Database is ready"
 
 echo ""
-echo "📊 Current migration status:"
+echo " Current migration status:"
 docker exec $DB_CONTAINER psql -U $DB_USER -d $DB_NAME -c "SELECT version, description, applied_at FROM schema_migrations ORDER BY version;" 2>/dev/null || echo "No migrations table yet"
 
 echo ""
-echo "🔄 Running migrations..."
+echo " Running migrations..."
 python scripts/run_migrations.py
 
 echo ""
-echo "✅ Verifying database structure..."
+echo " Verifying database structure..."
 
 # Check tables
 TABLE_COUNT=$(docker exec $DB_CONTAINER psql -U $DB_USER -d $DB_NAME -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE';" | tr -d ' ')
@@ -73,7 +73,7 @@ FUNCTION_COUNT=$(docker exec $DB_CONTAINER psql -U $DB_USER -d $DB_NAME -t -c "S
 echo "Functions created: $FUNCTION_COUNT"
 
 echo ""
-echo "📋 Testing sample queries..."
+echo " Testing sample queries..."
 
 # Test view queries
 echo "Testing v_daily_kpis view..."
@@ -93,17 +93,17 @@ echo "Testing calculate_aov function..."
 docker exec $DB_CONTAINER psql -U $DB_USER -d $DB_NAME -c "SELECT calculate_aov(10000.00, 50);" > /dev/null 2>&1 && echo -e "${GREEN}✓${NC} calculate_aov OK" || echo -e "${RED}✗${NC} calculate_aov FAILED"
 
 echo ""
-echo "📊 Checking seed data..."
+echo " Checking seed data..."
 AB_SCENARIOS=$(docker exec $DB_CONTAINER psql -U $DB_USER -d $DB_NAME -t -c "SELECT COUNT(*) FROM ab_test_scenarios;" | tr -d ' ')
 echo "A/B test scenarios: $AB_SCENARIOS"
 
 echo ""
 echo "========================================"
-echo -e "${GREEN}✅ Migration tests completed!${NC}"
+echo -e "${GREEN} Migration tests completed!${NC}"
 echo "========================================"
 
 echo ""
-echo "📈 Final Status:"
+echo " Final Status:"
 docker exec $DB_CONTAINER psql -U $DB_USER -d $DB_NAME -c "
 SELECT 
     (SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE') as tables,

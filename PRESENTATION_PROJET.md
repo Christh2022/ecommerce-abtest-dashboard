@@ -7,7 +7,6 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 header: '📊 Analyse E-Commerce - RetailRocket Dataset'
 footer: 'Projet #1 - L\'École Multimédia - Décembre 2025'
 ---
-
 <style>
 section {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -98,6 +97,8 @@ Analyser les données d'une plateforme e-commerce et proposer des optimisations 
 </div>
 <div>
 
+
+
 ## Volume de Données
 
 - **Événements** : 2,76M
@@ -107,6 +108,7 @@ Analyser les données d'une plateforme e-commerce et proposer des optimisations 
 
 </div>
 </div>
+
 
 ---
 
@@ -144,6 +146,7 @@ PostgreSQL → Dashboard Dash (12 pages)
 </div>
 <div>
 
+
 ## Tests Statistiques
 
 - ✅ Z-test (proportions)
@@ -153,6 +156,7 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 </div>
 </div>
+
 
 ---
 
@@ -164,14 +168,14 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 # 💰 MÉTRIQUES GLOBALES
 
-| 📈 KPI                    | 💯 Valeur   | 🎯 Évaluation             |
-| :------------------------ | :---------- | :------------------------ |
-| 💵 **Revenu Total**       | **5,73M$**  | ✅ Performance solide     |
-| 🛍️ **Transactions**       | **22,457**  | ✅ Base d'analyse robuste |
-| 🛒 **Panier Moyen (AOV)** | **255,36$** | ✅ +27% vs retail         |
-| 👥 **Utilisateurs**       | **11,719**  | ✅ 4 segments identifiés  |
-| 📈 **Taux Conversion**    | **0.84%**   | ⚠️ À optimiser (-58%)     |
-| 🚫 **Abandon Panier**     | **67.43%**  | ⚠️ Point critique         |
+| 📈 KPI                         | 💯 Valeur         | 🎯 Évaluation            |
+| :----------------------------- | :---------------- | :------------------------ |
+| 💵**Revenu Total**       | **5,73M$**  | ✅ Performance solide     |
+| 🛍️**Transactions**     | **22,457**  | ✅ Base d'analyse robuste |
+| 🛒**Panier Moyen (AOV)** | **255,36$** | ✅ +27% vs retail         |
+| 👥**Utilisateurs**       | **11,719**  | ✅ 4 segments identifiés |
+| 📈**Taux Conversion**    | **0.84%**   | ⚠️ À optimiser (-58%)  |
+| 🚫**Abandon Panier**     | **67.43%**  | ⚠️ Point critique       |
 
 ---
 
@@ -200,12 +204,12 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 # 👥 SEGMENTATION UTILISATEURS
 
-| 💎 Segment        | 👥 Users    | 💰 Rev/User | 📊 % Revenu | 🎯 Stratégie       |
-| :---------------- | :---------- | :---------- | :---------- | :----------------- |
-| **💎 Premium**    | 209 (1.8%)  | **7,999$**  | 29.1%       | 🔒 Rétention VIP   |
-| **⭐ Regular**    | 1,316 (11%) | 691$        | 15.9%       | ⬆️ Upsell Premium  |
-| **🔵 Occasional** | 4,957 (42%) | 356$        | 30.8%       | 🔄 Fréquence achat |
-| **🆕 New**        | 5,237 (45%) | 265$        | 24.2%       | 🎯 Conversion      |
+| 💎 Segment              | 👥 Users    | 💰 Rev/User      | 📊 % Revenu | 🎯 Stratégie       |
+| :---------------------- | :---------- | :--------------- | :---------- | :------------------ |
+| **💎 Premium**    | 209 (1.8%)  | **7,999$** | 29.1%       | 🔒 Rétention VIP   |
+| **⭐ Regular**    | 1,316 (11%) | 691$             | 15.9%       | ⬆️ Upsell Premium |
+| **🔵 Occasional** | 4,957 (42%) | 356$             | 30.8%       | 🔄 Fréquence achat |
+| **🆕 New**        | 5,237 (45%) | 265$             | 24.2%       | 🎯 Conversion       |
 
 <div class="highlight">
 
@@ -229,12 +233,12 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 </div>
 
-| 📊 Métrique            | 🎯 Impact       |
-| :--------------------- | :-------------- |
+| 📊 Métrique                 | 🎯 Impact             |
+| :--------------------------- | :-------------------- |
 | **Lift Conversion**    | **+15.3%**      |
 | **ROI 30 jours**       | **+12,333%** 🔥 |
 | **ROI Annuel**         | **+151,215%**   |
-| **Coût**               | 10,000$         |
+| **Coût**              | 10,000$               |
 | **Revenu add. annuel** | **15,1M$**      |
 
 <div class="highlight">
@@ -253,12 +257,12 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 </div>
 
-| 📊 Métrique            | 🎯 Impact    |
-| :--------------------- | :----------- |
+| 📊 Métrique                 | 🎯 Impact          |
+| :--------------------------- | :----------------- |
 | **Lift Conversion**    | **+24.6%**   |
 | **ROI 30 jours**       | **+7,485%**  |
 | **ROI Annuel**         | **+92,212%** |
-| **Coût**               | 25,000$      |
+| **Coût**              | 25,000$            |
 | **Revenu add. annuel** | **23,1M$**   |
 
 <div class="warning">
@@ -277,12 +281,12 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 </div>
 
-| 📊 Métrique            | 🎯 Impact    |
-| :--------------------- | :----------- |
+| 📊 Métrique                 | 🎯 Impact          |
+| :--------------------------- | :----------------- |
 | **Lift Conversion**    | **+21.4%**   |
 | **ROI 30 jours**       | **+6,665%**  |
 | **ROI Annuel**         | **+82,230%** |
-| **Coût**               | 25,000$      |
+| **Coût**              | 25,000$            |
 | **Revenu add. annuel** | **20,6M$**   |
 
 <div class="highlight">
@@ -301,12 +305,12 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 </div>
 
-| 📊 Métrique            | 🎯 Impact                |
-| :--------------------- | :----------------------- |
-| **Lift Conversion**    | **+34.1%**               |
-| **ROI 30 jours**       | **+4,231%**              |
-| **Coût**               | **5,000$** (très faible) |
-| **Revenu add. annuel** | **2,6M$**                |
+| 📊 Métrique                 | 🎯 Impact                       |
+| :--------------------------- | :------------------------------ |
+| **Lift Conversion**    | **+34.1%**                |
+| **ROI 30 jours**       | **+4,231%**               |
+| **Coût**              | **5,000$** (très faible) |
+| **Revenu add. annuel** | **2,6M$**                 |
 
 <div class="highlight">
 
@@ -324,12 +328,12 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 </div>
 
-| 📊 Métrique            | 🎯 Impact    |
-| :--------------------- | :----------- |
+| 📊 Métrique                 | 🎯 Impact          |
+| :--------------------------- | :----------------- |
 | **Lift Conversion**    | **+42.6%**   |
 | **ROI 30 jours**       | **+1,698%**  |
 | **ROI Annuel**         | **+21,778%** |
-| **Coût**               | 15,000$      |
+| **Coût**              | 15,000$            |
 | **Revenu add. annuel** | **3,3M$**    |
 
 <div class="warning">
@@ -361,6 +365,7 @@ PostgreSQL → Dashboard Dash (12 pages)
 </div>
 <div>
 
+
 ## 🚀 Avec Optimisations
 
 - **Revenu annuel** : **80M$**
@@ -370,6 +375,7 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 </div>
 </div>
+
 
 <div class="success">
 
@@ -381,11 +387,11 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 # 💸 ROI GLOBAL
 
-| Phase                   | Scénarios                       | Investissement | Revenu Annuel | ROI     |
-| :---------------------- | :------------------------------ | :------------- | :------------ | :------ |
-| **Phase 1** (0-3 mois)  | Paiements + Catalogue + Reviews | 30K$           | +20M$         | 66,567% |
-| **Phase 2** (3-6 mois)  | Checkout + Fidélité + Photos    | 80K$           | +38M$         | 47,400% |
-| **Phase 3** (6-12 mois) | Pricing + Weekend + Perso       | 78K$           | +7M$          | 8,874%  |
+| Phase                         | Scénarios                      | Investissement           | Revenu Annuel | ROI |
+| :---------------------------- | :------------------------------ | :----------------------- | :------------ | :-- |
+| **Phase 1** (0-3 mois)  | Paiements + Catalogue + Reviews | 30K$           | +20M$ | 66,567%       |     |
+| **Phase 2** (3-6 mois)  | Checkout + Fidélité + Photos  | 80K$           | +38M$ | 47,400%       |     |
+| **Phase 3** (6-12 mois) | Pricing + Weekend + Perso       | 78K$           | +7M$  | 8,874%        |     |
 
 <div class="highlight">
 
@@ -430,6 +436,7 @@ PostgreSQL → Dashboard Dash (12 pages)
 </div>
 <div>
 
+
 ## ⭐ Regular (11%)
 
 - Conversion vers Premium
@@ -439,6 +446,7 @@ PostgreSQL → Dashboard Dash (12 pages)
 
 </div>
 </div>
+
 
 <div class="highlight">
 
@@ -471,6 +479,7 @@ Checkout simplifié + Paiements + Reviews → **+18M$/an**
 </div>
 <div>
 
+
 ## 📊 Frontend
 
 - **Dash/Plotly** (12 pages)
@@ -480,6 +489,7 @@ Checkout simplifié + Paiements + Reviews → **+18M$/an**
 
 </div>
 </div>
+
 
 <div class="columns">
 <div>
@@ -493,6 +503,7 @@ Checkout simplifié + Paiements + Reviews → **+18M$/an**
 </div>
 <div>
 
+
 ## 🔐 Sécurité
 
 - Flask-Login + bcrypt
@@ -501,6 +512,7 @@ Checkout simplifié + Paiements + Reviews → **+18M$/an**
 
 </div>
 </div>
+
 
 ---
 
@@ -641,6 +653,7 @@ ecommerce-abtest-dashboard/
 </div>
 <div>
 
+
 ## 📊 Optimisations
 
 - Alertes temps réel
@@ -650,6 +663,7 @@ ecommerce-abtest-dashboard/
 
 </div>
 </div>
+
 
 <div class="highlight">
 
@@ -665,12 +679,12 @@ ecommerce-abtest-dashboard/
 
 ## 🎯 Objectifs 12 Mois
 
-| KPI            | Baseline | Objectif | Gain      |
-| :------------- | :------- | :------- | :-------- |
-| **Conversion** | 0.84%    | 1.52%    | **+81%**  |
-| **Revenu**     | 15M$     | 80M$     | **+65M$** |
-| **AOV**        | 255$     | 285$     | **+12%**  |
-| **Rev/User**   | 489$     | 865$     | **+77%**  |
+| KPI                  | Baseline          | Objectif        | Gain           |
+| :------------------- | :---------------- | :-------------- | :------------- |
+| **Conversion** | 0.84%             | 1.52%           | **+81%** |
+| **Revenu**     | 15M$     | 80M$ | **+65M$** |                |
+| **AOV**        | 255$     | 285$ | **+12%**  |                |
+| **Rev/User**   | 489$     | 865$ | **+77%**  |                |
 
 </div>
 

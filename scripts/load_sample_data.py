@@ -159,7 +159,7 @@ cur.close()
 conn.close()
 
 print("\n" + "="*50)
-print("✅ Sample data loaded successfully!")
+print(" Sample data loaded successfully!")
 print("="*50)
 print("\nVerify with:")
 print("  docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -c 'SELECT COUNT(*) FROM ab_test_results;'")

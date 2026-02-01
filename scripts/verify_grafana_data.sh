@@ -1,12 +1,12 @@
 #!/bin/bash
 # Quick data verification script for Grafana dashboards
 
-echo "🔍 Verifying PostgreSQL Data for Grafana Dashboards"
+echo " Verifying PostgreSQL Data for Grafana Dashboards"
 echo "=================================================="
 echo ""
 
 # Check daily_metrics
-echo "📊 Daily Metrics:"
+echo " Daily Metrics:"
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -t -c "
 SELECT 
   'Date Range: ' || MIN(date) || ' to ' || MAX(date),
@@ -17,7 +17,7 @@ FROM daily_metrics;
 " | grep -v '^$'
 
 echo ""
-echo "🏷️  Products:"
+echo "  Products:"
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -t -c "
 SELECT 
   'Total Products: ' || COUNT(*),
@@ -27,7 +27,7 @@ WHERE total_revenue > 0;
 " | grep -v '^$'
 
 echo ""
-echo "🧪 A/B Tests:"
+echo " A/B Tests:"
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -t -c "
 SELECT 
   'Total Scenarios: ' || COUNT(DISTINCT scenario_id),
@@ -36,7 +36,7 @@ FROM ab_test_results;
 " | grep -v '^$'
 
 echo ""
-echo "🔄 Funnel Stages:"
+echo " Funnel Stages:"
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -t -c "
 SELECT 
   'Total Stages: ' || COUNT(DISTINCT stage_name),
@@ -45,7 +45,7 @@ FROM funnel_stages;
 " | grep -v '^$'
 
 echo ""
-echo "🚦 Traffic Sources:"
+echo " Traffic Sources:"
 docker exec ecommerce-postgres psql -U dashuser -d ecommerce_db -t -c "
 SELECT 
   'Total Sources: ' || COUNT(DISTINCT source || '-' || medium),
@@ -55,12 +55,12 @@ FROM traffic_sources;
 
 echo ""
 echo "=================================================="
-echo "✅ Data verification complete!"
+echo " Data verification complete!"
 echo ""
-echo "📍 Grafana Dashboard URLs:"
+echo " Grafana Dashboard URLs:"
 echo "   Main Dashboard: http://localhost:3000/d/ecommerce-main-dashboard"
 echo "   KPIs Dashboard: http://localhost:3000/d/ecommerce-kpis"
 echo "   A/B Testing: http://localhost:3000/d/ab-testing-analysis"
 echo ""
-echo "🔑 Login: admin / admin123"
+echo " Login: admin / admin123"
 echo ""

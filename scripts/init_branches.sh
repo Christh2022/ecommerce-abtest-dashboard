@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script d'initialisation des branches Git pour le projet E-commerce Dashboard
 
-echo "🚀 Initialisation du projet E-commerce Dashboard & A/B Testing"
+echo " Initialisation du projet E-commerce Dashboard & A/B Testing"
 echo "============================================================="
 
 # Couleurs pour l'output

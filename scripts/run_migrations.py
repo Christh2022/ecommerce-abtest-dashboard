@@ -30,7 +30,7 @@ def get_connection():
         conn = psycopg2.connect(**DB_CONFIG)
         return conn
     except psycopg2.Error as e:
-        print(f"❌ Error connecting to database: {e}")
+        print(f" Error connecting to database: {e}")
         sys.exit(1)
 
 
@@ -48,7 +48,7 @@ def ensure_migrations_table(conn):
     """)
     conn.commit()
     cursor.close()
-    print("✅ Migrations tracking table ready")
+    print(" Migrations tracking table ready")
 
 
 def get_applied_migrations(conn):
@@ -63,7 +63,7 @@ def get_applied_migrations(conn):
 def get_pending_migrations(applied_migrations):
     """Get list of migration files that haven't been applied"""
     if not MIGRATIONS_DIR.exists():
-        print(f"❌ Migrations directory not found: {MIGRATIONS_DIR}")
+        print(f" Migrations directory not found: {MIGRATIONS_DIR}")
         return []
     
     all_migrations = sorted([
@@ -82,7 +82,7 @@ def get_pending_migrations(applied_migrations):
 
 def execute_migration(conn, version, migration_file):
     """Execute a single migration file"""
-    print(f"\n📝 Applying migration {version}: {migration_file.name}")
+    print(f"\n Applying migration {version}: {migration_file.name}")
     
     try:
         with open(migration_file, 'r', encoding='utf-8') as f:
@@ -107,16 +107,16 @@ def execute_migration(conn, version, migration_file):
         conn.commit()
         cursor.close()
         
-        print(f"✅ Migration {version} applied successfully ({execution_time}ms)")
+        print(f" Migration {version} applied successfully ({execution_time}ms)")
         return True
         
     except psycopg2.Error as e:
         conn.rollback()
-        print(f"❌ Error applying migration {version}: {e}")
+        print(f" Error applying migration {version}: {e}")
         return False
     except Exception as e:
         conn.rollback()
-        print(f"❌ Unexpected error: {e}")
+        print(f" Unexpected error: {e}")
         return False
 
 
@@ -133,10 +133,10 @@ def show_migration_status(conn):
     cursor.close()
     
     if not migrations:
-        print("\n📊 No migrations applied yet")
+        print("\n No migrations applied yet")
         return
     
-    print("\n📊 Applied Migrations:")
+    print("\n Applied Migrations:")
     print("-" * 80)
     for version, description, applied_at, exec_time in migrations:
         print(f"  {version} | {description or 'N/A'}")
@@ -147,7 +147,7 @@ def show_migration_status(conn):
 def run_migrations(dry_run=False):
     """Main function to run all pending migrations"""
     print("=" * 80)
-    print("🚀 Database Migration Runner")
+    print(" Database Migration Runner")
     print("=" * 80)
     
     # Connect to database
@@ -159,19 +159,19 @@ def run_migrations(dry_run=False):
     
     # Get migration status
     applied_migrations = get_applied_migrations(conn)
-    print(f"✅ Found {len(applied_migrations)} applied migration(s)")
+    print(f" Found {len(applied_migrations)} applied migration(s)")
     
     pending_migrations = get_pending_migrations(applied_migrations)
-    print(f"📋 Found {len(pending_migrations)} pending migration(s)")
+    print(f" Found {len(pending_migrations)} pending migration(s)")
     
     if not pending_migrations:
-        print("\n✨ Database is up to date!")
+        print("\n Database is up to date!")
         show_migration_status(conn)
         conn.close()
         return
     
     if dry_run:
-        print("\n🔍 DRY RUN MODE - No changes will be made")
+        print("\n DRY RUN MODE - No changes will be made")
         print("\nPending migrations:")
         for version, migration_file in pending_migrations:
             print(f"  - {version}: {migration_file.name}")
@@ -179,18 +179,18 @@ def run_migrations(dry_run=False):
         return
     
     # Apply pending migrations
-    print(f"\n🔄 Applying {len(pending_migrations)} migration(s)...")
+    print(f"\n Applying {len(pending_migrations)} migration(s)...")
     
     success_count = 0
     for version, migration_file in pending_migrations:
         if execute_migration(conn, version, migration_file):
             success_count += 1
         else:
-            print(f"\n❌ Migration failed. Stopping here.")
+            print(f"\n Migration failed. Stopping here.")
             break
     
     # Show final status
-    print(f"\n✅ Successfully applied {success_count}/{len(pending_migrations)} migration(s)")
+    print(f"\n Successfully applied {success_count}/{len(pending_migrations)} migration(s)")
     show_migration_status(conn)
     
     conn.close()
@@ -199,7 +199,7 @@ def run_migrations(dry_run=False):
 
 def rollback_migration(version):
     """Rollback a specific migration (placeholder for future implementation)"""
-    print(f"⚠️  Rollback functionality not yet implemented for version {version}")
+    print(f" Rollback functionality not yet implemented for version {version}")
     print("Please manually revert changes if needed")
 
 

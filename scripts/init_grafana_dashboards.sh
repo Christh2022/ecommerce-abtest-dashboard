@@ -7,7 +7,7 @@ set -e
 echo "=== Initialisation des Dashboards Grafana ==="
 
 # Attendre que Grafana soit prêt
-echo "⏳ Attente de Grafana..."
+echo " Attente de Grafana..."
 GRAFANA_URL="${GRAFANA_URL:-http://grafana:3000}"
 GRAFANA_USER="${GRAFANA_USER:-admin}"
 GRAFANA_PASSWORD="${GRAFANA_PASSWORD:-changeme}"
@@ -16,7 +16,7 @@ RETRY_COUNT=0
 
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
     if curl -sf "${GRAFANA_URL}/api/health" > /dev/null 2>&1; then
-        echo "✅ Grafana est prêt!"
+        echo " Grafana est prêt!"
         break
     fi
     RETRY_COUNT=$((RETRY_COUNT + 1))
@@ -25,7 +25,7 @@ while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
 done
 
 if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
-    echo "❌ Timeout: Grafana n'est pas accessible"
+    echo " Timeout: Grafana n'est pas accessible"
     exit 1
 fi
 
@@ -33,7 +33,7 @@ fi
 sleep 5
 
 echo ""
-echo "📊 Création des dashboards..."
+echo " Création des dashboards..."
 
 # Export des variables pour tous les scripts Python
 export GRAFANA_URL
@@ -72,9 +72,9 @@ echo "  → Prometheus Dashboard..."
 python /app/grafana_dashboards_scripts/create_prometheus_dashboard.py
 
 echo ""
-echo "✅ Tous les dashboards ont été créés avec succès!"
+echo " Tous les dashboards ont été créés avec succès!"
 echo ""
-echo "🌐 Accédez à Grafana: http://localhost:3000"
+echo " Accédez à Grafana: http://localhost:3000"
 echo "   Utilisateur: \$GRAFANA_USER"
 echo "   Mot de passe: Voir variable d'environnement GRAFANA_PASSWORD"
 echo ""

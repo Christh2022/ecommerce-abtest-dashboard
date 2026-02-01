@@ -23,13 +23,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}🔒 Audit de Sécurité des Dépendances${NC}"
+echo -e "${BLUE} Audit de Sécurité des Dépendances${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo ""
 
 # Check if pip-audit is installed
 if ! command -v pip-audit &> /dev/null; then
-    echo -e "${YELLOW}⚠️  pip-audit n'est pas installé. Installation...${NC}"
+    echo -e "${YELLOW}  pip-audit n'est pas installé. Installation...${NC}"
     pip install pip-audit
     echo ""
 fi
@@ -71,7 +71,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Audit root requirements.txt
-echo -e "${BLUE}📋 Audit: $REQUIREMENTS_FILE${NC}"
+echo -e "${BLUE} Audit: $REQUIREMENTS_FILE${NC}"
 echo ""
 
 AUDIT_CMD="pip-audit --requirement $REQUIREMENTS_FILE --format $OUTPUT_FORMAT"
@@ -89,12 +89,12 @@ AUDIT_CMD="$AUDIT_CMD $EXTRA_ARGS"
 # Run audit
 if eval $AUDIT_CMD; then
     echo ""
-    echo -e "${GREEN}✅ Aucune vulnérabilité détectée dans $REQUIREMENTS_FILE${NC}"
+    echo -e "${GREEN} Aucune vulnérabilité détectée dans $REQUIREMENTS_FILE${NC}"
     ROOT_STATUS=0
 else
     ROOT_STATUS=$?
     echo ""
-    echo -e "${RED}❌ Vulnérabilités trouvées dans $REQUIREMENTS_FILE${NC}"
+    echo -e "${RED} Vulnérabilités trouvées dans $REQUIREMENTS_FILE${NC}"
 fi
 
 echo ""
@@ -104,7 +104,7 @@ echo -e "${BLUE}========================================${NC}"
 DASHBOARD_REQ="$PROJECT_DIR/dashboard/requirements.txt"
 if [ -f "$DASHBOARD_REQ" ]; then
     echo ""
-    echo -e "${BLUE}📋 Audit: dashboard/requirements.txt${NC}"
+    echo -e "${BLUE} Audit: dashboard/requirements.txt${NC}"
     echo ""
     
     DASHBOARD_AUDIT_CMD="pip-audit --requirement $DASHBOARD_REQ --format $OUTPUT_FORMAT"
@@ -122,12 +122,12 @@ if [ -f "$DASHBOARD_REQ" ]; then
     
     if eval $DASHBOARD_AUDIT_CMD; then
         echo ""
-        echo -e "${GREEN}✅ Aucune vulnérabilité détectée dans dashboard/requirements.txt${NC}"
+        echo -e "${GREEN} Aucune vulnérabilité détectée dans dashboard/requirements.txt${NC}"
         DASHBOARD_STATUS=0
     else
         DASHBOARD_STATUS=$?
         echo ""
-        echo -e "${RED}❌ Vulnérabilités trouvées dans dashboard/requirements.txt${NC}"
+        echo -e "${RED} Vulnérabilités trouvées dans dashboard/requirements.txt${NC}"
     fi
     
     echo ""
@@ -136,17 +136,17 @@ fi
 
 # Summary
 echo ""
-echo -e "${BLUE}📊 Résumé de l'Audit${NC}"
+echo -e "${BLUE} Résumé de l'Audit${NC}"
 echo -e "${BLUE}========================================${NC}"
 
 if [ $ROOT_STATUS -eq 0 ] && [ ${DASHBOARD_STATUS:-0} -eq 0 ]; then
-    echo -e "${GREEN}✅ Tous les fichiers requirements.txt sont sécurisés${NC}"
+    echo -e "${GREEN} Tous les fichiers requirements.txt sont sécurisés${NC}"
     echo ""
     exit 0
 else
-    echo -e "${RED}❌ Des vulnérabilités ont été détectées${NC}"
+    echo -e "${RED} Des vulnérabilités ont été détectées${NC}"
     echo ""
-    echo -e "${YELLOW}💡 Actions recommandées:${NC}"
+    echo -e "${YELLOW} Actions recommandées:${NC}"
     echo "   1. Examiner les vulnérabilités ci-dessus"
     echo "   2. Mettre à jour les packages vulnérables:"
     echo "      pip install --upgrade <package-name>"

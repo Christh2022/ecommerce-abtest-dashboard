@@ -62,14 +62,21 @@ class ABTestVisualizer:
             df: DataFrame avec simulation quotidienne
             metric: Métrique à visualiser
         """
-        fig, axes = plt.subplots(2, 4, figsize=(20, 10))
+        scenarios = df['scenario_id'].unique()
+        n_scenarios = len(scenarios)
+        n_cols = 4
+        n_rows = (n_scenarios + n_cols - 1) // n_cols  # Ceiling division
+        
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 5 * n_rows))
         fig.suptitle(f'Évolution Quotidienne du Lift - {metric.replace("_", " ").title()}', 
                      fontsize=16, fontweight='bold')
         
-        scenarios = df['scenario_id'].unique()
+        # Aplatir axes si nécessaire
+        if n_rows == 1:
+            axes = axes.reshape(1, -1)
         
         for idx, scenario_id in enumerate(scenarios):
-            ax = axes[idx // 4, idx % 4]
+            ax = axes[idx // n_cols, idx % n_cols]
             scenario_data = df[df['scenario_id'] == scenario_id].sort_values('day_number')
             
             # Nom du scénario
@@ -186,14 +193,20 @@ class ABTestVisualizer:
         Args:
             df: DataFrame avec données de simulation
         """
-        fig, axes = plt.subplots(2, 4, figsize=(20, 10))
+        scenarios = df['scenario_id'].unique()
+        n_scenarios = len(scenarios)
+        n_cols = 4
+        n_rows = (n_scenarios + n_cols - 1) // n_cols
+        
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 5 * n_rows))
         fig.suptitle('Funnel de Conversion - Contrôle vs Variant', 
                      fontsize=16, fontweight='bold')
         
-        scenarios = df['scenario_id'].unique()
+        if n_rows == 1:
+            axes = axes.reshape(1, -1)
         
         for idx, scenario_id in enumerate(scenarios):
-            ax = axes[idx // 4, idx % 4]
+            ax = axes[idx // n_cols, idx % n_cols]
             scenario_data = df[df['scenario_id'] == scenario_id]
             scenario_name = scenario_data['scenario_name'].iloc[0]
             
@@ -284,14 +297,20 @@ class ABTestVisualizer:
         Args:
             df: DataFrame avec simulation quotidienne
         """
-        fig, axes = plt.subplots(2, 4, figsize=(20, 10))
+        scenarios = df['scenario_id'].unique()
+        n_scenarios = len(scenarios)
+        n_cols = 4
+        n_rows = (n_scenarios + n_cols - 1) // n_cols
+        
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 5 * n_rows))
         fig.suptitle('Distribution des P-values au Fil du Temps', 
                      fontsize=16, fontweight='bold')
         
-        scenarios = df['scenario_id'].unique()
+        if n_rows == 1:
+            axes = axes.reshape(1, -1)
         
         for idx, scenario_id in enumerate(scenarios):
-            ax = axes[idx // 4, idx % 4]
+            ax = axes[idx // n_cols, idx % n_cols]
             scenario_data = df[df['scenario_id'] == scenario_id].sort_values('day_number')
             scenario_name = scenario_data['scenario_name'].iloc[0]
             

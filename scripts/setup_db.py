@@ -126,13 +126,13 @@ class ABTestResult(Base):
 def create_database():
     """Créer toutes les tables dans la base de données"""
     try:
-        print("🔌 Connexion à la base de données...")
+        print(" Connexion à la base de données...")
         engine = create_engine(DATABASE_URL)
         
-        print("📊 Création des tables...")
+        print(" Création des tables...")
         Base.metadata.create_all(engine)
         
-        print("✅ Tables créées avec succès!")
+        print(" Tables créées avec succès!")
         print("\nTables créées:")
         for table in Base.metadata.tables.keys():
             print(f"  - {table}")
@@ -140,7 +140,7 @@ def create_database():
         return engine
     
     except Exception as e:
-        print(f"❌ Erreur lors de la création des tables: {e}")
+        print(f" Erreur lors de la création des tables: {e}")
         sys.exit(1)
 
 
@@ -151,7 +151,7 @@ def verify_tables(engine):
     inspector = inspect(engine)
     tables = inspector.get_table_names()
     
-    print("\n🔍 Vérification des tables...")
+    print("\n Vérification des tables...")
     expected_tables = [
         'users', 'sessions', 'products', 'transactions',
         'transaction_items', 'ab_tests', 'ab_test_assignments', 'ab_test_results'
@@ -163,7 +163,7 @@ def verify_tables(engine):
         else:
             print(f"  ✗ {table} - MANQUANTE")
     
-    print(f"\n📈 Total: {len(tables)} tables créées")
+    print(f"\n Total: {len(tables)} tables créées")
 
 
 if __name__ == "__main__":
@@ -176,5 +176,5 @@ if __name__ == "__main__":
     verify_tables(engine)
     
     print("\n" + "=" * 60)
-    print("✨ Initialisation terminée avec succès!")
+    print(" Initialisation terminée avec succès!")
     print("=" * 60)
