@@ -1,0 +1,22 @@
+# Dockerfile pour l'initialisation automatique des dashboards Grafana
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Installer curl pour vérifier la disponibilité de Grafana
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copier les fichiers de création de dashboards
+COPY grafana_dashboards_scripts/ /app/grafana_dashboards_scripts/
+
+# Installer les dépendances Python (minimal pour API Grafana)
+RUN pip install --no-cache-dir requests==2.31.0
+
+# Copier le script d'initialisation
+COPY scripts/init_grafana_dashboards.sh /app/init.sh
+RUN chmod +x /app/init.sh
+
+# Exécuter le script d'initialisation
+CMD ["/app/init.sh"]
