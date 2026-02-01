@@ -1,14 +1,14 @@
-# 🔧 Configuration GitHub Repository - Guide d'Administration
+#  Configuration GitHub Repository - Guide d'Administration
 
-## 📋 Vue d'Ensemble
+##  Vue d'Ensemble
 
 Ce guide explique comment configurer correctement le repository GitHub pour que tous les workflows CI/CD et fonctionnalités de sécurité fonctionnent parfaitement.
 
 ---
 
-## ⚙️ Configurations Requises
+## ️ Configurations Requises
 
-### 1. 🔐 Security & Code Analysis
+### 1.  Security & Code Analysis
 
 **Chemin**: Settings → Security → Code security and analysis  
 **URL**: https://github.com/Christh2022/ecommerce-abtest-dashboard/settings/security_analysis
@@ -17,11 +17,11 @@ Ce guide explique comment configurer correctement le repository GitHub pour que 
 
 | Fonctionnalité                  | Status        | Impact                          | Workflow Concerné     |
 | ------------------------------- | ------------- | ------------------------------- | --------------------- |
-| **Dependency graph**            | ❌ À activer  | Requis pour dependency-review   | dependency-review.yml |
-| **Dependabot alerts**           | ✅ Recommandé | Alertes sur vulnérabilités      | -                     |
-| **Dependabot security updates** | ✅ Recommandé | PRs automatiques de sécurité    | -                     |
-| **Secret scanning**             | ✅ Activé     | Détection de secrets            | -                     |
-| **Push protection**             | ✅ Recommandé | Bloque les commits avec secrets | -                     |
+| **Dependency graph**            |  À activer  | Requis pour dependency-review   | dependency-review.yml |
+| **Dependabot alerts**           |  Recommandé | Alertes sur vulnérabilités      | -                     |
+| **Dependabot security updates** |  Recommandé | PRs automatiques de sécurité    | -                     |
+| **Secret scanning**             |  Activé     | Détection de secrets            | -                     |
+| **Push protection**             |  Recommandé | Bloque les commits avec secrets | -                     |
 
 #### Instructions:
 
@@ -34,7 +34,7 @@ Ce guide explique comment configurer correctement le repository GitHub pour que 
 
 ---
 
-### 2. 📦 GitHub Actions
+### 2.  GitHub Actions
 
 **Chemin**: Settings → Actions → General  
 **URL**: https://github.com/Christh2022/ecommerce-abtest-dashboard/settings/actions
@@ -50,17 +50,17 @@ Ce guide explique comment configurer correctement le repository GitHub pour que 
 #### Configuration Recommandée:
 
 ```yaml
-Workflow permissions: ☑ Read and write permissions
-  ☐ Read repository contents and packages permissions
+Workflow permissions:  Read and write permissions
+   Read repository contents and packages permissions
 
 Fork pull request workflows from outside collaborators:
-  ☑ Require approval for all outside collaborators
-  ☑ Require approval for first-time contributors
+   Require approval for all outside collaborators
+   Require approval for first-time contributors
 ```
 
 ---
 
-### 3. 🎯 Secrets GitHub Actions
+### 3.  Secrets GitHub Actions
 
 **Chemin**: Settings → Secrets and variables → Actions  
 **URL**: https://github.com/Christh2022/ecommerce-abtest-dashboard/settings/secrets/actions
@@ -70,18 +70,18 @@ Fork pull request workflows from outside collaborators:
 **Secrets Actifs**:
 | Secret Name | Description | Utilisé Dans | Requis |
 | ------------------ | ------------------------- | -------------- | ------------ |
-| `GRAFANA_URL` | URL Grafana production | dashboards.yml | ✅ |
-| `GRAFANA_USER` | Username Grafana admin | dashboards.yml | ✅ |
-| `GRAFANA_PASSWORD` | Password Grafana admin | dashboards.yml | ✅ |
+| `GRAFANA_URL` | URL Grafana production | dashboards.yml |  |
+| `GRAFANA_USER` | Username Grafana admin | dashboards.yml |  |
+| `GRAFANA_PASSWORD` | Password Grafana admin | dashboards.yml |  |
 
 **Secrets CD (Déploiement Désactivé - cd.yml.disabled)**:
 | Secret Name | Description | Utilisé Dans | Status |
 | ------------------ | ------------------------- | --------------------- | ------------------------- |
-| `DOCKER_USERNAME` | Docker Hub username | cd.yml (disabled) | ❌ Non utilisé |
-| `DOCKER_PASSWORD` | Docker Hub password | cd.yml (disabled) | ❌ Non utilisé |
-| `SSH_PRIVATE_KEY` | Clé SSH pour déploiement | cd.yml (disabled) | ❌ Non utilisé |
-| `DEPLOY_HOST` | Serveur de production | cd.yml (disabled) | ❌ Non utilisé |
-| `DEPLOY_USER` | User SSH pour déploiement | cd.yml (disabled) | ❌ Non utilisé |
+| `DOCKER_USERNAME` | Docker Hub username | cd.yml (disabled) |  Non utilisé |
+| `DOCKER_PASSWORD` | Docker Hub password | cd.yml (disabled) |  Non utilisé |
+| `SSH_PRIVATE_KEY` | Clé SSH pour déploiement | cd.yml (disabled) |  Non utilisé |
+| `DEPLOY_HOST` | Serveur de production | cd.yml (disabled) |  Non utilisé |
+| `DEPLOY_USER` | User SSH pour déploiement | cd.yml (disabled) |  Non utilisé |
 
 #### Comment Ajouter un Secret:
 
@@ -95,7 +95,7 @@ Fork pull request workflows from outside collaborators:
 
 ---
 
-### 4. 🌿 Branch Protection Rules
+### 4.  Branch Protection Rules
 
 **Chemin**: Settings → Branches  
 **URL**: https://github.com/Christh2022/ecommerce-abtest-dashboard/settings/branches
@@ -105,13 +105,13 @@ Fork pull request workflows from outside collaborators:
 ```yaml
 Branch name pattern: main
 
-☑ Require a pull request before merging
-  ☑ Require approvals: 1
-  ☑ Dismiss stale pull request approvals when new commits are pushed
-  ☑ Require review from Code Owners
+ Require a pull request before merging
+   Require approvals: 1
+   Dismiss stale pull request approvals when new commits are pushed
+   Require review from Code Owners
 
-☑ Require status checks to pass before merging
-  ☑ Require branches to be up to date before merging
+ Require status checks to pass before merging
+   Require branches to be up to date before merging
   Required status checks:
     - Validate Project Structure
     - Run Tests
@@ -119,8 +119,8 @@ Branch name pattern: main
     - Security Scan
     - Code Quality
 
-☑ Require conversation resolution before merging
-☑ Include administrators
+ Require conversation resolution before merging
+ Include administrators
 ```
 
 #### Créer une Branch Protection Rule:
@@ -132,7 +132,7 @@ Branch name pattern: main
 
 ---
 
-### 5. 📋 GitHub Packages (Container Registry)
+### 5.  GitHub Packages (Container Registry)
 
 **Chemin**: Settings → Packages  
 **URL**: https://github.com/orgs/YOUR_ORG/packages?repo_name=ecommerce-abtest-dashboard
@@ -151,11 +151,11 @@ Les images Docker sont automatiquement publiées dans GitHub Container Registry 
 
 ---
 
-## 🛠️ Workflows Spécifiques
+## ️ Workflows Spécifiques
 
 ### Workflow `dependency-review.yml`
 
-**Status**: ⚠️ Temporairement désactivé
+**Status**: ️ Temporairement désactivé
 
 **Raison**: Nécessite que "Dependency Graph" soit activé
 
@@ -173,7 +173,7 @@ Les images Docker sont automatiquement publiées dans GitHub Container Registry 
 
 ---
 
-## 🚨 Résolution des Erreurs Courantes
+##  Résolution des Erreurs Courantes
 
 ### Erreur: "Resource not accessible by integration"
 
@@ -235,7 +235,7 @@ uses: github/codeql-action/upload-sarif@v4
 
 ---
 
-## ✅ Checklist de Configuration Complète
+##  Checklist de Configuration Complète
 
 ### Étape 1: Sécurité de Base
 
@@ -271,20 +271,20 @@ uses: github/codeql-action/upload-sarif@v4
 
 ---
 
-## 📊 Status Actuel des Workflows
+##  Status Actuel des Workflows
 
 | Workflow                  | Status               | Corrections Appliquées                            |
 | ------------------------- | -------------------- | ------------------------------------------------- |
-| **ci.yml**                | ✅ Prêt              | Permissions ajoutées, CodeQL v4, test-results fix |
-| **cd.yml**                | ⛔ Désactivé         | Renommé en cd.yml.disabled - Déploiement manuel   |
-| **dashboards.yml**        | ⚠️ Nécessite secrets | Permissions OK, secrets GRAFANA\_\* requis        |
-| **dependency-review.yml** | ⚠️ Désactivé         | Attend activation Dependency Graph                |
-| **security-audit.yml**    | ✅ Prêt              | Permissions ajoutées                              |
-| **cleanup.yml**           | ✅ Prêt              | Permissions ajoutées                              |
+| **ci.yml**                |  Prêt              | Permissions ajoutées, CodeQL v4, test-results fix |
+| **cd.yml**                |  Désactivé         | Renommé en cd.yml.disabled - Déploiement manuel   |
+| **dashboards.yml**        | ️ Nécessite secrets | Permissions OK, secrets GRAFANA\_\* requis        |
+| **dependency-review.yml** | ️ Désactivé         | Attend activation Dependency Graph                |
+| **security-audit.yml**    |  Prêt              | Permissions ajoutées                              |
+| **cleanup.yml**           |  Prêt              | Permissions ajoutées                              |
 
 ---
 
-## 🔗 Liens Rapides
+##  Liens Rapides
 
 - [Settings du Repository](https://github.com/Christh2022/ecommerce-abtest-dashboard/settings)
 - [Security Analysis](https://github.com/Christh2022/ecommerce-abtest-dashboard/settings/security_analysis)
@@ -295,7 +295,7 @@ uses: github/codeql-action/upload-sarif@v4
 
 ---
 
-## 📞 Support
+##  Support
 
 Pour toute question:
 
