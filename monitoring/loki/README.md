@@ -4,7 +4,7 @@ Ce dossier contient la configuration pour **Loki**, le système d'agrégation de
 
 ---
 
-## 📋 Vue d'ensemble
+##  Vue d'ensemble
 
 Loki est un système de stockage et d'interrogation de logs hautement scalable, conçu pour être :
 
@@ -14,7 +14,7 @@ Loki est un système de stockage et d'interrogation de logs hautement scalable, 
 
 ---
 
-## 📁 Fichiers
+##  Fichiers
 
 ### loki-config.yml
 
@@ -40,7 +40,7 @@ Configuration principale de Loki pour le projet e-commerce dashboard.
 
 ---
 
-## 🔧 Paramètres Clés
+##  Paramètres Clés
 
 ### Schema
 
@@ -102,7 +102,7 @@ compactor:
 
 ---
 
-## 🚀 Utilisation
+##  Utilisation
 
 ### Démarrer Loki
 
@@ -167,7 +167,7 @@ curl -G -s "http://localhost:3100/loki/api/v1/tail" \
 
 ---
 
-## 📊 Métriques Importantes
+##  Métriques Importantes
 
 ### Ingestion
 
@@ -207,7 +207,7 @@ sum(loki_chunk_store_index_entries_per_chunk)
 
 ---
 
-## ⚙️ Personnalisation
+## ️ Personnalisation
 
 ### Modifier la Rétention
 
@@ -252,7 +252,7 @@ chunk_encoding: snappy # ou gzip, lz4, zstd
 
 ---
 
-## 🔍 Debugging
+##  Debugging
 
 ### Vérifier Configuration
 
@@ -298,7 +298,7 @@ server:
 
 ---
 
-## 📚 Ressources
+##  Ressources
 
 ### Documentation Officielle
 
@@ -321,7 +321,7 @@ server:
 
 ---
 
-## 🔗 Fichiers Liés
+##  Fichiers Liés
 
 - [../promtail/promtail-config.yml](../promtail/promtail-config.yml) - Config agent de collecte
 - [../docker-compose.yml](../docker-compose.yml) - Service Docker

@@ -16,7 +16,7 @@ dashboard = {
     "dashboard": {
         "id": None,
         "uid": "security-attacks-v2",
-        "title": "🚨 Security Attacks - Real-Time Monitoring",
+        "title": " Security Attacks - Real-Time Monitoring",
         "tags": ["security", "attacks"],
         "timezone": "browser",
         "schemaVersion": 38,
@@ -29,7 +29,7 @@ dashboard = {
         "panels": [
             {
                 "id": 1,
-                "title": "🚨 Total Attacks (Last 5 min)",
+                "title": " Total Attacks (Last 5 min)",
                 "type": "stat",
                 "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
                 "targets": [{
@@ -64,7 +64,7 @@ dashboard = {
             },
             {
                 "id": 2,
-                "title": "🔴 Critical Attacks",
+                "title": " Critical Attacks",
                 "type": "stat",
                 "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0},
                 "targets": [{
@@ -91,7 +91,7 @@ dashboard = {
             },
             {
                 "id": 3,
-                "title": "🟠 High Severity Attacks",
+                "title": " High Severity Attacks",
                 "type": "stat",
                 "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0},
                 "targets": [{
@@ -118,7 +118,7 @@ dashboard = {
             },
             {
                 "id": 4,
-                "title": "🟡 Medium Severity Attacks",
+                "title": " Medium Severity Attacks",
                 "type": "stat",
                 "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0},
                 "targets": [{
@@ -145,7 +145,7 @@ dashboard = {
             },
             {
                 "id": 5,
-                "title": "🎯 Attacks by Category",
+                "title": " Attacks by Category",
                 "type": "piechart",
                 "gridPos": {"h": 10, "w": 12, "x": 0, "y": 8},
                 "targets": [{
@@ -162,7 +162,7 @@ dashboard = {
             },
             {
                 "id": 6,
-                "title": "⚠️ Attacks by Severity",
+                "title": "️ Attacks by Severity",
                 "type": "piechart",
                 "gridPos": {"h": 10, "w": 12, "x": 12, "y": 8},
                 "targets": [{
@@ -179,7 +179,7 @@ dashboard = {
             },
             {
                 "id": 7,
-                "title": "📊 Top Attack Types",
+                "title": " Top Attack Types",
                 "type": "table",
                 "gridPos": {"h": 10, "w": 24, "x": 0, "y": 18},
                 "targets": [{
@@ -205,7 +205,7 @@ dashboard = {
             },
             {
                 "id": 8,
-                "title": "📈 Attack Timeline (Real-Time)",
+                "title": " Attack Timeline (Real-Time)",
                 "type": "timeseries",
                 "gridPos": {"h": 9, "w": 12, "x": 0, "y": 28},
                 "targets": [{
@@ -238,7 +238,7 @@ dashboard = {
                     "legend": {"displayMode": "list", "placement": "bottom"}
                 },
                 "alert": {
-                    "name": "🚨 High Attack Rate Detected",
+                    "name": " High Attack Rate Detected",
                     "message": "ALERTE: Taux d'attaques élevé détecté! Plus de 10 attaques par minute.",
                     "frequency": "1m",
                     "for": "1m",
@@ -253,7 +253,7 @@ dashboard = {
             },
             {
                 "id": 9,
-                "title": "🔥 Attack Intensity Heatmap",
+                "title": " Attack Intensity Heatmap",
                 "type": "bargauge",
                 "gridPos": {"h": 9, "w": 12, "x": 12, "y": 28},
                 "targets": [{
@@ -285,32 +285,32 @@ dashboard = {
             },
             {
                 "id": 10,
-                "title": "⚡ Live Attack Feed (Last 5 min)",
+                "title": " Live Attack Feed (Last 5 min)",
                 "type": "timeseries",
                 "gridPos": {"h": 9, "w": 12, "x": 0, "y": 37},
                 "targets": [
                     {
                         "expr": 'security_attack_by_category{category="injection"}',
                         "refId": "A",
-                        "legendFormat": "💉 Injection Attacks",
+                        "legendFormat": " Injection Attacks",
                         "datasource": {"type": "prometheus", "uid": "prometheus-ecommerce"}
                     },
                     {
                         "expr": 'security_attack_by_category{category="file"}',
                         "refId": "B",
-                        "legendFormat": "📁 File Attacks",
+                        "legendFormat": " File Attacks",
                         "datasource": {"type": "prometheus", "uid": "prometheus-ecommerce"}
                     },
                     {
                         "expr": 'security_attack_by_category{category="docker"}',
                         "refId": "C",
-                        "legendFormat": "🐳 Docker Attacks",
+                        "legendFormat": " Docker Attacks",
                         "datasource": {"type": "prometheus", "uid": "prometheus-ecommerce"}
                     },
                     {
                         "expr": 'security_attack_by_category{category="advanced"}',
                         "refId": "D",
-                        "legendFormat": "🎯 Advanced Attacks",
+                        "legendFormat": " Advanced Attacks",
                         "datasource": {"type": "prometheus", "uid": "prometheus-ecommerce"}
                     }
                 ],
@@ -329,7 +329,7 @@ dashboard = {
                     "legend": {"displayMode": "table", "placement": "bottom", "values": ["value", "max"]}
                 },
                 "alert": {
-                    "name": "🔴 Injection Attack Detected",
+                    "name": " Injection Attack Detected",
                     "message": "ALERTE: Attaque par injection détectée! Vérifiez immédiatement les logs de sécurité.",
                     "frequency": "30s",
                     "for": "30s",
@@ -344,7 +344,7 @@ dashboard = {
             },
             {
                 "id": 11,
-                "title": "🛡️ Attack Detection Counter",
+                "title": "️ Attack Detection Counter",
                 "type": "stat",
                 "gridPos": {"h": 9, "w": 12, "x": 12, "y": 37},
                 "targets": [{
@@ -376,7 +376,7 @@ dashboard = {
                     }
                 },
                 "alert": {
-                    "name": "⚠️ New Attacks Detected",
+                    "name": "️ New Attacks Detected",
                     "message": "ALERTE: Nouvelles attaques informatiques détectées dans les 5 dernières minutes!",
                     "frequency": "30s",
                     "for": "10s",
@@ -424,7 +424,7 @@ def import_dashboard():
             dashboard_url = f"{GRAFANA_URL}{data.get('url', '')}"
             print(f"[OK] Dashboard imported successfully!")
             print(f"[OK] Access it at: {dashboard_url}")
-            print(f"\nℹ️  If you still see 'No data', wait 10-30 seconds for Prometheus to scrape metrics")
+            print(f"\n️  If you still see 'No data', wait 10-30 seconds for Prometheus to scrape metrics")
             return True
         else:
             print(f"[ERROR] Failed to import: {response.status_code}")
@@ -442,6 +442,6 @@ if __name__ == '__main__':
     time.sleep(2)  # Wait for Grafana to be ready
     
     if import_dashboard():
-        print("\n✅ Done! Refresh your Grafana page to see the new dashboard with data")
+        print("\n Done! Refresh your Grafana page to see the new dashboard with data")
     else:
-        print("\n❌ Failed to import dashboard")
+        print("\n Failed to import dashboard")

@@ -27,17 +27,17 @@ def check_kaggle_installed():
     """Vérifier si kaggle CLI est installé"""
     try:
         import kaggle
-        print("✓ Kaggle API installée")
+        print(" Kaggle API installée")
         return True
     except ImportError:
-        print("❌ Kaggle API non installée")
-        print("\n📦 Installation de Kaggle API...")
+        print(" Kaggle API non installée")
+        print("\n Installation de Kaggle API...")
         try:
             subprocess.check_call([sys.executable, "-m", "pip", "install", "kaggle"])
-            print("✓ Kaggle API installée avec succès")
+            print(" Kaggle API installée avec succès")
             return True
         except:
-            print("❌ Erreur lors de l'installation de Kaggle API")
+            print(" Erreur lors de l'installation de Kaggle API")
             return False
 
 
@@ -47,11 +47,11 @@ def check_kaggle_credentials():
     kaggle_json = kaggle_dir / "kaggle.json"
     
     if kaggle_json.exists():
-        print(f"✓ Credentials Kaggle trouvées: {kaggle_json}")
+        print(f" Credentials Kaggle trouvées: {kaggle_json}")
         return True
     else:
-        print(f"❌ Credentials Kaggle non trouvées")
-        print(f"\n📋 Instructions de configuration:")
+        print(f" Credentials Kaggle non trouvées")
+        print(f"\n Instructions de configuration:")
         print(f"1. Créer un compte sur https://www.kaggle.com")
         print(f"2. Aller dans Account > API > Create New API Token")
         print(f"3. Télécharger le fichier kaggle.json")
@@ -62,8 +62,8 @@ def check_kaggle_credentials():
 
 def download_dataset():
     """Télécharger le dataset depuis Kaggle"""
-    print(f"\n📥 Téléchargement du dataset: {KAGGLE_DATASET}")
-    print(f"📂 Destination: {DATA_RAW_DIR}")
+    print(f"\n Téléchargement du dataset: {KAGGLE_DATASET}")
+    print(f" Destination: {DATA_RAW_DIR}")
     
     # Créer le répertoire si nécessaire
     DATA_RAW_DIR.mkdir(parents=True, exist_ok=True)
@@ -81,12 +81,12 @@ def download_dataset():
             unzip=True
         )
         
-        print("✅ Téléchargement terminé!")
+        print(" Téléchargement terminé!")
         return True
         
     except Exception as e:
-        print(f"❌ Erreur lors du téléchargement: {e}")
-        print("\n💡 Alternative: Téléchargement manuel")
+        print(f" Erreur lors du téléchargement: {e}")
+        print("\n Alternative: Téléchargement manuel")
         print(f"1. Aller sur: https://www.kaggle.com/datasets/{KAGGLE_DATASET}")
         print(f"2. Cliquer sur 'Download' (connexion requise)")
         print(f"3. Extraire le fichier ZIP dans: {DATA_RAW_DIR}")
@@ -95,7 +95,7 @@ def download_dataset():
 
 def verify_files():
     """Vérifier que les fichiers ont été téléchargés"""
-    print("\n🔍 Vérification des fichiers...")
+    print("\n Vérification des fichiers...")
     
     expected_files = [
         "events.csv",
@@ -111,16 +111,16 @@ def verify_files():
         filepath = DATA_RAW_DIR / filename
         if filepath.exists():
             size = filepath.stat().st_size / (1024 * 1024)  # MB
-            print(f"  ✓ {filename} ({size:.1f} MB)")
+            print(f"   {filename} ({size:.1f} MB)")
             found_files.append(filename)
         else:
-            print(f"  ✗ {filename} - MANQUANT")
+            print(f"   {filename} - MANQUANT")
             missing_files.append(filename)
     
-    print(f"\n📊 Résumé: {len(found_files)}/{len(expected_files)} fichiers présents")
+    print(f"\n Résumé: {len(found_files)}/{len(expected_files)} fichiers présents")
     
     if missing_files:
-        print(f"\n⚠️  Fichiers manquants: {', '.join(missing_files)}")
+        print(f"\n️  Fichiers manquants: {', '.join(missing_files)}")
         return False
     
     return True
@@ -129,18 +129,18 @@ def verify_files():
 def show_dataset_info():
     """Afficher des informations sur le dataset"""
     print("\n" + "=" * 60)
-    print("📊 DATASET RETAILROCKET - E-COMMERCE")
+    print(" DATASET RETAILROCKET - E-COMMERCE")
     print("=" * 60)
-    print("\n📝 Description:")
+    print("\n Description:")
     print("  Dataset de comportement utilisateur sur un site e-commerce")
     print("  Période: 4.5 mois")
     print("  Source: RetailRocket recommender system")
-    print("\n📁 Fichiers:")
+    print("\n Fichiers:")
     print("  • events.csv - Événements utilisateur (views, addtocart, transaction)")
     print("  • item_properties_part1.csv - Propriétés des produits (partie 1)")
     print("  • item_properties_part2.csv - Propriétés des produits (partie 2)")
     print("  • category_tree.csv - Arborescence des catégories")
-    print("\n🔗 Lien: https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset")
+    print("\n Lien: https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset")
     print("=" * 60)
 
 
@@ -168,10 +168,10 @@ def main():
         return 1
     
     print("\n" + "=" * 60)
-    print("✨ TÉLÉCHARGEMENT TERMINÉ AVEC SUCCÈS!")
+    print(" TÉLÉCHARGEMENT TERMINÉ AVEC SUCCÈS!")
     print("=" * 60)
-    print(f"\n📂 Fichiers disponibles dans: {DATA_RAW_DIR}")
-    print("\n🔜 Prochaine étape:")
+    print(f"\n Fichiers disponibles dans: {DATA_RAW_DIR}")
+    print("\n Prochaine étape:")
     print("   python scripts/preprocess_retailrocket.py")
     
     return 0

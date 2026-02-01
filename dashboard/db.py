@@ -55,10 +55,10 @@ def test_connection():
         with get_db_connection() as conn:
             result = conn.execute(text("SELECT 1"))
             result.fetchone()
-        logger.info("✅ Database connection successful")
+        logger.info(" Database connection successful")
         return True
     except Exception as e:
-        logger.error(f"❌ Database connection failed: {e}")
+        logger.error(f" Database connection failed: {e}")
         return False
 
 
@@ -81,7 +81,7 @@ def execute_query(query, params=None):
                 df = pd.read_sql_query(query, conn)
         return df
     except Exception as e:
-        logger.error(f"❌ Query execution failed: {e}")
+        logger.error(f" Query execution failed: {e}")
         raise
 
 

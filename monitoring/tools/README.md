@@ -2,9 +2,9 @@
 
 Ce dossier contient les scripts utilitaires et outils du projet.
 
-## 📋 Scripts Disponibles
+##  Scripts Disponibles
 
-### 🔍 `ecommerce_exporter.py`
+###  `ecommerce_exporter.py`
 
 **Exporteur de métriques Prometheus pour e-commerce**
 
@@ -28,7 +28,7 @@ python monitoring/tools/ecommerce_exporter.py
 
 ---
 
-### 📊 `import_dashboard.py`
+###  `import_dashboard.py`
 
 **Import de dashboards dans Grafana**
 
@@ -42,7 +42,7 @@ python monitoring/tools/import_dashboard.py
 
 ---
 
-### 📊 `import_dashboard_to_grafana.py`
+###  `import_dashboard_to_grafana.py`
 
 **Import avancé de dashboards**
 
@@ -62,7 +62,7 @@ python tools/import_dashboard_to_grafana.py
 
 ---
 
-### ✅ `validate_dashboard_organization.py`
+###  `validate_dashboard_organization.py`
 
 **Validation de l'organisation du projet**
 
@@ -76,15 +76,15 @@ python tools/validate_dashboard_organization.py
 
 **Ce qu'il vérifie:**
 
-- ✅ Existence du dossier `grafana_dashboards_scripts/`
-- ✅ Présence de tous les scripts de dashboards
-- ✅ Syntaxe Python valide
-- ✅ Fichiers de configuration (Dockerfiles, scripts)
-- ✅ Structure des dashboards
+-  Existence du dossier `grafana_dashboards_scripts/`
+-  Présence de tous les scripts de dashboards
+-  Syntaxe Python valide
+-  Fichiers de configuration (Dockerfiles, scripts)
+-  Structure des dashboards
 
 ---
 
-## 🚀 Utilisation Générale
+##  Utilisation Générale
 
 ### Depuis la Racine du Projet
 
@@ -109,7 +109,7 @@ docker-compose -f docker-compose.secure.yml up -d ecommerce-exporter
 
 ---
 
-## 📖 Documentation Associée
+##  Documentation Associée
 
 - [docker/README.md](../docker/README.md) - Documentation des Dockerfiles
 - [grafana_dashboards_scripts/README.md](../grafana_dashboards_scripts/README.md) - Scripts de dashboards
@@ -117,7 +117,7 @@ docker-compose -f docker-compose.secure.yml up -d ecommerce-exporter
 
 ---
 
-## 🔧 Dépendances
+##  Dépendances
 
 Ces scripts nécessitent:
 
@@ -134,7 +134,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🎯 Structure
+##  Structure
 
 ```
 tools/
@@ -147,7 +147,7 @@ tools/
 
 ---
 
-## 💡 Bonnes Pratiques
+##  Bonnes Pratiques
 
 1. **Exporter des métriques** : Utilisez `ecommerce_exporter.py` avec Docker pour un monitoring continu
 2. **Valider régulièrement** : Exécutez `validate_dashboard_organization.py` après des modifications
@@ -157,4 +157,4 @@ tools/
 ---
 
 **Dernière mise à jour** : 23 Décembre 2025  
-**Statut** : ✅ Opérationnel
+**Statut** :  Opérationnel

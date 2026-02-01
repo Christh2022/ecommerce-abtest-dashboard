@@ -325,27 +325,27 @@ dashboard = {
                     "content": """
 # Actions Recommandees
 
-## 🎯 Priorite 1 - Deploiement Immediat
+##  Priorite 1 - Deploiement Immediat
 - **Deployer les variantes gagnantes** avec taux de conversion >32%
 - **Arreter les tests Control** si variantes testees montrent >5% d'amelioration
 - **Allouer 70% du budget** aux segments haute performance
 
-## 💰 Priorite 2 - Optimisation Revenue
+##  Priorite 2 - Optimisation Revenue
 - **Augmenter AOV** - Objectif: $260+ par commande
 - **Cross-selling**: Implementer sur variantes a fort taux de conversion
 - **Up-selling**: Focus sur users avec revenue/session >$4
 
-## 📊 Priorite 3 - Tests Futurs
+##  Priorite 3 - Tests Futurs
 - **Tester de nouvelles variantes** sur les scenarios performants
 - **Segmentation**: Creer tests specifiques pour top 20% users
 - **A/B/n testing**: Tester 3-4 variantes simultanement sur homepage
 
-## 🔍 Indicateurs de Vigilance
-- ⚠️ **Taux conversion <28%** - Revoir UX/funnel
-- ⚠️ **Revenue/user <$3** - Probleme monetisation
-- ⚠️ **Efficacite <1.5%** - Optimiser tunnel conversion
+##  Indicateurs de Vigilance
+- ️ **Taux conversion <28%** - Revoir UX/funnel
+- ️ **Revenue/user <$3** - Probleme monetisation
+- ️ **Efficacite <1.5%** - Optimiser tunnel conversion
 
-## 💡 Opportunites Identifiees
+##  Opportunites Identifiees
 - Potentiel gain: **+15-20% revenue** avec deployment variantes gagnantes
 - **ROI tests A/B**: Evaluable apres 2-3 semaines de production
 - **Quick wins**: Homepage + Checkout optimises = impact immediat

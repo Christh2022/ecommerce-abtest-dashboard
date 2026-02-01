@@ -4,7 +4,7 @@ Ce dossier contient la configuration pour **Promtail**, l'agent de collecte de l
 
 ---
 
-## 📋 Vue d'ensemble
+##  Vue d'ensemble
 
 Promtail est un agent qui :
 
@@ -15,7 +15,7 @@ Promtail est un agent qui :
 
 ---
 
-## 📁 Fichiers
+##  Fichiers
 
 ### promtail-config.yml
 
@@ -31,7 +31,7 @@ Configuration de Promtail pour collecter les logs de 5 services du projet e-comm
 
 ---
 
-## 🎯 Services Monitorés
+##  Services Monitorés
 
 Promtail collecte les logs des conteneurs suivants :
 
@@ -45,7 +45,7 @@ Promtail collecte les logs des conteneurs suivants :
 
 ---
 
-## 🔧 Configuration Détaillée
+##  Configuration Détaillée
 
 ### Client Loki
 
@@ -120,7 +120,7 @@ pipeline_stages:
 
 ---
 
-## 🚀 Utilisation
+##  Utilisation
 
 ### Démarrer Promtail
 
@@ -158,7 +158,7 @@ positions:
 
 ---
 
-## 📊 Métriques
+##  Métriques
 
 ### API Metrics
 
@@ -205,7 +205,7 @@ histogram_quantile(0.99, rate(promtail_request_duration_seconds_bucket[5m]))
 
 ---
 
-## ⚙️ Personnalisation
+## ️ Personnalisation
 
 ### Ajouter un Nouveau Service
 
@@ -290,7 +290,7 @@ relabel_configs:
 
 ---
 
-## 🔍 Debugging
+##  Debugging
 
 ### Vérifier Configuration
 
@@ -377,7 +377,7 @@ docker logs -f ecommerce-promtail
 
 ---
 
-## 📈 Performance & Optimisation
+##  Performance & Optimisation
 
 ### Tuning Batching
 
@@ -430,7 +430,7 @@ pipeline_stages:
 
 ---
 
-## 🧪 Tests
+##  Tests
 
 ### Test Local (Sans Docker)
 
@@ -479,7 +479,7 @@ curl -G "http://localhost:3100/loki/api/v1/query" \
 
 ---
 
-## 📚 Ressources
+##  Ressources
 
 ### Documentation Officielle
 
@@ -501,7 +501,7 @@ curl -G "http://localhost:3100/loki/api/v1/query" \
 
 ---
 
-## 🔗 Fichiers Liés
+##  Fichiers Liés
 
 - [../loki/loki-config.yml](../loki/loki-config.yml) - Config serveur Loki
 - [../docker-compose.yml](../docker-compose.yml) - Service Docker

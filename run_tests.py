@@ -39,7 +39,7 @@ def run_tests():
 def main():
     """Point d'entrée principal"""
     print("=" * 60)
-    print("🧪 Exécution des tests du projet")
+    print(" Exécution des tests du projet")
     print("=" * 60)
     print()
     
@@ -49,15 +49,15 @@ def main():
         print()
         print("=" * 60)
         if exit_code == 0:
-            print("✅ Tous les tests ont réussi!")
+            print(" Tous les tests ont réussi!")
         else:
-            print("❌ Certains tests ont échoué")
+            print(" Certains tests ont échoué")
         print("=" * 60)
         
         sys.exit(exit_code)
         
     except Exception as e:
-        print(f"❌ Erreur lors de l'exécution des tests: {e}")
+        print(f" Erreur lors de l'exécution des tests: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

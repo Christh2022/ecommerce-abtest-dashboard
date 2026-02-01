@@ -1,10 +1,10 @@
 # Données nettoyées - RetailRocket Dataset
 
-## ⚠️ Fichiers non inclus dans Git
+## ️ Fichiers non inclus dans Git
 
 Les fichiers CSV nettoyés ne sont pas inclus dans le repository Git car ils sont trop volumineux (536+ MB au total).
 
-## 📊 Fichiers disponibles après preprocessing
+##  Fichiers disponibles après preprocessing
 
 | Fichier | Lignes | Taille | Description |
 |---------|--------|--------|-------------|
@@ -15,7 +15,7 @@ Les fichiers CSV nettoyés ne sont pas inclus dans le repository Git car ils son
 
 **Total**: ~536 MB
 
-## 🔄 Comment regénérer les données
+##  Comment regénérer les données
 
 ### Option 1: Télécharger et préprocesser (recommandé)
 
@@ -48,7 +48,7 @@ python scripts/setup_db.py
 python scripts/load_retailrocket_to_db.py
 ```
 
-## 📋 Prérequis
+##  Prérequis
 
 ### Pour télécharger depuis Kaggle
 
@@ -63,7 +63,7 @@ python scripts/load_retailrocket_to_db.py
    pip install -r requirements.txt
    ```
 
-## 📦 Alternative: Archive compressée
+##  Alternative: Archive compressée
 
 Si vous avez déjà les fichiers CSV, vous pouvez créer une archive compressée:
 
@@ -77,18 +77,18 @@ python scripts/compress_data.py extract
 
 **Note**: L'archive ZIP résultante fait ~82 MB.
 
-## 🔗 Source des données
+##  Source des données
 
 Dataset RetailRocket original disponible sur Kaggle:
 - https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset
 
-## 💡 Remarques
+##  Remarques
 
 - Les fichiers bruts (`data/raw/*.csv`) sont également exclus de Git (taille totale: ~942 MB)
 - Assurez-vous d'avoir au moins 2 GB d'espace disque libre
 - Le preprocessing utilise environ 4 GB de RAM pendant l'exécution
 
-## 📚 Documentation
+##  Documentation
 
 Pour plus de détails, consultez:
 - [DATASET.md](../../docs/DATASET.md) - Documentation complète du dataset

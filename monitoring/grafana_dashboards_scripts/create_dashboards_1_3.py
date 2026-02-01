@@ -357,9 +357,9 @@ for dashboard_config in dashboards:
     uid = dashboard_config["uid"]
     
     if response.status_code == 200:
-        print(f"✓ {title}")
+        print(f" {title}")
         print(f"  URL: http://localhost:3000/d/{uid}")
     else:
-        print(f"✗ {title}: Error {response.status_code}")
+        print(f" {title}: Error {response.status_code}")
 
 print("\n=== 3 premiers dashboards crees ===")

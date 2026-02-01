@@ -27,11 +27,11 @@ def get_engine():
         # Tester la connexion
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
-        print("✓ Connexion à la base de données établie")
+        print(" Connexion à la base de données établie")
         return engine
     except Exception as e:
-        print(f"❌ Erreur de connexion à la base de données: {e}")
-        print("\n💡 Assurez-vous que PostgreSQL est démarré:")
+        print(f" Erreur de connexion à la base de données: {e}")
+        print("\n Assurez-vous que PostgreSQL est démarré:")
         print("   docker-compose up -d postgres")
         sys.exit(1)
 
@@ -41,30 +41,30 @@ def load_csv_file(filename):
     filepath = DATA_CLEAN_DIR / filename
     
     if not filepath.exists():
-        print(f"  ⚠️  Fichier non trouvé: {filename}")
+        print(f"  ️  Fichier non trouvé: {filename}")
         return None
     
     try:
         df = pd.read_csv(filepath)
-        print(f"  ✓ {filename}: {len(df):,} lignes chargées")
+        print(f"   {filename}: {len(df):,} lignes chargées")
         return df
     except Exception as e:
-        print(f"  ❌ Erreur lors du chargement de {filename}: {e}")
+        print(f"   Erreur lors du chargement de {filename}: {e}")
         return None
 
 
 def truncate_tables(engine, tables):
     """Vider les tables existantes"""
-    print("\n🗑️  Nettoyage des tables existantes...")
+    print("\n️  Nettoyage des tables existantes...")
     
     with engine.connect() as conn:
         for table in tables:
             try:
                 conn.execute(text(f"TRUNCATE TABLE {table} CASCADE"))
                 conn.commit()
-                print(f"  ✓ Table {table} vidée")
+                print(f"   Table {table} vidée")
             except Exception as e:
-                print(f"  ⚠️  Impossible de vider {table}: {e}")
+                print(f"  ️  Impossible de vider {table}: {e}")
 
 
 def load_users(df, engine):
@@ -72,7 +72,7 @@ def load_users(df, engine):
     if df is None:
         return
     
-    print("\n👥 Chargement des utilisateurs...")
+    print("\n Chargement des utilisateurs...")
     
     # Adapter les colonnes au schéma de la base
     df_users = pd.DataFrame({
@@ -85,9 +85,9 @@ def load_users(df, engine):
     
     try:
         df_users.to_sql('users', engine, if_exists='append', index=False)
-        print(f"  ✓ {len(df_users):,} utilisateurs chargés")
+        print(f"   {len(df_users):,} utilisateurs chargés")
     except Exception as e:
-        print(f"  ❌ Erreur: {e}")
+        print(f"   Erreur: {e}")
 
 
 def load_products(df, engine):
@@ -95,7 +95,7 @@ def load_products(df, engine):
     if df is None:
         return
     
-    print("\n📦 Chargement des produits...")
+    print("\n Chargement des produits...")
     
     # Adapter les colonnes au schéma de la base
     df_products = pd.DataFrame({
@@ -108,14 +108,14 @@ def load_products(df, engine):
     
     # Limiter aux 100k premiers produits pour éviter les problèmes de mémoire
     if len(df_products) > 100000:
-        print(f"  ⚠️  Limitation à 100,000 produits (sur {len(df_products):,})")
+        print(f"  ️  Limitation à 100,000 produits (sur {len(df_products):,})")
         df_products = df_products.head(100000)
     
     try:
         df_products.to_sql('products', engine, if_exists='append', index=False)
-        print(f"  ✓ {len(df_products):,} produits chargés")
+        print(f"   {len(df_products):,} produits chargés")
     except Exception as e:
-        print(f"  ❌ Erreur: {e}")
+        print(f"   Erreur: {e}")
 
 
 def load_sessions(df, engine):
@@ -123,7 +123,7 @@ def load_sessions(df, engine):
     if df is None:
         return
     
-    print("\n🌐 Chargement des sessions...")
+    print("\n Chargement des sessions...")
     
     # Adapter les colonnes au schéma de la base
     df_sessions = pd.DataFrame({
@@ -138,9 +138,9 @@ def load_sessions(df, engine):
     
     try:
         df_sessions.to_sql('sessions', engine, if_exists='append', index=False)
-        print(f"  ✓ {len(df_sessions):,} sessions chargées")
+        print(f"   {len(df_sessions):,} sessions chargées")
     except Exception as e:
-        print(f"  ❌ Erreur: {e}")
+        print(f"   Erreur: {e}")
 
 
 def load_transactions(df, engine):
@@ -148,7 +148,7 @@ def load_transactions(df, engine):
     if df is None:
         return
     
-    print("\n💳 Chargement des transactions...")
+    print("\n Chargement des transactions...")
     
     # Adapter les colonnes au schéma de la base
     df_transactions = pd.DataFrame({
@@ -163,10 +163,10 @@ def load_transactions(df, engine):
     
     try:
         df_transactions.to_sql('transactions', engine, if_exists='append', index=False)
-        print(f"  ✓ {len(df_transactions):,} transactions chargées")
-        print(f"  💰 CA total: {df_transactions['total_amount'].sum():,.2f}€")
+        print(f"   {len(df_transactions):,} transactions chargées")
+        print(f"   CA total: {df_transactions['total_amount'].sum():,.2f}€")
     except Exception as e:
-        print(f"  ❌ Erreur: {e}")
+        print(f"   Erreur: {e}")
 
 
 def load_transaction_items(df_transactions, engine):
@@ -174,7 +174,7 @@ def load_transaction_items(df_transactions, engine):
     if df_transactions is None:
         return
     
-    print("\n🛒 Création des items de transaction...")
+    print("\n Création des items de transaction...")
     
     # Créer un item par transaction (simplification)
     df_items = pd.DataFrame({
@@ -188,14 +188,14 @@ def load_transaction_items(df_transactions, engine):
     
     try:
         df_items.to_sql('transaction_items', engine, if_exists='append', index=False)
-        print(f"  ✓ {len(df_items):,} items chargés")
+        print(f"   {len(df_items):,} items chargés")
     except Exception as e:
-        print(f"  ❌ Erreur: {e}")
+        print(f"   Erreur: {e}")
 
 
 def verify_data(engine):
     """Vérifier les données chargées"""
-    print("\n🔍 Vérification des données...")
+    print("\n Vérification des données...")
     
     tables = ['users', 'products', 'sessions', 'transactions', 'transaction_items']
     
@@ -204,14 +204,14 @@ def verify_data(engine):
             try:
                 result = conn.execute(text(f"SELECT COUNT(*) FROM {table}"))
                 count = result.scalar()
-                print(f"  ✓ {table}: {count:,} enregistrements")
+                print(f"   {table}: {count:,} enregistrements")
             except Exception as e:
-                print(f"  ❌ {table}: Erreur - {e}")
+                print(f"   {table}: Erreur - {e}")
 
 
 def create_indexes(engine):
     """Créer des index pour optimiser les performances"""
-    print("\n⚡ Création des index...")
+    print("\n Création des index...")
     
     indexes = [
         "CREATE INDEX IF NOT EXISTS idx_users_segment ON users(segment)",
@@ -228,9 +228,9 @@ def create_indexes(engine):
             try:
                 conn.execute(text(idx_sql))
                 conn.commit()
-                print(f"  ✓ Index créé")
+                print(f"   Index créé")
             except Exception as e:
-                print(f"  ⚠️  Erreur: {e}")
+                print(f"  ️  Erreur: {e}")
 
 
 def main():
@@ -243,15 +243,15 @@ def main():
     engine = get_engine()
     
     # Charger les fichiers CSV
-    print("\n📥 Chargement des fichiers CSV...")
+    print("\n Chargement des fichiers CSV...")
     users_df = load_csv_file('users.csv')
     products_df = load_csv_file('products.csv')
     sessions_df = load_csv_file('sessions.csv')
     transactions_df = load_csv_file('transactions.csv')
     
     if not any([users_df is not None, transactions_df is not None]):
-        print("\n❌ Aucune donnée à charger")
-        print("💡 Exécutez d'abord: python scripts/preprocess_retailrocket.py")
+        print("\n Aucune donnée à charger")
+        print(" Exécutez d'abord: python scripts/preprocess_retailrocket.py")
         return 1
     
     # Vider les tables existantes
@@ -274,10 +274,10 @@ def main():
     create_indexes(engine)
     
     print("\n" + "=" * 60)
-    print("✨ CHARGEMENT TERMINÉ AVEC SUCCÈS!")
+    print(" CHARGEMENT TERMINÉ AVEC SUCCÈS!")
     print("=" * 60)
-    print("\n🎉 Les données RetailRocket sont prêtes à être analysées!")
-    print("\n🔜 Prochaine étape:")
+    print("\n Les données RetailRocket sont prêtes à être analysées!")
+    print("\n Prochaine étape:")
     print("   Démarrer le dashboard: docker-compose up -d dash-app")
     print("   Accéder à: http://localhost:8050")
     

@@ -2,17 +2,17 @@
 
 Configuration complète de Grafana pour le monitoring et la visualisation des KPIs e-commerce.
 
-## 🎯 Vue d'ensemble
+##  Vue d'ensemble
 
 Grafana est intégré dans le stack Docker Compose pour:
 
-- ✅ Visualisation en temps réel des KPIs
-- ✅ Monitoring des métriques quotidiennes
-- ✅ Analyse des tests A/B
-- ✅ Suivi des performances produits
-- ✅ Agrégation des logs avec Loki
+-  Visualisation en temps réel des KPIs
+-  Monitoring des métriques quotidiennes
+-  Analyse des tests A/B
+-  Suivi des performances produits
+-  Agrégation des logs avec Loki
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 ┌─────────────────┐
@@ -36,7 +36,7 @@ Grafana est intégré dans le stack Docker Compose pour:
                            └─────────┘
 ```
 
-## 📦 Services Docker
+##  Services Docker
 
 ### Grafana
 
@@ -93,7 +93,7 @@ promtail:
   restart: unless-stopped
 ```
 
-## 🔧 Configuration
+##  Configuration
 
 ### Datasources
 
@@ -153,18 +153,18 @@ providers:
       foldersFromFilesStructure: true
 ```
 
-## 📊 Dashboards Disponibles
+##  Dashboards Disponibles
 
 ### 1. E-commerce KPIs (`ecommerce-kpis.json`)
 
 **Panels inclus:**
 
-- 📈 Total Users
-- 💰 Total Revenue
-- 🛒 Conversion Rate
-- 📊 Daily Metrics Timeline
-- 🔝 Top Products
-- 🧪 A/B Test Results
+-  Total Users
+-  Total Revenue
+-  Conversion Rate
+-  Daily Metrics Timeline
+-  Top Products
+-  A/B Test Results
 
 **Requêtes SQL:**
 
@@ -200,7 +200,7 @@ ORDER BY total_revenue DESC
 LIMIT 10;
 ```
 
-## 🚀 Utilisation
+##  Utilisation
 
 ### Démarrage
 
@@ -234,7 +234,7 @@ docker ps
 3. **Explore** → PostgreSQL-Ecommerce datasource
 4. **Configuration** → Data Sources
 
-## 📈 Créer des Dashboards Personnalisés
+##  Créer des Dashboards Personnalisés
 
 ### Via l'interface Web
 
@@ -273,7 +273,7 @@ GROUP BY scenario_name;
 
 **Visualization:** Bar chart
 
-## 🔍 Requêtes Utiles
+##  Requêtes Utiles
 
 ### KPIs Quotidiens
 
@@ -324,7 +324,7 @@ SELECT * FROM v_ab_test_summary
 WHERE status = 'active';
 ```
 
-## 🎨 Variables de Dashboard
+##  Variables de Dashboard
 
 Ajouter des variables pour des dashboards dynamiques:
 
@@ -340,7 +340,7 @@ Ajouter des variables pour des dashboards dynamiques:
 - **Type:** Query
 - **Query:** `SELECT DISTINCT scenario_id FROM ab_test_scenarios`
 
-## 🔐 Sécurité
+##  Sécurité
 
 ### Changement du mot de passe admin
 
@@ -359,7 +359,7 @@ GF_SECURITY_ADMIN_PASSWORD=VotreNouveauMotDePasse
 2. **Invite** → Ajouter email
 3. Définir rôle: Viewer, Editor, ou Admin
 
-## 📊 Plugins Installés
+##  Plugins Installés
 
 ```yaml
 GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
@@ -374,7 +374,7 @@ docker exec ecommerce-grafana grafana-cli plugins install grafana-worldmap-panel
 docker restart ecommerce-grafana
 ```
 
-## 🔄 Backup & Restore
+##  Backup & Restore
 
 ### Backup des dashboards
 
@@ -396,7 +396,7 @@ docker exec ecommerce-grafana \
   .dump > grafana_backup.sql
 ```
 
-## 🐛 Dépannage
+##  Dépannage
 
 ### Grafana ne démarre pas
 
@@ -435,14 +435,14 @@ docker exec ecommerce-grafana \
   ls -la /var/lib/grafana/dashboards/
 ```
 
-## 📚 Ressources
+##  Ressources
 
 - [Grafana Documentation](https://grafana.com/docs/grafana/latest/)
 - [PostgreSQL Data Source](https://grafana.com/docs/grafana/latest/datasources/postgres/)
 - [Dashboard Best Practices](https://grafana.com/docs/grafana/latest/best-practices/)
 - [Loki Documentation](https://grafana.com/docs/loki/latest/)
 
-## ✅ Checklist d'Intégration
+##  Checklist d'Intégration
 
 - [x] Grafana service dans docker-compose.yml
 - [x] PostgreSQL datasource configuré
@@ -455,4 +455,4 @@ docker exec ecommerce-grafana \
 
 ---
 
-**Status:** ✅ Grafana intégré et opérationnel
+**Status:**  Grafana intégré et opérationnel

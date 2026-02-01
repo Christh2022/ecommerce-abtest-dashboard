@@ -12,7 +12,7 @@ def test_user_model():
     """Test du modèle User avec force_password_change"""
     from dashboard.auth import User
     
-    print("📝 Test 1: Modèle User avec force_password_change")
+    print(" Test 1: Modèle User avec force_password_change")
     
     user = User(
         id='1',
@@ -26,7 +26,7 @@ def test_user_model():
     assert user.username == 'testuser', "Username incorrect"
     assert user.force_password_change == True, "force_password_change devrait être True"
     
-    print("  ✅ Modèle User fonctionne correctement")
+    print("   Modèle User fonctionne correctement")
     return True
 
 
@@ -35,7 +35,7 @@ def test_auth_manager():
     from dashboard.auth import AuthManager
     from flask import Flask
     
-    print("\n📝 Test 2: AuthManager et gestion des utilisateurs")
+    print("\n Test 2: AuthManager et gestion des utilisateurs")
     
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'test-key'
@@ -46,12 +46,12 @@ def test_auth_manager():
     admin = auth_manager.get_user_by_username('admin')
     assert admin is not None, "Admin devrait exister"
     assert hasattr(admin, 'force_password_change'), "Admin devrait avoir force_password_change"
-    print(f"  ✅ Admin force_password_change = {admin.force_password_change}")
+    print(f"   Admin force_password_change = {admin.force_password_change}")
     
     user = auth_manager.get_user_by_username('user')
     assert user is not None, "User devrait exister"
     assert hasattr(user, 'force_password_change'), "User devrait avoir force_password_change"
-    print(f"  ✅ User force_password_change = {user.force_password_change}")
+    print(f"   User force_password_change = {user.force_password_change}")
     
     return True
 
@@ -61,7 +61,7 @@ def test_change_password():
     from dashboard.auth import AuthManager
     from flask import Flask
     
-    print("\n📝 Test 3: Méthode change_password")
+    print("\n Test 3: Méthode change_password")
     
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'test-key'
@@ -70,18 +70,18 @@ def test_change_password():
     
     # Vérifier force_password_change avant
     admin = auth_manager.get_user_by_username('admin')
-    print(f"  📊 Avant changement: force_password_change = {admin.force_password_change}")
+    print(f"   Avant changement: force_password_change = {admin.force_password_change}")
     
     # Changer le mot de passe
     success = auth_manager.change_password('admin', 'NewPassword123')
     assert success, "Le changement de mot de passe devrait réussir"
-    print("  ✅ Mot de passe changé avec succès")
+    print("   Mot de passe changé avec succès")
     
     # Vérifier force_password_change après
     admin_after = auth_manager.get_user_by_username('admin')
-    print(f"  📊 Après changement: force_password_change = {admin_after.force_password_change}")
+    print(f"   Après changement: force_password_change = {admin_after.force_password_change}")
     assert admin_after.force_password_change == False, "force_password_change devrait être False après changement"
-    print("  ✅ force_password_change correctement mis à False")
+    print("   force_password_change correctement mis à False")
     
     # Restaurer le mot de passe original
     auth_manager.users_db['admin']['password'] = auth_manager.users_db['admin']['password']
@@ -94,7 +94,7 @@ def test_password_validation():
     """Test de la validation du mot de passe"""
     import re
     
-    print("\n📝 Test 4: Validation de la force du mot de passe")
+    print("\n Test 4: Validation de la force du mot de passe")
     
     test_passwords = [
         ('test', False, "Trop court, pas de majuscule, pas de chiffre"),
@@ -113,19 +113,19 @@ def test_password_validation():
         
         is_valid = length_ok and uppercase_ok and lowercase_ok and number_ok
         
-        status = "✅" if is_valid == should_be_valid else "❌"
+        status = "" if is_valid == should_be_valid else ""
         print(f"  {status} '{password}': {reason}")
         
         assert is_valid == should_be_valid, f"Validation incorrecte pour '{password}'"
     
-    print("  ✅ Toutes les validations fonctionnent correctement")
+    print("   Toutes les validations fonctionnent correctement")
     return True
 
 
 def main():
     """Exécuter tous les tests"""
     print("="*60)
-    print("🧪 Tests de la fonctionnalité de changement de mot de passe")
+    print(" Tests de la fonctionnalité de changement de mot de passe")
     print("="*60)
     
     try:
@@ -138,9 +138,9 @@ def main():
         
         print("\n" + "="*60)
         if all(results):
-            print("✅ Tous les tests ont réussi!")
+            print(" Tous les tests ont réussi!")
             print("="*60)
-            print("\n🎉 La fonctionnalité est prête à l'emploi!")
+            print("\n La fonctionnalité est prête à l'emploi!")
             print("\nPour tester l'interface :")
             print("  1. python dashboard/app.py")
             print("  2. Ouvrez http://localhost:8050")
@@ -148,11 +148,11 @@ def main():
             print("  4. Vous serez redirigé vers /change-password")
             return 0
         else:
-            print("❌ Certains tests ont échoué")
+            print(" Certains tests ont échoué")
             return 1
             
     except Exception as e:
-        print(f"\n❌ Erreur lors des tests: {str(e)}")
+        print(f"\n Erreur lors des tests: {str(e)}")
         import traceback
         traceback.print_exc()
         return 1

@@ -2,7 +2,7 @@
 
 Ce dossier contient tous les Dockerfiles nécessaires pour construire les images Docker du projet.
 
-## 📦 Fichiers
+##  Fichiers
 
 ### 1. `Dockerfile`
 
@@ -59,7 +59,7 @@ Ce dossier contient tous les Dockerfiles nécessaires pour construire les images
 - Attend que Grafana soit prêt
 - Crée les 10 dashboards automatiquement
 
-## 🚀 Utilisation
+##  Utilisation
 
 ### Construction des Images
 
@@ -86,7 +86,7 @@ docker-compose -f docker-compose.secure.yml up -d --build
 
 Docker Compose construit automatiquement les images avec les bons Dockerfiles.
 
-## 📋 Structure des Images
+##  Structure des Images
 
 ### Dockerfile (Application Dash)
 
@@ -125,7 +125,7 @@ FROM python:3.11-slim
 └── CMD: Exécution du script d'init
 ```
 
-## 🔧 Configuration
+##  Configuration
 
 ### Variables d'Environnement
 
@@ -151,7 +151,7 @@ Les Dockerfiles utilisent les variables d'environnement définies dans `docker-c
 - `GRAFANA_USER`: Utilisateur Grafana
 - `GRAFANA_PASSWORD`: Mot de passe Grafana
 
-## 📊 Ports Exposés
+##  Ports Exposés
 
 | Image                     | Port | Service                      |
 | ------------------------- | ---- | ---------------------------- |
@@ -159,18 +159,18 @@ Les Dockerfiles utilisent les variables d'environnement définies dans `docker-c
 | Dockerfile.exporter       | 9200 | Métriques Prometheus         |
 | Dockerfile.dashboard-init | -    | Pas de port (init seulement) |
 
-## 🛡️ Sécurité
+## ️ Sécurité
 
 Toutes les images suivent les bonnes pratiques de sécurité:
 
-- ✅ Images slim pour réduire la surface d'attaque
-- ✅ Utilisateur non-root
-- ✅ Pas de secrets dans les images
-- ✅ Healthchecks pour le monitoring
-- ✅ Isolation réseau
-- ✅ Volumes pour les données persistantes
+-  Images slim pour réduire la surface d'attaque
+-  Utilisateur non-root
+-  Pas de secrets dans les images
+-  Healthchecks pour le monitoring
+-  Isolation réseau
+-  Volumes pour les données persistantes
 
-## 🔄 Mise à Jour des Images
+##  Mise à Jour des Images
 
 ```bash
 # Reconstruire toutes les images
@@ -184,20 +184,20 @@ docker-compose -f docker-compose.secure.yml build prometheus-exporter
 docker-compose -f docker-compose.secure.yml build --no-cache
 ```
 
-## 📖 Documentation
+##  Documentation
 
 - [README.md](../README.md) - Documentation principale
 - [docker-compose.secure.yml](../docker-compose.secure.yml) - Configuration Docker Compose
 - [k8s/README.md](../k8s/README.md) - Déploiement Kubernetes
 
-## 💡 Conseils
+##  Conseils
 
 1. **Build Context**: Tous les Dockerfiles utilisent la racine du projet comme contexte
 2. **Cache Layers**: Organisez vos commandes pour optimiser le cache Docker
 3. **Multi-stage**: Considérez les builds multi-stage pour des images plus petites
 4. **Tags**: Utilisez des tags de version pour les images en production
 
-## 🐳 Docker Compose
+##  Docker Compose
 
 Les services dans `docker-compose.secure.yml` référencent ces Dockerfiles:
 
@@ -219,14 +219,14 @@ services:
       dockerfile: docker/Dockerfile.dashboard-init
 ```
 
-## 📝 Changelog
+##  Changelog
 
 ### v1.0.0 (2025-12-23)
 
-- ✅ Organisation des Dockerfiles dans le dossier docker/
-- ✅ Documentation complète du dossier
-- ✅ Mise à jour des références dans docker-compose.secure.yml
-- ✅ Mise à jour des scripts Kubernetes
+-  Organisation des Dockerfiles dans le dossier docker/
+-  Documentation complète du dossier
+-  Mise à jour des références dans docker-compose.secure.yml
+-  Mise à jour des scripts Kubernetes
 
 ---
 

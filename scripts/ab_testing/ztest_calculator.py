@@ -320,7 +320,7 @@ Intervalle de confiance 95%: [{result['confidence_interval']['lower_pct']:.2f}%,
 
 Effect size (Cohen's h): {result['effect_size']['cohen_h']:.3f} ({result['effect_size']['interpretation']})
 
-Verdict: {'✓ SIGNIFICATIF' if result['is_significant'] else '✗ NON SIGNIFICATIF'} (α={self.alpha})
+Verdict: {' SIGNIFICATIF' if result['is_significant'] else ' NON SIGNIFICATIF'} (α={self.alpha})
 """
         return summary
 
@@ -355,7 +355,7 @@ def demo_z_test():
     print(f"P-value: {result['p_value']:.6f}")
     print(f"IC 95%: [{result['confidence_interval']['lower_pct']:.2f}%, {result['confidence_interval']['upper_pct']:.2f}%]")
     print(f"\nEffect size: {result['effect_size']['cohen_h']:.3f} ({result['effect_size']['interpretation']})")
-    print(f"\nVERDICT: {'✓ SIGNIFICATIF' if result['is_significant'] else '✗ NON SIGNIFICATIF'}")
+    print(f"\nVERDICT: {' SIGNIFICATIF' if result['is_significant'] else ' NON SIGNIFICATIF'}")
     
     # Exemple 2: Test unilatéral (B > A ?)
     print("\n" + "="*80)
@@ -371,7 +371,7 @@ def demo_z_test():
     print(f"\nH0: B ≤ A")
     print(f"H1: B > A")
     print(f"\nP-value (unilatéral): {result_greater['p_value']:.6f}")
-    print(f"VERDICT: {'✓ B est significativement meilleur' if result_greater['is_significant'] else '✗ Pas de preuve que B meilleur'}")
+    print(f"VERDICT: {' B est significativement meilleur' if result_greater['is_significant'] else ' Pas de preuve que B meilleur'}")
     
     # Exemple 3: Taille d'échantillon minimale
     print("\n" + "="*80)
@@ -411,7 +411,7 @@ def demo_z_test():
     print(f"Différence: {result_one['difference']:.2%}")
     print(f"\nZ-score: {result_one['z_score']:.3f}")
     print(f"P-value: {result_one['p_value']:.4f}")
-    print(f"\nVERDICT: {'✓ Différent de l\'attendu' if result_one['is_significant'] else '✗ Conforme à l\'attendu'}")
+    print(f"\nVERDICT: {' Différent de l\'attendu' if result_one['is_significant'] else ' Conforme à l\'attendu'}")
     
     # Exemple 5: Intervalle de confiance
     print("\n" + "="*80)

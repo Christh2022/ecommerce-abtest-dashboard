@@ -32,10 +32,10 @@ def print_header(message):
     print(f"{BOLD}{BLUE}{'=' * 70}{RESET}\n")
 
 def print_success(message):
-    print(f"{GREEN}✓{RESET} {message}")
+    print(f"{GREEN}{RESET} {message}")
 
 def print_error(message):
-    print(f"{RED}✗{RESET} {message}")
+    print(f"{RED}{RESET} {message}")
 
 def print_info(message):
     print(f"{BLUE}→{RESET} {message}")
@@ -73,7 +73,7 @@ def run_script(script_path, description):
         return False
 
 def main():
-    print_header("🚀 Création Automatique de Tous les Dashboards Grafana")
+    print_header(" Création Automatique de Tous les Dashboards Grafana")
     
     # Configuration
     grafana_url = os.getenv('GRAFANA_URL', 'http://localhost:3000')
@@ -126,7 +126,7 @@ def main():
             failed_scripts.append((script_name, "Erreur d'exécution"))
     
     # Résumé final
-    print_header("📊 Résumé de l'Exécution")
+    print_header(" Résumé de l'Exécution")
     
     print(f"Total: {total} scripts")
     print_success(f"Succès: {success_count}/{total}")
@@ -137,16 +137,16 @@ def main():
         for script_name, reason in failed_scripts:
             print(f"  • {script_name}: {reason}")
     
-    print(f"\n{BLUE}🌐 Accédez à Grafana:{RESET} {grafana_url}")
+    print(f"\n{BLUE} Accédez à Grafana:{RESET} {grafana_url}")
     print(f"   Utilisateur: {grafana_user}")
     print()
     
     # Code de retour
     if success_count == total:
-        print_success("✨ Tous les dashboards ont été créés avec succès!")
+        print_success(" Tous les dashboards ont été créés avec succès!")
         return 0
     elif success_count > 0:
-        print(f"{YELLOW}⚠{RESET}  Certains dashboards ont échoué mais d'autres ont été créés.")
+        print(f"{YELLOW}{RESET}  Certains dashboards ont échoué mais d'autres ont été créés.")
         return 1
     else:
         print_error("Aucun dashboard n'a pu être créé. Vérifiez la configuration.")

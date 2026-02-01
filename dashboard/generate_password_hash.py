@@ -22,15 +22,15 @@ def main():
             break
         
         if not password:
-            print("⚠️  Password cannot be empty!\n")
+            print("️  Password cannot be empty!\n")
             continue
         
         # Generate hash
         hashed = generate_password_hash(password)
         
-        print(f"\n✅ Password hash generated:")
+        print(f"\n Password hash generated:")
         print(f"   {hashed}")
-        print(f"\n📋 Copy this hash to users.json in the 'password' field")
+        print(f"\n Copy this hash to users.json in the 'password' field")
         print("-" * 60)
         print()
 

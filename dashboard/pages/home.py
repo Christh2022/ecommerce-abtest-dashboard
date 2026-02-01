@@ -252,7 +252,7 @@ layout = dbc.Container([
                         dbc.ListGroupItem([
                             dbc.Row([
                                 dbc.Col([
-                                    html.Span("🥇 S8", className="badge bg-warning text-dark me-2"),
+                                    html.Span(" S8", className="badge bg-warning text-dark me-2"),
                                     html.Strong("Nettoyage Catalogue"),
                                 ], width=6),
                                 dbc.Col([
@@ -267,7 +267,7 @@ layout = dbc.Container([
                         dbc.ListGroupItem([
                             dbc.Row([
                                 dbc.Col([
-                                    html.Span("🥈 S2", className="badge bg-secondary me-2"),
+                                    html.Span(" S2", className="badge bg-secondary me-2"),
                                     html.Strong("Système Reviews"),
                                 ], width=6),
                                 dbc.Col([
@@ -282,7 +282,7 @@ layout = dbc.Container([
                         dbc.ListGroupItem([
                             dbc.Row([
                                 dbc.Col([
-                                    html.Span("🥉 S4", className="badge bg-warning text-dark me-2"),
+                                    html.Span(" S4", className="badge bg-warning text-dark me-2"),
                                     html.Strong("Prix Compétitifs"),
                                 ], width=6),
                                 dbc.Col([

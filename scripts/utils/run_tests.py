@@ -25,16 +25,16 @@ class Colors:
     BOLD = '\033[1m'
 
 def print_success(message):
-    print(f"{Colors.GREEN}✓ {message}{Colors.END}")
+    print(f"{Colors.GREEN} {message}{Colors.END}")
 
 def print_error(message):
-    print(f"{Colors.RED}✗ {message}{Colors.END}")
+    print(f"{Colors.RED} {message}{Colors.END}")
 
 def print_info(message):
-    print(f"{Colors.BLUE}ℹ {message}{Colors.END}")
+    print(f"{Colors.BLUE} {message}{Colors.END}")
 
 def print_warning(message):
-    print(f"{Colors.YELLOW}⚠ {message}{Colors.END}")
+    print(f"{Colors.YELLOW} {message}{Colors.END}")
 
 def print_header(message):
     print(f"\n{Colors.BOLD}{Colors.BLUE}{'='*60}")
@@ -250,17 +250,17 @@ def run_all_tests():
     total = len(results)
     
     for test_name, result in results:
-        status = "✓ PASS" if result else "✗ FAIL"
+        status = " PASS" if result else " FAIL"
         color = Colors.GREEN if result else Colors.RED
         print(f"{color}{status:10}{Colors.END} {test_name}")
     
     print(f"\n{Colors.BOLD}Résultat: {passed}/{total} tests réussis{Colors.END}")
     
     if passed == total:
-        print(f"{Colors.GREEN}{Colors.BOLD}🎉 Tous les tests sont passés !{Colors.END}\n")
+        print(f"{Colors.GREEN}{Colors.BOLD} Tous les tests sont passés !{Colors.END}\n")
         return 0
     else:
-        print(f"{Colors.RED}{Colors.BOLD}❌ Certains tests ont échoué{Colors.END}\n")
+        print(f"{Colors.RED}{Colors.BOLD} Certains tests ont échoué{Colors.END}\n")
         return 1
 
 if __name__ == "__main__":

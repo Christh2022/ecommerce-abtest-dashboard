@@ -204,19 +204,19 @@ def main():
     print("1. Chargement de ab_test_simulation_summary.json...")
     with open(data_dir / 'ab_test_simulation_summary.json', 'r', encoding='utf-8') as f:
         simulation_data = json.load(f)
-    print(f"   ✅ {len(simulation_data['scenarios'])} scénarios chargés")
+    print(f"    {len(simulation_data['scenarios'])} scénarios chargés")
     
     print("\n2. Chargement de funnel_daily_detailed.csv...")
     funnel_daily = pd.read_csv(data_dir / 'funnel_daily_detailed.csv')
-    print(f"   ✅ {len(funnel_daily)} jours de données baseline")
+    print(f"    {len(funnel_daily)} jours de données baseline")
     
     print("\n3. Extraction des métadonnées...")
     scenarios = simulation_data['scenarios']
     simulation_results = simulation_data['simulation_results']
     baseline_metrics = simulation_data['baseline_metrics']
     
-    print(f"   ✅ Baseline view→cart: {baseline_metrics['view_to_cart_pct']}%")
-    print(f"   ✅ Baseline cart→purchase: {baseline_metrics['cart_to_purchase_pct']}%")
+    print(f"    Baseline view→cart: {baseline_metrics['view_to_cart_pct']}%")
+    print(f"    Baseline cart→purchase: {baseline_metrics['cart_to_purchase_pct']}%")
     
     print_separator("GÉNÉRATION SIMULATION QUOTIDIENNE")
     
@@ -231,7 +231,7 @@ def main():
         days=30
     )
     
-    print(f"✅ Simulation générée: {len(simulation_df)} lignes")
+    print(f" Simulation générée: {len(simulation_df)} lignes")
     print(f"   • 8 scénarios × 30 jours")
     print(f"   • Contrôle vs Variant quotidien")
     print(f"   • Lifts et significativité statistique")
@@ -270,7 +270,7 @@ def main():
     print("1. Export de ab_test_simulation.csv...")
     output_file = output_dir / 'ab_test_simulation.csv'
     simulation_df.to_csv(output_file, index=False)
-    print(f"   ✅ {output_file.name}")
+    print(f"    {output_file.name}")
     print(f"   • {len(simulation_df)} lignes")
     print(f"   • {len(simulation_df.columns)} colonnes")
     print(f"   • {output_file.stat().st_size / 1024:.1f} KB")
@@ -315,7 +315,7 @@ def main():
     
     output_file = output_dir / 'ab_test_summary_by_scenario.csv'
     summary_by_scenario.to_csv(output_file, index=False)
-    print(f"   ✅ {output_file.name} ({len(summary_by_scenario)} scénarios)")
+    print(f"    {output_file.name} ({len(summary_by_scenario)} scénarios)")
     
     # Export données quotidiennes agrégées
     print("\n3. Export de ab_test_daily_aggregate.csv...")
@@ -337,20 +337,20 @@ def main():
     
     output_file = output_dir / 'ab_test_daily_aggregate.csv'
     daily_aggregate.to_csv(output_file, index=False)
-    print(f"   ✅ {output_file.name} ({len(daily_aggregate)} jours)")
+    print(f"    {output_file.name} ({len(daily_aggregate)} jours)")
     
     # Durée d'exécution
     duration = (datetime.now() - start_time).total_seconds()
     
     print_separator("GÉNÉRATION TERMINÉE")
-    print(f"✅ Fichiers générés avec succès")
-    print(f"📊 3 fichiers créés dans {output_dir}")
+    print(f" Fichiers générés avec succès")
+    print(f" 3 fichiers créés dans {output_dir}")
     print(f"⏱️  Durée: {duration:.2f}s")
-    print(f"\n📁 FICHIERS:")
+    print(f"\n FICHIERS:")
     print(f"   1. ab_test_simulation.csv - {len(simulation_df)} lignes (simulation complète)")
     print(f"   2. ab_test_summary_by_scenario.csv - {len(summary_by_scenario)} scénarios (résumé)")
     print(f"   3. ab_test_daily_aggregate.csv - {len(daily_aggregate)} jours (agrégat quotidien)")
-    print(f"\n🎯 PRÊT POUR VISUALISATION:")
+    print(f"\n PRÊT POUR VISUALISATION:")
     print(f"   • Dashboard Power BI / Tableau")
     print(f"   • Graphiques de tendances")
     print(f"   • Comparaison contrôle vs variant")

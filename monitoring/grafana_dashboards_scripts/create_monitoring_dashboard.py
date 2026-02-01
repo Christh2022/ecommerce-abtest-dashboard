@@ -388,10 +388,10 @@ response = requests.post(url, json=dashboard, auth=auth)
 
 if response.status_code == 200:
     result = response.json()
-    print(f"✅ Dashboard 'E-Commerce Monitoring Dashboard' créé avec succès!")
+    print(f" Dashboard 'E-Commerce Monitoring Dashboard' créé avec succès!")
     print(f"   URL: http://localhost:3000/d/{result['uid']}")
     print(f"   Version: {result['version']}")
-    print(f"\n📊 Panels créés:")
+    print(f"\n Panels créés:")
     print(f"   1. Sessions (stat)")
     print(f"   2. Conversion Rate (stat)")
     print(f"   3. Total Revenue (stat)")
@@ -401,5 +401,5 @@ if response.status_code == 200:
     print(f"   7. Conversion Rate Trend (timeseries)")
     print(f"   8. Errors Over Time (timeseries)")
 else:
-    print(f"❌ Erreur: {response.status_code}")
+    print(f" Erreur: {response.status_code}")
     print(response.text)

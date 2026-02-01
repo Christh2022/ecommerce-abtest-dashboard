@@ -140,7 +140,7 @@ def setup_ddos_protection(app):
         stats = rate_limiter.get_stats(ip)
         return jsonify(stats)
     
-    print("✅ Protection DDoS activée")
+    print(" Protection DDoS activée")
     print("   - Rate limiting: 200 req/min (général)")
     print("   - Rate limiting: 20 req/min (endpoints sensibles)")
     print("   - Blocage automatique: 5 minutes")

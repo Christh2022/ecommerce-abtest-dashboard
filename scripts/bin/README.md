@@ -2,9 +2,9 @@
 
 Ce dossier contient tous les scripts exécutables pour faciliter l'utilisation du projet.
 
-## 📋 Scripts Disponibles
+##  Scripts Disponibles
 
-### 🎨 Dashboards Grafana
+###  Dashboards Grafana
 
 #### `run_all_dashboards.bat` (Windows)
 
@@ -30,14 +30,14 @@ bash scripts/bin/run_all_dashboards.sh
 
 **Ce que fait ce script:**
 
-- ✅ Vérifie que Python est installé
-- ✅ Exécute `run_all_dashboards.py`
-- ✅ Crée automatiquement les 10 dashboards Grafana
-- ✅ Affiche un rapport de succès/échec
+-  Vérifie que Python est installé
+-  Exécute `run_all_dashboards.py`
+-  Crée automatiquement les 10 dashboards Grafana
+-  Affiche un rapport de succès/échec
 
 ---
 
-### 🧪 Tests
+###  Tests
 
 #### `run_tests.bat` (Windows)
 
@@ -63,14 +63,14 @@ bash scripts/bin/run_tests.sh
 
 **Ce que fait ce script:**
 
-- ✅ Vérifie que Python est installé
-- ✅ Exécute `run_tests.py`
-- ✅ Lance tous les tests unitaires
-- ✅ Affiche les résultats
+-  Vérifie que Python est installé
+-  Exécute `run_tests.py`
+-  Lance tous les tests unitaires
+-  Affiche les résultats
 
 ---
 
-## 🚀 Utilisation Rapide
+##  Utilisation Rapide
 
 ### Depuis la Racine du Projet
 
@@ -99,7 +99,7 @@ run_tests.bat
 ./run_tests.sh
 ```
 
-## ⚙️ Configuration
+## ️ Configuration
 
 ### Variables d'Environnement (Dashboards)
 
@@ -127,7 +127,7 @@ export GRAFANA_URL=http://grafana.example.com:3000
 ./bin/run_all_dashboards.sh
 ```
 
-## 🔍 Que Font Ces Scripts ?
+##  Que Font Ces Scripts ?
 
 ### run_all_dashboards.\*
 
@@ -152,7 +152,7 @@ export GRAFANA_URL=http://grafana.example.com:3000
    - Valide les configurations
 4. Affiche les résultats des tests
 
-## 🛠️ Dépannage
+## ️ Dépannage
 
 ### Windows: "Python n'est pas reconnu"
 
@@ -185,14 +185,14 @@ docker ps | grep grafana
 curl http://localhost:3000/api/health
 ```
 
-## 📖 Documentation Associée
+##  Documentation Associée
 
 - [run_all_dashboards.py](../run_all_dashboards.py) - Script Python principal
 - [run_tests.py](../run_tests.py) - Script de tests Python
 - [GUIDE_DASHBOARDS.md](../GUIDE_DASHBOARDS.md) - Guide complet des dashboards
 - [README.md](../README.md) - Documentation principale
 
-## 💡 Alternative: Exécuter Directement avec Python
+##  Alternative: Exécuter Directement avec Python
 
 Si vous préférez, vous pouvez exécuter les scripts Python directement:
 
@@ -210,7 +210,7 @@ Les scripts batch/shell sont juste des wrappers pratiques qui:
 - Gèrent les erreurs
 - Affichent des messages formatés
 
-## 🎯 Avantages de Ces Scripts
+##  Avantages de Ces Scripts
 
 | Avantage              | Description                           |
 | --------------------- | ------------------------------------- |
@@ -220,7 +220,7 @@ Les scripts batch/shell sont juste des wrappers pratiques qui:
 | **Messages clairs**   | Output formaté et lisible             |
 | **Gestion d'erreurs** | Codes de retour appropriés            |
 
-## 📊 Structure
+##  Structure
 
 ```
 bin/
@@ -231,7 +231,7 @@ bin/
 └── README.md               # Ce fichier
 ```
 
-## 🔗 Liens Utiles
+##  Liens Utiles
 
 - **Grafana**: http://localhost:3000
 - **Prometheus**: http://localhost:9090
@@ -240,4 +240,4 @@ bin/
 ---
 
 **Dernière mise à jour**: 23 Décembre 2025  
-**Statut**: ✅ Opérationnel
+**Statut**:  Opérationnel

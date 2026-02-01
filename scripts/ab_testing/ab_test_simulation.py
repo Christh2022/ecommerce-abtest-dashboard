@@ -140,7 +140,7 @@ def main():
     total_transactions = daily_metrics['transactions'].sum()
     avg_order_value = daily_metrics['avg_order_value'].mean()
     
-    print(f"\n✅ Données chargées")
+    print(f"\n Données chargées")
     print(f"   Total utilisateurs: {total_users:,}")
     print(f"   Total transactions: {total_transactions:,}")
     print(f"   AOV moyen: €{avg_order_value:.2f}")
@@ -272,7 +272,7 @@ def main():
         'priority': 'CRITICAL'
     })
     
-    print(f"✅ {len(scenarios)} scénarios définis\n")
+    print(f" {len(scenarios)} scénarios définis\n")
     for s in scenarios:
         print(f"   {s['id']}: {s['name']} (Priorité: {s['priority']})")
     
@@ -335,9 +335,9 @@ def main():
         
         simulation_results.append(sim_result)
         
-        print(f"   ✅ Puissance statistique: {sim_result['statistical_power']*100:.1f}%")
-        print(f"   ✅ Tests significatifs: {sim_result['significant_tests_pct']:.1f}%")
-        print(f"   ✅ Lift moyen simulé: +{sim_result['avg_lift_pct']:.1f}%")
+        print(f"    Puissance statistique: {sim_result['statistical_power']*100:.1f}%")
+        print(f"    Tests significatifs: {sim_result['significant_tests_pct']:.1f}%")
+        print(f"    Lift moyen simulé: +{sim_result['avg_lift_pct']:.1f}%")
     
     print_separator("ESTIMATION IMPACT BUSINESS")
     
@@ -526,10 +526,10 @@ def main():
     duration = (datetime.now() - start_time).total_seconds()
     
     print_separator("SIMULATION TERMINÉE")
-    print(f"✅ Simulation A/B terminée avec succès")
-    print(f"📊 5 fichiers générés dans {output_dir}")
+    print(f" Simulation A/B terminée avec succès")
+    print(f" 5 fichiers générés dans {output_dir}")
     print(f"⏱️  Durée: {duration:.2f}s")
-    print(f"\n🎯 RECOMMANDATIONS:")
+    print(f"\n RECOMMANDATIONS:")
     print(f"   1. Commencer par {business_impact_sorted[0]['scenario_name']} (priorité {business_impact_sorted[0]['priority']})")
     print(f"   2. ROI portfolio: {summary['portfolio_summary']['portfolio_roi']:+.0f}%")
     print(f"   3. Revenue annuel potentiel: €{cumulative_revenue:,.0f}")

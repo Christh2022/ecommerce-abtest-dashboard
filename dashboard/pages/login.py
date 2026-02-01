@@ -166,11 +166,11 @@ def login_user_callback(n_clicks, username, password, remember):
         user = auth_manager.authenticate_user(username, password, remember=remember)
         
         if user:
-            logger.info(f"✓ Successful login: {username}")
+            logger.info(f" Successful login: {username}")
             session.permanent = remember
             return "Connexion réussie! Redirection...", True, "success", '/'
         else:
-            logger.warning(f"✗ Failed login attempt for user: {username}")
+            logger.warning(f" Failed login attempt for user: {username}")
             return "Nom d'utilisateur ou mot de passe incorrect", True, "danger", dash.no_update
             
     except Exception as e:

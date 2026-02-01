@@ -493,10 +493,10 @@ def main():
     duration = (datetime.now() - start_time).total_seconds()
     
     print_separator("ANALYSE TERMINÉE")
-    print(f"✅ Funnel analysé avec succès")
-    print(f"📊 9 fichiers générés dans {output_dir}")
+    print(f" Funnel analysé avec succès")
+    print(f" 9 fichiers générés dans {output_dir}")
     print(f"⏱️  Durée: {duration:.2f}s")
-    print(f"\n🎯 POINTS CLÉS:")
+    print(f"\n POINTS CLÉS:")
     print(f"   • Vue → Panier: {view_to_cart_rate:.2f}% (perte: {view_to_cart_dropoff:.2f}%)")
     print(f"   • Panier → Achat: {cart_to_purchase_rate:.2f}% (perte: {cart_to_purchase_dropoff:.2f}%)")
     print(f"   • Vue → Achat: {view_to_purchase_rate:.2f}%")

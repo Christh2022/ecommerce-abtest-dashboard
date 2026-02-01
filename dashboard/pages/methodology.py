@@ -85,7 +85,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🎨 Design/UI", className="text-primary"),
+                                    html.H6(" Design/UI", className="text-primary"),
                                     html.P("Modifications visuelles, couleurs, mise en page", className="small mb-0")
                                 ])
                             ], className="h-100")
@@ -93,7 +93,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("📝 Contenu", className="text-success"),
+                                    html.H6(" Contenu", className="text-success"),
                                     html.P("Textes, titres, descriptions, call-to-action", className="small mb-0")
                                 ])
                             ], className="h-100")
@@ -101,7 +101,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("⚙️ Fonctionnalités", className="text-warning"),
+                                    html.H6("️ Fonctionnalités", className="text-warning"),
                                     html.P("Nouvelles features, processus checkout, filtres", className="small mb-0")
                                 ])
                             ], className="h-100")
@@ -277,7 +277,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("📊 Minimum Viable", className="text-info mb-2"),
+                                    html.H6(" Minimum Viable", className="text-info mb-2"),
                                     html.P("≥ 100 conversions par groupe", className="mb-1"),
                                     html.Small("Pour détecter des effets moyens", className="text-muted")
                                 ])
@@ -286,7 +286,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🎯 Recommandé", className="text-success mb-2"),
+                                    html.H6(" Recommandé", className="text-success mb-2"),
                                     html.P("≥ 350-400 conversions par groupe", className="mb-1"),
                                     html.Small("Pour détecter de petits effets", className="text-muted")
                                 ])
@@ -378,7 +378,7 @@ layout = dbc.Container([
                     html.H5("Critères de Décision", className="mb-3"),
                     
                     dbc.Alert([
-                        html.H6("✅ Test Concluant (Variant Gagnant)", className="text-success"),
+                        html.H6(" Test Concluant (Variant Gagnant)", className="text-success"),
                         html.Ul([
                             html.Li("p-value < 0.05 (significatif)"),
                             html.Li("Puissance statistique ≥ 80%"),
@@ -388,7 +388,7 @@ layout = dbc.Container([
                     ], color="success"),
                     
                     dbc.Alert([
-                        html.H6("❌ Test Non Concluant", className="text-warning"),
+                        html.H6(" Test Non Concluant", className="text-warning"),
                         html.Ul([
                             html.Li("p-value ≥ 0.05 (non significatif)"),
                             html.Li("ou Puissance statistique < 80%"),
@@ -397,7 +397,7 @@ layout = dbc.Container([
                     ], color="warning"),
                     
                     dbc.Alert([
-                        html.H6("🔄 Continuer le Test", className="text-info"),
+                        html.H6(" Continuer le Test", className="text-info"),
                         html.Ul([
                             html.Li("Tendance positive mais pas encore significative"),
                             html.Li("Taille d'échantillon insuffisante"),
@@ -436,7 +436,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🚫 Peeking", className="text-danger mb-3"),
+                                    html.H6(" Peeking", className="text-danger mb-3"),
                                     html.P([
                                         "Arrêter le test prématurément en voyant des résultats prometteurs. ",
                                         "Cela augmente le taux de faux positifs."
@@ -448,7 +448,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🚫 Multiple Testing", className="text-danger mb-3"),
+                                    html.H6(" Multiple Testing", className="text-danger mb-3"),
                                     html.P([
                                         "Tester plusieurs variantes simultanément sans ajuster le niveau ",
                                         "de signification augmente le risque d'erreur de Type I."
@@ -462,7 +462,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🚫 Seasonality Bias", className="text-warning mb-3"),
+                                    html.H6(" Seasonality Bias", className="text-warning mb-3"),
                                     html.P([
                                         "Lancer un test pendant une période atypique (promo, vacances) ",
                                         "peut fausser les résultats."
@@ -474,7 +474,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🚫 Selection Bias", className="text-warning mb-3"),
+                                    html.H6(" Selection Bias", className="text-warning mb-3"),
                                     html.P([
                                         "Mauvaise randomisation créant des groupes non comparables ",
                                         "(ex: desktop vs mobile)."
@@ -488,7 +488,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🚫 Novelty Effect", className="text-info mb-3"),
+                                    html.H6(" Novelty Effect", className="text-info mb-3"),
                                     html.P([
                                         "Les utilisateurs réagissent positivement au changement par curiosité, ",
                                         "mais l'effet s'estompe avec le temps."
@@ -500,7 +500,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🚫 Sample Ratio Mismatch", className="text-info mb-3"),
+                                    html.H6(" Sample Ratio Mismatch", className="text-info mb-3"),
                                     html.P([
                                         "Les groupes ont des tailles très différentes de ce qui était prévu, ",
                                         "indiquant un problème d'implémentation."
@@ -594,7 +594,7 @@ layout = dbc.Container([
                     html.Ul([
                         html.Li("Sample Size Calculator: Evan Miller, Optimizely"),
                         html.Li("Statistical Significance Calculator"),
-                        html.Li("Cette dashboard pour simuler et analyser vos tests! 🎉"),
+                        html.Li("Cette dashboard pour simuler et analyser vos tests! "),
                     ])
                 ])
             ], className="shadow-sm mb-4")

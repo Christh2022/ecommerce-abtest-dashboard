@@ -1,10 +1,10 @@
 # Système d'Authentification - Dashboard E-Commerce
 
-## 📋 Vue d'ensemble
+##  Vue d'ensemble
 
 Le dashboard E-Commerce dispose maintenant d'un système d'authentification complet basé sur Flask-Login. Tous les utilisateurs doivent se connecter avant d'accéder aux pages du dashboard.
 
-## 🔐 Caractéristiques
+##  Caractéristiques
 
 - **Authentification par session** : Utilise Flask-Login pour gérer les sessions utilisateurs
 - **Protection des routes** : Toutes les pages du dashboard nécessitent une authentification
@@ -13,7 +13,7 @@ Le dashboard E-Commerce dispose maintenant d'un système d'authentification comp
 - **Interface de connexion moderne** : Design cohérent avec le thème du dashboard
 - **Journalisation** : Tous les événements d'authentification sont enregistrés
 
-## 👥 Comptes par défaut
+##  Comptes par défaut
 
 Le système inclut deux comptes de démonstration :
 
@@ -31,7 +31,7 @@ Le système inclut deux comptes de démonstration :
 - **Rôle** : Utilisateur
 - **Email** : user@example.com
 
-## 🚀 Utilisation
+##  Utilisation
 
 ### Connexion
 
@@ -46,7 +46,7 @@ Le système inclut deux comptes de démonstration :
 - Cliquez sur le bouton "Déconnexion" dans la barre latérale
 - Ou accédez à `/logout`
 
-## 🔧 Configuration
+##  Configuration
 
 ### Variables d'environnement
 
@@ -86,7 +86,7 @@ from werkzeug.security import generate_password_hash
 print(generate_password_hash('votre_mot_de_passe'))
 ```
 
-## 📁 Structure des fichiers
+##  Structure des fichiers
 
 ```
 dashboard/
@@ -101,15 +101,15 @@ dashboard/
     └── ...                   # Autres pages (protégées)
 ```
 
-## 🛡️ Sécurité
+## ️ Sécurité
 
 ### Bonnes pratiques implémentées
 
-- ✅ Mots de passe hachés avec `scrypt` (via Werkzeug)
-- ✅ Sessions sécurisées avec clé secrète
-- ✅ Protection CSRF automatique (Flask)
-- ✅ Journalisation des tentatives de connexion
-- ✅ Redirection automatique si non authentifié
+-  Mots de passe hachés avec `scrypt` (via Werkzeug)
+-  Sessions sécurisées avec clé secrète
+-  Protection CSRF automatique (Flask)
+-  Journalisation des tentatives de connexion
+-  Redirection automatique si non authentifié
 
 ### Recommandations pour la production
 
@@ -130,7 +130,7 @@ dashboard/
 
 5. **MFA** : Envisagez l'authentification à deux facteurs pour les comptes admin
 
-## 🔄 Migration depuis l'ancienne version
+##  Migration depuis l'ancienne version
 
 Si vous utilisez une ancienne version du dashboard sans authentification :
 
@@ -148,7 +148,7 @@ Si vous utilisez une ancienne version du dashboard sans authentification :
    python app.py
    ```
 
-## 🧪 Tests
+##  Tests
 
 Pour tester l'authentification :
 
@@ -164,7 +164,7 @@ python dashboard/app.py
 # 5. Déconnectez-vous et vérifiez la redirection
 ```
 
-## 📝 Journaux
+##  Journaux
 
 Les événements d'authentification sont enregistrés :
 
@@ -193,7 +193,7 @@ Solution : Augmentez `PERMANENT_SESSION_LIFETIME` dans la configuration
 
 Solution : Supprimez `users.json` et relancez l'application pour régénérer les comptes
 
-## 🔮 Améliorations futures
+##  Améliorations futures
 
 - [ ] Interface d'administration des utilisateurs
 - [ ] Authentification OAuth2 (Google, GitHub, etc.)
@@ -203,7 +203,7 @@ Solution : Supprimez `users.json` et relancez l'application pour régénérer le
 - [ ] Récupération de mot de passe par email
 - [ ] Politique de mot de passe fort
 
-## 📞 Support
+##  Support
 
 Pour toute question ou problème :
 

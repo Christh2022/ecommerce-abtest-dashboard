@@ -28,16 +28,16 @@ BLUE = '\033[94m'
 RESET = '\033[0m'
 
 def print_success(message):
-    print(f"{GREEN}✓{RESET} {message}")
+    print(f"{GREEN}{RESET} {message}")
 
 def print_error(message):
-    print(f"{RED}✗{RESET} {message}")
+    print(f"{RED}{RESET} {message}")
 
 def print_info(message):
-    print(f"{BLUE}ℹ{RESET} {message}")
+    print(f"{BLUE}{RESET} {message}")
 
 def print_warning(message):
-    print(f"{YELLOW}⚠{RESET} {message}")
+    print(f"{YELLOW}{RESET} {message}")
 
 def test_file_exists(file_path, description):
     """Vérifie qu'un fichier existe"""
@@ -143,7 +143,7 @@ def main():
     # Résumé final
     print("\n" + "=" * 70)
     if all_tests_passed:
-        print_success("Tous les tests sont passés! ✨")
+        print_success("Tous les tests sont passés! ")
         print_info("\nVous pouvez maintenant:")
         print("  1. Exécuter les scripts individuellement:")
         print(f"     python grafana_dashboards_scripts/create_dashboards_1_3.py")

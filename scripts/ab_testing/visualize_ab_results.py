@@ -114,7 +114,7 @@ class ABTestVisualizer:
         plt.tight_layout()
         output_path = self.output_dir / f'daily_lift_trends_{metric}.png'
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"✓ Graphique sauvegardé: {output_path}")
+        print(f" Graphique sauvegardé: {output_path}")
         plt.close()
     
     def plot_control_vs_variant_comparison(self, df: pd.DataFrame):
@@ -183,7 +183,7 @@ class ABTestVisualizer:
         plt.tight_layout()
         output_path = self.output_dir / 'control_vs_variant_comparison.png'
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"✓ Graphique sauvegardé: {output_path}")
+        print(f" Graphique sauvegardé: {output_path}")
         plt.close()
     
     def plot_funnel_analysis(self, df: pd.DataFrame):
@@ -254,7 +254,7 @@ class ABTestVisualizer:
         plt.tight_layout()
         output_path = self.output_dir / 'funnel_analysis.png'
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"✓ Graphique sauvegardé: {output_path}")
+        print(f" Graphique sauvegardé: {output_path}")
         plt.close()
     
     def plot_significance_heatmap(self, df: pd.DataFrame):
@@ -287,7 +287,7 @@ class ABTestVisualizer:
         plt.tight_layout()
         output_path = self.output_dir / 'significance_heatmap.png'
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"✓ Graphique sauvegardé: {output_path}")
+        print(f" Graphique sauvegardé: {output_path}")
         plt.close()
     
     def plot_pvalue_distribution(self, df: pd.DataFrame):
@@ -342,7 +342,7 @@ class ABTestVisualizer:
         plt.tight_layout()
         output_path = self.output_dir / 'pvalue_distribution.png'
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"✓ Graphique sauvegardé: {output_path}")
+        print(f" Graphique sauvegardé: {output_path}")
         plt.close()
     
     def plot_cumulative_revenue_lift(self, df: pd.DataFrame):
@@ -374,7 +374,7 @@ class ABTestVisualizer:
         plt.tight_layout()
         output_path = self.output_dir / 'cumulative_revenue_lift.png'
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"✓ Graphique sauvegardé: {output_path}")
+        print(f" Graphique sauvegardé: {output_path}")
         plt.close()
     
     def plot_roi_comparison(self, summary_csv: Path):
@@ -419,7 +419,7 @@ class ABTestVisualizer:
         plt.tight_layout()
         output_path = self.output_dir / 'roi_comparison.png'
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"✓ Graphique sauvegardé: {output_path}")
+        print(f" Graphique sauvegardé: {output_path}")
         plt.close()
     
     def plot_conversion_test_results(self, summary_csv: Path):
@@ -511,7 +511,7 @@ class ABTestVisualizer:
         plt.tight_layout()
         output_path = self.output_dir / 'conversion_test_results.png'
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"✓ Graphique sauvegardé: {output_path}")
+        print(f" Graphique sauvegardé: {output_path}")
         plt.close()
     
     def generate_summary_dashboard(self, df: pd.DataFrame, summary_csv: Path):
@@ -627,7 +627,7 @@ Split: 50% / 50%
         ax7.grid(True, alpha=0.3, axis='y')
         
         plt.savefig(self.output_dir / 'summary_dashboard.png', dpi=300, bbox_inches='tight')
-        print(f"✓ Dashboard sauvegardé: {self.output_dir / 'summary_dashboard.png'}")
+        print(f" Dashboard sauvegardé: {self.output_dir / 'summary_dashboard.png'}")
         plt.close()
 
 
@@ -648,8 +648,8 @@ def main():
     summary_json = data_dir / 'ab_test_simulation_summary.json'
     conversion_tests_csv = data_dir / 'ab_test_conversion_tests_summary.csv'
     
-    print(f"✓ {len(simulation_df)} lignes chargées (simulation)")
-    print(f"✓ {len(simulation_df['scenario_id'].unique())} scénarios")
+    print(f" {len(simulation_df)} lignes chargées (simulation)")
+    print(f" {len(simulation_df['scenario_id'].unique())} scénarios")
     
     # Initialiser visualiseur
     viz = ABTestVisualizer(output_dir)

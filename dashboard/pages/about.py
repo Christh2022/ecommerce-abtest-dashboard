@@ -286,7 +286,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("📊 Puissance Statistique", className="text-primary mb-2"),
+                                    html.H6(" Puissance Statistique", className="text-primary mb-2"),
                                     html.P("Minimum 78% pour tous les scénarios", className="small mb-0")
                                 ])
                             ], className="border-primary mb-3")
@@ -294,7 +294,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🎯 Niveau de Confiance", className="text-success mb-2"),
+                                    html.H6(" Niveau de Confiance", className="text-success mb-2"),
                                     html.P("95% (α = 0.05) pour tous les tests", className="small mb-0")
                                 ])
                             ], className="border-success mb-3")
@@ -302,7 +302,7 @@ layout = dbc.Container([
                         dbc.Col([
                             dbc.Card([
                                 dbc.CardBody([
-                                    html.H6("🔬 Simulations", className="text-info mb-2"),
+                                    html.H6(" Simulations", className="text-info mb-2"),
                                     html.P("10,000 itérations Monte Carlo par scénario", className="small mb-0")
                                 ])
                             ], className="border-info mb-3")

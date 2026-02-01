@@ -181,13 +181,13 @@ def check_password_strength(password):
     strength_score = sum([length_ok, uppercase_ok, lowercase_ok, number_ok])
     
     if strength_score == 4:
-        strength_text = "✓ Mot de passe fort"
+        strength_text = " Mot de passe fort"
         strength_class = "text-success fw-bold"
     elif strength_score >= 3:
-        strength_text = "⚠ Mot de passe moyen"
+        strength_text = " Mot de passe moyen"
         strength_class = "text-warning fw-bold"
     else:
-        strength_text = "✗ Mot de passe faible"
+        strength_text = " Mot de passe faible"
         strength_class = "text-danger fw-bold"
     
     # Icons for requirements

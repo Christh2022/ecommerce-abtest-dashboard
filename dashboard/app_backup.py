@@ -406,12 +406,12 @@ if __name__ == '__main__':
             logger.warning(f"Text-to-speech error: {e}")
     
     print("\n" + "="*60)
-    print("🎩 Bonjour Docteur Christh !")
+    print(" Bonjour Docteur Christh !")
     print("="*60)
-    print("🚀 E-Commerce A/B Test Dashboard")
+    print(" E-Commerce A/B Test Dashboard")
     print("="*60)
-    print("📊 Dashboard URL: http://127.0.0.1:8050")
-    print("📁 Pages disponibles:")
+    print(" Dashboard URL: http://127.0.0.1:8050")
+    print(" Pages disponibles:")
     print("   - Home: /")
     print("   - Traffic: /traffic")
     print("   - Behavior: /behavior")
@@ -432,13 +432,13 @@ if __name__ == '__main__':
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() in ('true', '1', 'yes')
     
     if debug_mode:
-        print("\n⚠️  WARNING: Debug mode is ENABLED - for development only!")
-        print("🔄 Le dashboard se recharge automatiquement à chaque modification")
-        print("🛑 Appuyez sur Ctrl+C pour arrêter\n")
+        print("\n️  WARNING: Debug mode is ENABLED - for development only!")
+        print(" Le dashboard se recharge automatiquement à chaque modification")
+        print(" Appuyez sur Ctrl+C pour arrêter\n")
     else:
-        print("\n✅ Running in PRODUCTION mode (debug disabled)")
+        print("\n Running in PRODUCTION mode (debug disabled)")
     
-    logger.info("🚀 Starting E-Commerce A/B Test Dashboard...")
+    logger.info(" Starting E-Commerce A/B Test Dashboard...")
     
     app.run_server(
         debug=debug_mode,

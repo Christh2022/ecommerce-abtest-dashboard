@@ -98,7 +98,7 @@ dashboards.append({
                 "options": {
                     "mode": "markdown",
                     "content": """
-## 📊 Analyse de Cohortes - Recommandations
+##  Analyse de Cohortes - Recommandations
 
 ### Actions Prioritaires:
 1. **Acquisition**: Reproduire les tactiques marketing des cohortes à forte rétention
@@ -453,7 +453,7 @@ dashboards.append({
                 "options": {
                     "mode": "markdown",
                     "content": """
-## 🔮 Prédictions & Insights Machine Learning
+##  Prédictions & Insights Machine Learning
 
 ### Tendances Détectées:
 - **Revenue**: Croissance stable de +5% anticipée
@@ -466,9 +466,9 @@ dashboards.append({
 3. **Marketing**: ROI optimal si budget +15% sur canaux haute conversion
 
 ### Alertes Automatiques:
-- ⚠️ **Conversion <1.2%**: Alert équipe UX
-- ⚠️ **AOV <$240**: Revoir stratégie pricing
-- ✅ **Tout nominal**: Performance dans les normes
+- ️ **Conversion <1.2%**: Alert équipe UX
+- ️ **AOV <$240**: Revoir stratégie pricing
+-  **Tout nominal**: Performance dans les normes
 
 ### Prochaine Révision:
 - Ajuster prédictions dans 7 jours
@@ -494,10 +494,10 @@ for dashboard_config in dashboards:
     uid = dashboard_config["uid"]
     
     if response.status_code == 200:
-        print(f"✓ {title}")
+        print(f" {title}")
         print(f"  URL: http://localhost:3000/d/{uid}")
     else:
-        print(f"✗ {title}: Error {response.status_code}")
+        print(f" {title}: Error {response.status_code}")
 
 print("\n=== 3 derniers dashboards crees ===")
-print("\n🎉 TOTAL: 6 nouveaux dashboards + 2 existants = 8 dashboards operationnels!")
+print("\n TOTAL: 6 nouveaux dashboards + 2 existants = 8 dashboards operationnels!")
