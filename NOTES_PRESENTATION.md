@@ -1,10 +1,10 @@
-# 📝 NOTES DE PRÉSENTATION - Script Oral
+# NOTES DE PRÉSENTATION - Script Oral
 
 _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 🎬 INTRODUCTION (2 min)
+## INTRODUCTION (2 min)
 
 **Slide 1 : Page de garde**
 
@@ -21,7 +21,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 📊 SECTION 1 : VUE D'ENSEMBLE (3 min)
+## SECTION 1 : VUE D'ENSEMBLE (3 min)
 
 **Slide : Dashboard récapitulatif**
 
@@ -41,7 +41,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 🔬 SECTION 2 : MÉTHODOLOGIE (4 min)
+## SECTION 2 : MÉTHODOLOGIE (4 min)
 
 **Slide : Dataset RetailRocket**
 
@@ -73,7 +73,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 📈 SECTION 3 : RÉSULTATS CLÉS (5 min)
+## SECTION 3 : RÉSULTATS CLÉS (5 min)
 
 **Slide : KPIs Principaux**
 
@@ -126,7 +126,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 🏆 SECTION 4 : TOP 5 OPTIMISATIONS (8 min)
+## SECTION 4 : TOP 5 OPTIMISATIONS (8 min)
 
 **Slide : Comparaison des ROI**
 
@@ -227,7 +227,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 💰 SECTION 5 : IMPACT BUSINESS (5 min)
+## SECTION 5 : IMPACT BUSINESS (5 min)
 
 **Slide : Impact cumulé**
 
@@ -263,7 +263,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 🎯 SECTION 6 : RECOMMANDATIONS & ROADMAP (5 min)
+## SECTION 6 : RECOMMANDATIONS & ROADMAP (5 min)
 
 **Slide : Roadmap de déploiement**
 
@@ -301,7 +301,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 📊 SECTION 7 : VISUALISATIONS DÉTAILLÉES (3 min)
+## SECTION 7 : VISUALISATIONS DÉTAILLÉES (3 min)
 
 > Les slides suivantes montrent les analyses détaillées si vous voulez approfondir certains aspects.
 
@@ -325,17 +325,17 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 🎓 CONCLUSION (3 min)
+## CONCLUSION (3 min)
 
 **Messages clés à répéter :**
 
 > En conclusion, cette analyse nous a permis de :
 >
-> ✅ Analyser 2.76 millions d'événements avec rigueur scientifique
-> ✅ Identifier les problèmes critiques : abandon panier 67%, conversion 0.84%
-> ✅ Tester 16 scénarios d'optimisation avec 160,000 simulations
-> ✅ Quantifier un potentiel de 63.7 millions de dollars de revenu additionnel
-> ✅ Proposer une roadmap actionnable sur 9 mois avec ROI détaillés
+> Analyser 2.76 millions d'événements avec rigueur scientifique
+> Identifier les problèmes critiques : abandon panier 67%, conversion 0.84%
+> Tester 16 scénarios d'optimisation avec 160,000 simulations
+> Quantifier un potentiel de 63.7 millions de dollars de revenu additionnel
+> Proposer une roadmap actionnable sur 9 mois avec ROI détaillés
 
 **Les 3 insights majeurs :**
 
@@ -363,7 +363,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## ❓ QUESTIONS FRÉQUENTES - RÉPONSES PRÉPARÉES
+## QUESTIONS FRÉQUENTES - RÉPONSES PRÉPARÉES
 
 ### Q : "Pourquoi des simulations et pas de vrais A/B tests ?"
 
@@ -446,7 +446,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 💡 CONSEILS DE PRÉSENTATION
+## CONSEILS DE PRÉSENTATION
 
 ### Timing
 
@@ -496,7 +496,7 @@ _Guide de présentation à lire pendant que vous montrez les slides_
 
 ---
 
-## 🎯 VERSION COURTE (15 min pitch)
+## VERSION COURTE (15 min pitch)
 
 Si on vous demande une version courte :
 
@@ -524,4 +524,4 @@ Ajouter :
 
 ---
 
-**🎤 Bonne présentation !**
+** Bonne présentation !**

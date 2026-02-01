@@ -1,4 +1,4 @@
-# 🔒 Politique de Sécurité - E-Commerce A/B Test Dashboard
+# Politique de Sécurité - E-Commerce A/B Test Dashboard
 
 ## Table des Matières
 
@@ -21,9 +21,9 @@ Ce document décrit la politique de sécurité de l'application E-Commerce A/B T
 
 ### Niveau de Sécurité
 
-🔒 **Niveau**: Production-Ready avec Defense in Depth  
-📊 **Status**: Sécurisé pour environnement de production  
-🎯 **Conformité**: OWASP Top 10, Docker Security Best Practices
+ **Niveau**: Production-Ready avec Defense in Depth 
+ **Status**: Sécurisé pour environnement de production 
+ **Conformité**: OWASP Top 10, Docker Security Best Practices
 
 ---
 
@@ -41,33 +41,33 @@ Ce document décrit la politique de sécurité de l'application E-Commerce A/B T
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    Internet / Utilisateurs               │
+│ Internet / Utilisateurs │
 └───────────────────────┬─────────────────────────────────┘
-                        │
-                        │ (Firewall Host + iptables)
-                        │
+ │
+ │ (Firewall Host + iptables)
+ │
 ┌───────────────────────▼─────────────────────────────────┐
-│              Frontend Network (172.21.0.0/24)           │
-│  ┌─────────────────┐        ┌──────────────────┐       │
-│  │  Dash App :8050 │        │  Grafana :3000   │       │
-│  │  (Public)       │        │  (Public)        │       │
-│  └────────┬────────┘        └─────────┬────────┘       │
+│ Frontend Network (172.21.0.0/24) │
+│ ┌─────────────────┐ ┌──────────────────┐ │
+│ │ Dash App :8050 │ │ Grafana :3000 │ │
+│ │ (Public) │ │ (Public) │ │
+│ └────────┬────────┘ └─────────┬────────┘ │
 └───────────┼─────────────────────────────┼───────────────┘
-            │                             │
+ │ │
 ┌───────────▼─────────────────────────────▼───────────────┐
-│          Backend Network (172.22.0.0/24) INTERNAL       │
-│  ┌──────────────────┐    ┌────────────────────┐        │
-│  │ PostgreSQL :5432 │    │ Exporters :9187    │        │
-│  │ (Private)        │    │ :9200 (Private)    │        │
-│  └──────────────────┘    └────────────────────┘        │
+│ Backend Network (172.22.0.0/24) INTERNAL │
+│ ┌──────────────────┐ ┌────────────────────┐ │
+│ │ PostgreSQL :5432 │ │ Exporters :9187 │ │
+│ │ (Private) │ │ :9200 (Private) │ │
+│ └──────────────────┘ └────────────────────┘ │
 └──────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────┐
-│      Monitoring Network (172.23.0.0/24) INTERNAL        │
-│  ┌─────────────┐  ┌──────────┐  ┌────────────┐         │
-│  │ Prometheus  │  │  Loki    │  │  Falco     │         │
-│  │ :9090       │  │  :3100   │  │ (Security) │         │
-│  │ (Private)   │  │ (Private)│  │            │         │
-│  └─────────────┘  └──────────┘  └────────────┘         │
+│ Monitoring Network (172.23.0.0/24) INTERNAL │
+│ ┌─────────────┐ ┌──────────┐ ┌────────────┐ │
+│ │ Prometheus │ │ Loki │ │ Falco │ │
+│ │ :9090 │ │ :3100 │ │ (Security) │ │
+│ │ (Private) │ │ (Private)│ │ │ │
+│ └─────────────┘ └──────────┘ └────────────┘ │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -75,174 +75,174 @@ Ce document décrit la politique de sécurité de l'application E-Commerce A/B T
 
 ## Risques Identifiés
 
-### 1. 🔴 CRITIQUE - Exposition Non Autorisée des Données
+### 1. CRITIQUE - Exposition Non Autorisée des Données
 
-**Risque**: Accès non autorisé à la base de données PostgreSQL  
-**Impact**: Vol de données clients, transactions, informations sensibles  
+**Risque**: Accès non autorisé à la base de données PostgreSQL 
+**Impact**: Vol de données clients, transactions, informations sensibles 
 **Probabilité**: Haute si port 5432 exposé publiquement
 
 **Mitigations**:
 
-- ✅ Port PostgreSQL (5432) bind uniquement à `127.0.0.1`
-- ✅ Réseau backend interne isolé
-- ✅ Authentification par mot de passe requis
-- ✅ Pas de compte root/superuser exposé
-- ✅ Connexions chiffrées (SSL recommandé)
+- Port PostgreSQL (5432) bind uniquement à `127.0.0.1`
+- Réseau backend interne isolé
+- Authentification par mot de passe requis
+- Pas de compte root/superuser exposé
+- Connexions chiffrées (SSL recommandé)
 
-### 2. 🔴 CRITIQUE - Injection SQL
+### 2. CRITIQUE - Injection SQL
 
-**Risque**: Exploitation de vulnérabilités SQL via inputs utilisateur  
-**Impact**: Accès complet base de données, modification/suppression données  
+**Risque**: Exploitation de vulnérabilités SQL via inputs utilisateur 
+**Impact**: Accès complet base de données, modification/suppression données 
 **Probabilité**: Moyenne
 
 **Mitigations**:
 
-- ✅ Utilisation de SQLAlchemy ORM (requêtes paramétrées)
-- ✅ Validation des inputs côté serveur
-- ✅ Least Privilege - Utilisateur DB avec permissions limitées
-- ✅ Monitoring des requêtes suspectes via Falco
-- 📋 TODO: Web Application Firewall (WAF)
+- Utilisation de SQLAlchemy ORM (requêtes paramétrées)
+- Validation des inputs côté serveur
+- Least Privilege - Utilisateur DB avec permissions limitées
+- Monitoring des requêtes suspectes via Falco
+- TODO: Web Application Firewall (WAF)
 
-### 3. 🟠 HAUTE - Cross-Site Scripting (XSS)
+### 3. HAUTE - Cross-Site Scripting (XSS)
 
-**Risque**: Injection de code JavaScript malveillant  
-**Impact**: Vol de sessions, redirection malveillante, phishing  
+**Risque**: Injection de code JavaScript malveillant 
+**Impact**: Vol de sessions, redirection malveillante, phishing 
 **Probabilité**: Moyenne
 
 **Mitigations**:
 
-- ✅ Dash 2.15.0 (patch CVE PYSEC-2024-35)
-- ✅ Sanitization automatique des inputs Dash
-- ✅ Content Security Policy (CSP) recommandée
-- 📋 TODO: Headers de sécurité HTTP (X-Frame-Options, etc.)
+- Dash 2.15.0 (patch CVE PYSEC-2024-35)
+- Sanitization automatique des inputs Dash
+- Content Security Policy (CSP) recommandée
+- TODO: Headers de sécurité HTTP (X-Frame-Options, etc.)
 
-### 4. 🟠 HAUTE - Déni de Service (DoS)
+### 4. HAUTE - Déni de Service (DoS)
 
-**Risque**: Saturation des ressources via requêtes massives  
-**Impact**: Indisponibilité du service  
+**Risque**: Saturation des ressources via requêtes massives 
+**Impact**: Indisponibilité du service 
 **Probabilité**: Moyenne
 
 **Mitigations**:
 
-- ✅ Limite de connexions iptables (10 conn/s, burst 20)
-- ✅ Resource limits Docker (CPU, RAM)
-- ✅ Health checks et auto-restart
-- ✅ Monitoring Prometheus + alertes
-- 📋 TODO: Rate limiting applicatif
-- 📋 TODO: CDN/Reverse Proxy avec protection DDoS
+- Limite de connexions iptables (10 conn/s, burst 20)
+- Resource limits Docker (CPU, RAM)
+- Health checks et auto-restart
+- Monitoring Prometheus + alertes
+- TODO: Rate limiting applicatif
+- TODO: CDN/Reverse Proxy avec protection DDoS
 
-### 5. 🟠 HAUTE - Exposition des Services d'Administration
+### 5. HAUTE - Exposition des Services d'Administration
 
-**Risque**: Accès non autorisé aux interfaces d'administration  
-**Impact**: Contrôle des services, accès aux métriques sensibles  
+**Risque**: Accès non autorisé aux interfaces d'administration 
+**Impact**: Contrôle des services, accès aux métriques sensibles 
 **Probabilité**: Haute si exposé publiquement
 
 **Mitigations**:
 
-- ✅ Prometheus (9090) - localhost uniquement
-- ✅ Loki (3100) - localhost uniquement
-- ✅ Exporters (9187, 9200) - réseau Docker interne uniquement
-- ✅ Grafana (3000) - localhost + whitelist IPs
-- ✅ Firewall iptables avec règles strictes
+- Prometheus (9090) - localhost uniquement
+- Loki (3100) - localhost uniquement
+- Exporters (9187, 9200) - réseau Docker interne uniquement
+- Grafana (3000) - localhost + whitelist IPs
+- Firewall iptables avec règles strictes
 
-### 6. 🟡 MOYENNE - Credentials Hardcodés
+### 6. MOYENNE - Credentials Hardcodés
 
-**Risque**: Mots de passe en clair dans le code/configuration  
-**Impact**: Compromission complète si repository public  
+**Risque**: Mots de passe en clair dans le code/configuration 
+**Impact**: Compromission complète si repository public 
 **Probabilité**: Faible (fichiers non commités)
 
 **Mitigations**:
 
-- ✅ Variables d'environnement pour credentials
-- ✅ .gitignore pour fichiers sensibles
-- ✅ Recommandation: Utiliser Docker Secrets
-- 📋 TODO: Vault pour gestion centralisée des secrets
-- 📋 TODO: Rotation automatique des passwords
+- Variables d'environnement pour credentials
+- .gitignore pour fichiers sensibles
+- Recommandation: Utiliser Docker Secrets
+- TODO: Vault pour gestion centralisée des secrets
+- TODO: Rotation automatique des passwords
 
-### 7. 🟡 MOYENNE - Vulnérabilités Dépendances Python
+### 7. MOYENNE - Vulnérabilités Dépendances Python
 
-**Risque**: Exploitation de CVE connues dans packages tiers  
-**Impact**: Variable selon la vulnérabilité  
+**Risque**: Exploitation de CVE connues dans packages tiers 
+**Impact**: Variable selon la vulnérabilité 
 **Probabilité**: Moyenne
 
 **Mitigations**:
 
-- ✅ pip-audit automatisé (hebdomadaire)
-- ✅ 4/5 vulnérabilités corrigées (80%)
-- ✅ CI/CD bloque PR avec vulnérabilités critiques
-- ✅ Monitoring GitHub Security Advisories
-- ✅ Versions pinned dans requirements.txt
+- pip-audit automatisé (hebdomadaire)
+- 4/5 vulnérabilités corrigées (80%)
+- CI/CD bloque PR avec vulnérabilités critiques
+- Monitoring GitHub Security Advisories
+- Versions pinned dans requirements.txt
 
-### 8. 🟡 MOYENNE - Accès Non Autorisé aux Logs
+### 8. MOYENNE - Accès Non Autorisé aux Logs
 
-**Risque**: Lecture de logs contenant informations sensibles  
-**Impact**: Fuite d'informations, reconnaissance  
+**Risque**: Lecture de logs contenant informations sensibles 
+**Impact**: Fuite d'informations, reconnaissance 
 **Probabilité**: Faible
 
 **Mitigations**:
 
-- ✅ Loki accessible uniquement localhost
-- ✅ Logs rotation et rétention limitée (7 jours)
-- ✅ Pas de données sensibles loggées (PII, passwords)
-- ✅ Accès Grafana protégé par authentification
+- Loki accessible uniquement localhost
+- Logs rotation et rétention limitée (7 jours)
+- Pas de données sensibles loggées (PII, passwords)
+- Accès Grafana protégé par authentification
 
-### 9. 🟡 MOYENNE - Escalade de Privilèges Container
+### 9. MOYENNE - Escalade de Privilèges Container
 
-**Risque**: Escape du container vers l'hôte  
-**Impact**: Compromission du serveur hôte  
+**Risque**: Escape du container vers l'hôte 
+**Impact**: Compromission du serveur hôte 
 **Probabilité**: Faible
 
 **Mitigations**:
 
-- ✅ `no-new-privileges:true` sur tous les containers
-- ✅ Capabilities minimales (cap_drop: ALL)
-- ✅ User non-root dans containers (dashuser, grafana:472)
-- ✅ Images Alpine réduites (surface d'attaque minimale)
-- ✅ Falco monitoring runtime activity
+- `no-new-privileges:true` sur tous les containers
+- Capabilities minimales (cap_drop: ALL)
+- User non-root dans containers (dashuser, grafana:472)
+- Images Alpine réduites (surface d'attaque minimale)
+- Falco monitoring runtime activity
 
-### 10. 🟢 FAIBLE - Man-in-the-Middle (MitM)
+### 10. FAIBLE - Man-in-the-Middle (MitM)
 
-**Risque**: Interception du trafic entre services  
-**Impact**: Vol de données en transit  
+**Risque**: Interception du trafic entre services 
+**Impact**: Vol de données en transit 
 **Probabilité**: Très faible (localhost/réseau interne)
 
 **Mitigations**:
 
-- ✅ Communication inter-containers via réseau Docker interne
-- ✅ Pas d'exposition Internet directe
-- 📋 TODO: TLS/SSL pour communications externes
-- 📋 TODO: mTLS entre services critiques
+- Communication inter-containers via réseau Docker interne
+- Pas d'exposition Internet directe
+- TODO: TLS/SSL pour communications externes
+- TODO: mTLS entre services critiques
 
-### 11. 🟢 FAIBLE - Directory Traversal
+### 11. FAIBLE - Directory Traversal
 
-**Risque**: Accès à des fichiers systèmes via manipulation paths  
-**Impact**: Lecture fichiers sensibles  
+**Risque**: Accès à des fichiers systèmes via manipulation paths 
+**Impact**: Lecture fichiers sensibles 
 **Probabilité**: Très faible
 
 **Mitigations**:
 
-- ✅ Werkzeug vulnerability acceptée (Windows uniquement, app sur Linux)
-- ✅ send_from_directory() non utilisé
-- ✅ Validation paths d'accès fichiers
-- ✅ Container isolation
+- Werkzeug vulnerability acceptée (Windows uniquement, app sur Linux)
+- send_from_directory() non utilisé
+- Validation paths d'accès fichiers
+- Container isolation
 
-### 12. 🟢 FAIBLE - Request Smuggling (HTTP)
+### 12. FAIBLE - Request Smuggling (HTTP)
 
-**Risque**: Contournement des contrôles de sécurité  
-**Impact**: Accès endpoints restreints  
+**Risque**: Contournement des contrôles de sécurité 
+**Impact**: Accès endpoints restreints 
 **Probabilité**: Très faible
 
 **Mitigations**:
 
-- ✅ Gunicorn 22.0.0 (patch CVE HTTP smuggling)
-- ✅ Headers validation stricte
-- 📋 TODO: WAF/Reverse Proxy avec validation
+- Gunicorn 22.0.0 (patch CVE HTTP smuggling)
+- Headers validation stricte
+- TODO: WAF/Reverse Proxy avec validation
 
 ---
 
 ## Mesures de Sécurité
 
-### 🔒 Sécurité Réseau
+### Sécurité Réseau
 
 #### Firewall Docker (iptables)
 
@@ -270,18 +270,18 @@ sudo ./scripts/configure_firewall.sh
 
 1. **frontend-network** (172.21.0.0/24)
 
-   - Services publics: Dash App, Grafana
-   - Accès Internet autorisé
+ - Services publics: Dash App, Grafana
+ - Accès Internet autorisé
 
 2. **backend-network** (172.22.0.0/24) - **INTERNAL**
 
-   - Services privés: PostgreSQL, Exporters
-   - Pas d'accès Internet
-   - Communication inter-services uniquement
+ - Services privés: PostgreSQL, Exporters
+ - Pas d'accès Internet
+ - Communication inter-services uniquement
 
 3. **monitoring-network** (172.23.0.0/24) - **INTERNAL**
-   - Prometheus, Loki, Falco
-   - Isolation complète
+ - Prometheus, Loki, Falco
+ - Isolation complète
 
 **Configuration**: `docker-compose.secure.yml`
 
@@ -302,17 +302,17 @@ echo "192.168.1.0/24" >> infrastructure/config/allowed_hosts.txt
 sudo ./scripts/configure_firewall.sh
 ```
 
-### 🔐 Sécurité des Containers
+### Sécurité des Containers
 
 #### Capacités Linux Réduites
 
 ```yaml
 security_opt:
-  - no-new-privileges:true
+ - no-new-privileges:true
 cap_drop:
-  - ALL
+ - ALL
 cap_add:
-  - NET_BIND_SERVICE # Uniquement si port <1024
+ - NET_BIND_SERVICE # Uniquement si port <1024
 ```
 
 #### Utilisateurs Non-Root
@@ -325,16 +325,16 @@ cap_add:
 
 ```yaml
 deploy:
-  resources:
-    limits:
-      cpus: "1.0"
-      memory: 1G
-    reservations:
-      cpus: "0.5"
-      memory: 512M
+ resources:
+ limits:
+ cpus: "1.0"
+ memory: 1G
+ reservations:
+ cpus: "0.5"
+ memory: 512M
 ```
 
-### 🛡️ Sécurité Applicative
+### ️ Sécurité Applicative
 
 #### Audit de Dépendances
 
@@ -355,18 +355,18 @@ docker-compose -f docker-compose.security.yml up
 
 #### Sanitization des Inputs
 
-- ✅ Dash automatic escaping
-- ✅ SQLAlchemy parameterized queries
-- ✅ Validation côté serveur
+- Dash automatic escaping
+- SQLAlchemy parameterized queries
+- Validation côté serveur
 
 #### Logging Sécurisé
 
-- ❌ Pas de passwords/tokens dans les logs
-- ❌ Pas de PII (données personnelles)
-- ✅ Audit trail des actions admin
-- ✅ Logs structurés pour analyse
+- Pas de passwords/tokens dans les logs
+- Pas de PII (données personnelles)
+- Audit trail des actions admin
+- Logs structurés pour analyse
 
-### 🔍 Monitoring et Détection
+### Monitoring et Détection
 
 #### Falco Runtime Security
 
@@ -393,14 +393,14 @@ docker-compose -f docker-compose.security.yml up
 
 **Dashboard**: http://localhost:3000/d/security-logs
 
-### 🔑 Gestion des Secrets
+### Gestion des Secrets
 
 #### Variables d'Environnement
 
 ```yaml
 environment:
-  - POSTGRES_PASSWORD=dashpass # À remplacer par Docker secret
-  - DATABASE_URL=postgresql://...
+ - POSTGRES_PASSWORD=dashpass # À remplacer par Docker secret
+ - DATABASE_URL=postgresql://...
 ```
 
 #### Bonnes Pratiques
@@ -415,15 +415,15 @@ environment:
 ```yaml
 # Utiliser Docker Secrets en production
 secrets:
-  postgres_password:
-    file: ./secrets/postgres_password.txt
+ postgres_password:
+ file: ./secrets/postgres_password.txt
 
 services:
-  postgres:
-    secrets:
-      - postgres_password
-    environment:
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+ postgres:
+ secrets:
+ - postgres_password
+ environment:
+ - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
 ```
 
 ---
@@ -432,17 +432,17 @@ services:
 
 ### Ports Exposés (Configuration Sécurisée)
 
-| Service         | Port | Exposition              | Justification       |
+| Service | Port | Exposition | Justification |
 | --------------- | ---- | ----------------------- | ------------------- |
-| Dashboard       | 8050 | `127.0.0.1` + Whitelist | Accès utilisateur   |
-| Grafana         | 3000 | `127.0.0.1` + Whitelist | Visualisation admin |
-| PostgreSQL      | 5432 | `127.0.0.1`             | Admin DB uniquement |
-| Prometheus      | 9090 | `127.0.0.1`             | Admin monitoring    |
-| Loki            | 3100 | `127.0.0.1`             | Admin logs          |
-| PG Exporter     | 9187 | Réseau interne          | Métriques internes  |
-| Custom Exporter | 9200 | Réseau interne          | Métriques internes  |
-| Promtail        | -    | Non exposé              | Collecteur logs     |
-| Falco           | -    | Non exposé              | Monitoring sécurité |
+| Dashboard | 8050 | `127.0.0.1` + Whitelist | Accès utilisateur |
+| Grafana | 3000 | `127.0.0.1` + Whitelist | Visualisation admin |
+| PostgreSQL | 5432 | `127.0.0.1` | Admin DB uniquement |
+| Prometheus | 9090 | `127.0.0.1` | Admin monitoring |
+| Loki | 3100 | `127.0.0.1` | Admin logs |
+| PG Exporter | 9187 | Réseau interne | Métriques internes |
+| Custom Exporter | 9200 | Réseau interne | Métriques internes |
+| Promtail | - | Non exposé | Collecteur logs |
+| Falco | - | Non exposé | Monitoring sécurité |
 
 ### Configuration Recommandée pour Production
 
@@ -451,25 +451,25 @@ services:
 ```nginx
 # /etc/nginx/sites-available/ecommerce-dashboard
 server {
-    listen 443 ssl http2;
-    server_name dashboard.example.com;
+ listen 443 ssl http2;
+ server_name dashboard.example.com;
 
-    ssl_certificate /etc/letsencrypt/live/dashboard.example.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/dashboard.example.com/privkey.pem;
+ ssl_certificate /etc/letsencrypt/live/dashboard.example.com/fullchain.pem;
+ ssl_certificate_key /etc/letsencrypt/live/dashboard.example.com/privkey.pem;
 
-    # Security headers
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
+ # Security headers
+ add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+ add_header X-Frame-Options "SAMEORIGIN" always;
+ add_header X-Content-Type-Options "nosniff" always;
+ add_header X-XSS-Protection "1; mode=block" always;
 
-    location / {
-        proxy_pass http://127.0.0.1:8050;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+ location / {
+ proxy_pass http://127.0.0.1:8050;
+ proxy_set_header Host $host;
+ proxy_set_header X-Real-IP $remote_addr;
+ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ proxy_set_header X-Forwarded-Proto $scheme;
+ }
 }
 ```
 
@@ -511,9 +511,9 @@ ssh -L 8050:localhost:8050 user@server
 ```yaml
 # docker-compose.yml
 environment:
-  - GF_AUTH_ANONYMOUS_ENABLED=false
-  - GF_AUTH_DISABLE_LOGIN_FORM=false
-  - GF_AUTH_LDAP_ENABLED=true
+ - GF_AUTH_ANONYMOUS_ENABLED=false
+ - GF_AUTH_DISABLE_LOGIN_FORM=false
+ - GF_AUTH_LDAP_ENABLED=true
 ```
 
 #### PostgreSQL
@@ -590,8 +590,8 @@ REVOKE CREATE ON SCHEMA public FROM dashuser;
 
 ### Logs de Sécurité
 
-**Rétention**: 7 jours (Loki)  
-**Volume**: ~5GB max  
+**Rétention**: 7 jours (Loki) 
+**Volume**: ~5GB max 
 **Format**: JSON structuré
 
 **Requêtes LogQL utiles**:
@@ -691,12 +691,12 @@ ALTER USER dashuser WITH PASSWORD 'nouveau_password_fort';
 
 ### Contacts d'Urgence
 
-| Rôle           | Contact              | Disponibilité  |
+| Rôle | Contact | Disponibilité |
 | -------------- | -------------------- | -------------- |
-| Security Lead  | security@example.com | 24/7           |
-| DevOps On-Call | oncall@example.com   | 24/7           |
-| Database Admin | dba@example.com      | Business hours |
-| CISO           | ciso@example.com     | Business hours |
+| Security Lead | security@example.com | 24/7 |
+| DevOps On-Call | oncall@example.com | 24/7 |
+| Database Admin | dba@example.com | Business hours |
+| CISO | ciso@example.com | Business hours |
 
 ### Runbooks
 
@@ -713,11 +713,11 @@ ALTER USER dashuser WITH PASSWORD 'nouveau_password_fort';
 
 ### Standards Appliqués
 
-- ✅ **OWASP Top 10** (2021)
-- ✅ **CIS Docker Benchmark** v1.4.0
-- ✅ **NIST Cybersecurity Framework**
-- 📋 **GDPR** (si données EU)
-- 📋 **PCI-DSS** (si paiements)
+- **OWASP Top 10** (2021)
+- **CIS Docker Benchmark** v1.4.0
+- **NIST Cybersecurity Framework**
+- **GDPR** (si données EU)
+- **PCI-DSS** (si paiements)
 
 ### Audits de Sécurité
 
@@ -831,22 +831,22 @@ nmap -sV -sC localhost
 
 ### C. Historique des Changements
 
-| Date       | Version | Modifications                      |
+| Date | Version | Modifications |
 | ---------- | ------- | ---------------------------------- |
-| 2025-12-13 | 1.0     | Document initial - Issues #59, #60 |
+| 2025-12-13 | 1.0 | Document initial - Issues #59, #60 |
 
 ---
 
-**Document maintenu par**: Security Team  
-**Dernière révision**: 2025-12-13  
+**Document maintenu par**: Security Team 
+**Dernière révision**: 2025-12-13 
 **Prochaine révision**: 2026-03-13 (Trimestrielle)
 
 ---
 
-## 🔒 Classification
+## Classification
 
-**Classification**: Internal Use  
-**Distribution**: Équipe technique uniquement  
+**Classification**: Internal Use 
+**Distribution**: Équipe technique uniquement 
 **Sensibilité**: Confidentiel
 
 ---
