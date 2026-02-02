@@ -9,7 +9,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copier les fichiers de création de dashboards
-COPY grafana_dashboards_scripts/ /app/grafana_dashboards_scripts/
+COPY monitoring/grafana_dashboards_scripts/ /app/grafana_dashboards_scripts/
 
 # Installer les dépendances Python (minimal pour API Grafana)
 RUN pip install --no-cache-dir requests==2.31.0
