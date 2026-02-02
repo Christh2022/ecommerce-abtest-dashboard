@@ -18,7 +18,7 @@ psycopg2-binary==2.9.9
 
 # Statistical Analysis & A/B Testing
 scipy==1.11.4
-statsmodels==0.14.1
+statsmodels==0.14.6
 
 # Environment Variables
 python-dotenv==1.0.0
